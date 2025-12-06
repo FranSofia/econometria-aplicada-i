@@ -1,0 +1,35 @@
+---
+title: "Programa del Curso"
+---
+
+## Información General
+
+- **Curso:** Econometría Aplicada I 
+- **Institución:** Universidad de Chile - FEN (Postgrado) 
+- **Profesores:** Mariana Zerpa R. - Esteban Puentes E. 
+- **Ayudante:** Camila Carrasco G. 
+- **Semestre:** Primavera II (noviembre-enero)
+
+## Descripción y Objetivos
+
+El curso busca introducir la aplicación de herramientas de microeconometría, con énfasis en la estimación de efectos causales. Se cubren métodos como variables instrumentales, regresión discontinua y diferencias en diferencias.
+
+## Evaluación 
+
+| Instrumento | Ponderación | Formato | Fecha |
+|:------------|:-----------:|:--------|:------|
+| **Tareas (3)** | 25% | Práctico (Stata/R) | 15 Dic, 05 Ene, 19 Ene |
+| **Controles (4)** | 25% | Híbrido (Lecturas) | 13 Dic, 19 Dic, 09 Ene, 16 Ene |
+| **Examen** | 50% | Presencial | **24 de Enero** |
+
+## Contenidos 
+
+1.  **Métodos Causales:** Endogeneidad, Evaluación Experimental, Selección en Observables.
+2.  **Variables Instrumentales (IV):** Identificación y estimación.
+3.  **Regresión Discontinua (RDD):** Diseños nítidos y borrosos.
+4.  **Datos de Panel:** Efectos Fijos.
+5.  **Diferencias en Diferencias (DiD):** y Estudios de Eventos.
+
+## Bibliografía Principal
+- *Mostly Harmless Econometrics* (Angrist & Pischke)
+- *Causal Inference: The Mixtape* (Cunningham)

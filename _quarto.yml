@@ -1,0 +1,40 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Apuntes Econometría Aplicada I"
+  navbar:
+    background: primary
+    left:
+      - text: "Inicio"
+        file: index.qmd
+      - text: "Programa"
+        file: syllabus.qmd
+      - text: "Sesiones"
+        menu:
+          - text: "1. Causalidad y RCTs"
+            file: sesiones/01-causalidad.qmd
+          - text: "2. Variables Instrumentales"
+            file: sesiones/02-iv.qmd
+          - text: "3. Regresión Discontinua"
+            file: sesiones/03-rdd.qmd
+          - text: "4. Datos de Panel"
+            file: sesiones/04-panel.qmd
+          - text: "5. Diff-in-Diff y Event Studies"
+            file: sesiones/05-did.qmd
+    right:
+      - icon: github
+        href: https://github.com/FranSofia/econometria-aplicada-i
+
+format:
+  html:
+    theme: 
+      - cosmo 
+      - styles.scss 
+    toc: true
+    code-fold: show
+    code-tools: true
+
+execute:
+  freeze: auto # Importante para no re-renderizar todo cada vez

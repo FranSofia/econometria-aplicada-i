@@ -1,0 +1,20 @@
+/.quarto/
+/_site/
+/.Rproj.user/
+.Rhistory
+.RData
+*.Rproj
+
+# Ignorar bases de datos pesadas en cualquier carpeta
+*.dta
+*.sav
+*.csv
+*.rds
+*.RData
+
+# Pero permitir archivos pequeños 
+# !sesiones/data/ejemplo_pequeno.csv
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db

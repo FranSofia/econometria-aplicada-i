@@ -1,0 +1,26 @@
+---
+title: "Econometría Aplicada I"
+subtitle: "Notas de clase y replicación de ejercicios en R"
+about:
+  template: jolla
+  links:
+    - icon: github
+      text: Repositorio
+      href: https://github.com/FranSofia/econometria-aplicada-i
+---
+
+Bienvenid@. Este sitio recopila mis apuntes y ejercicios del curso **Econometría Aplicada I** del Magíster en Análisis Económico *weekend* en la Facultad de Economía y Negocios de la Universidad de Chile.
+
+Aunque el curso se dicta oficialmente utilizando **Stata**, este repositorio contiene la **replicación de los laboratorios y tareas utilizando R**, como ejercicio personal de traducción de código y profundización en los métodos.
+
+### Estructura del sitio
+
+Aquí encontrarás:
+
+* **Apuntes teóricos:** Resúmenes de las clases expositivas y lecturas obligatorias (MHE, Mixtape).
+* **Laboratorios en R:** Replicación de las guías prácticas (originalmente en Stata).
+* **Visualizaciones:** Gráficos `ggplot2` para ilustrar conceptos como RDD o Event Studies.
+
+> *Nota: Este es un repositorio de estudio personal y no representa material oficial de la cátedra.*
+
+
