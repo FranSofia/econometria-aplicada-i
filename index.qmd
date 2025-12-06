@@ -1,15 +1,13 @@
 ---
 title: "Econometría Aplicada I"
-subtitle: "Notas de clase y replicación de ejercicios en R"
-about:
-  template: jolla
-  links:
-    - icon: github
-      text: Repositorio
-      href: https://github.com/FranSofia/econometria-aplicada-i
+subtitle: "Apuntes de clase y código R"
+format:
+  html:
+    toc: true
+    toc-title: "En esta página"
 ---
 
-Bienvenid@. Este sitio recopila mis apuntes y ejercicios del curso **Econometría Aplicada I** del Magíster en Análisis Económico *weekend* en la Facultad de Economía y Negocios de la Universidad de Chile.
+Bienvenida/e/o. Este sitio recopila mis apuntes y ejercicios del curso **Econometría Aplicada I** del Magíster en Análisis Económico *weekend* en la Facultad de Economía y Negocios de la Universidad de Chile.
 
 Aunque el curso se dicta oficialmente utilizando **Stata**, este repositorio contiene la **replicación de los laboratorios y tareas utilizando R**, como ejercicio personal de traducción de código y profundización en los métodos.
 
@@ -18,9 +16,21 @@ Aunque el curso se dicta oficialmente utilizando **Stata**, este repositorio con
 Aquí encontrarás:
 
 * **Apuntes teóricos:** Resúmenes de las clases expositivas y lecturas obligatorias (MHE, Mixtape).
-* **Laboratorios en R:** Replicación de las guías prácticas (originalmente en Stata).
+* **Laboratorios en R:** Replicación de las guías prácticas (originalmente en Stata). 
 * **Visualizaciones:** Gráficos `ggplot2` para ilustrar conceptos como RDD o Event Studies.
 
 > *Nota: Este es un repositorio de estudio personal y no representa material oficial de la cátedra.*
+
+## Objetivos del curso
+
+- **General**: 
+
+  - Que cada estudiante implemente los principales y más recientes métodos de estimacién y test estadísticos utilizados en microeconometría, de acuerdo a la pregunta de investigación que se enfrente y los datos disponibles con énfasis en la estimación de **efectos causales**
+  
+- **Específicos**: 
+
+  - Profundizar de manera teórica y analítica los principales modelos utilizados en microeconometría
+  - Implementar de manera práctica estos modelos, identificando la técnica más pertinente según la pregunta de investigación y datos disponibles
+  - Interpretar, evaluar y reportar los resultados de estimaciones microeconométricas
 
 

@@ -1,4 +1,175 @@
 ---
-title: "Métodos de evaluación causal y RCT"
-format: html
+title: "Sesión 1: Métodos de Evaluación Causal y RCT"
+subtitle: "Resultados Potenciales, Sesgo de Selección y Experimentos"
+date: "2025-12-06"
+author: "Fran Sofía Núñez"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    code-fold: show
+editor: visual
 ---
+
+```{r setup}
+#| include: false
+#| warning: false
+#| message: false
+
+# Carga de librerías para manipulación y tablas
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(tidyverse, kableExtra, knitr)
+```
+
+# Introducción
+
+Esta sesión introduce el problema fundamental de la inferencia causal y establece el marco teórico de los **Resultados Potenciales (Rubin Causal Model)**. Se discute por qué la correlación no implica causalidad y cómo los experimentos aleatorios (RCT) resuelven el problema del sesgo de selección.
+
+# Bloque 1: Causalidad y Validez
+
+## Causalidad vs. Correlación
+
+Muchas decisiones requieren entender relaciones causales ($X \Rightarrow Y$), no solo correlaciones. Observacionalmente, ambas pueden verse iguales.
+
+Un ejemplo clásico de correlación espuria:
+
+::: {.callout-note appearance="simple"}
+**Ejemplo: Nicolas Cage y Ahogamientos**
+Existe una correlación del 66% entre las películas de Nicolas Cage y la gente que se ahoga en piscinas. Esto ilustra que $Corr(X,Y) \neq 0$ no implica causalidad.
+:::
+
+```{r img-spurious}
+#| echo: false
+#| fig-cap: "Correlación espuria"
+#| out-width: "80%"
+
+knitr::include_graphics("images/spurious.png", error = FALSE)
+```
+
+## El problema del Sesgo de Selección
+
+Comparar grupos observacionales suele llevar a conclusiones erróneas debido a diferencias preexistentes.
+
+**Ejemplo: Salud y Hospitales** 
+
+  * Datos: Las personas que van al hospital tienen peor salud ($2.79$) que las que no van ($2.07$).
+  * ¿Conclusión errónea?: "Ir al hospital te enferma".
+  * **Realidad**: Hay un **sesgo de selección**. La gente que va al hospital ya estaba más enferma (autoselección).
+
+## Validez Interna y Externa
+
+Para evaluar cualquier estudio empírico, analizamos dos dimensiones:
+
+1.  **Validez Interna**: ¿El estimador del efecto causal es insesgado para la población estudiada?
+      * *Amenazas*: Variables omitidas, causalidad reversa, errores de medición.
+2.  **Validez Externa**: ¿Se pueden generalizar los resultados a otras poblaciones o contextos?
+      * *Amenazas*: Diferencias institucionales, muestras no representativas (ej. voluntarios).
+
+### Endogeneidad
+
+La endogeneidad ocurre cuando $Cov(X, \epsilon) \neq 0$. Un ejemplo clásico es la **Ecuación de Mincer** para el retorno a la educación:
+
+$$ \ln(y_i) = \beta_0 + \beta_1 S_i + \gamma X_i + u_i $$
+
+Donde $\beta_1$ suele estar sesgado hacia arriba por "habilidad" (variable omitida): la gente más hábil estudia más *y* gana más, sobreestimando el efecto real de la educación.
+
+```{r img-supply-demand}
+#| echo: false
+#| fig-cap: "Problema de identificación: Oferta y Demanda"
+#| out-width: "60%"
+
+knitr::include_graphics("images/supply_demand.png", error = FALSE)
+```
+
+# El Problema Fundamental de la Inferencia Causal
+
+Definimos los **Resultados Potenciales**:
+
+  * $Y_{1i}$: Resultado si individuo $i$ recibe tratamiento ($D_i=1$).
+  * $Y_{0i}$: Resultado si individuo $i$ NO recibe tratamiento ($D_i=0$).
+
+El efecto causal individual es $\tau_i = Y_{1i} - Y_{0i}$.
+El problema es que **nunca observamos ambos resultados para la misma persona** simultáneamente.
+
+## Descomposición del Sesgo
+
+La diferencia simple de medias (Naive Comparison) se descompone en:
+
+$$
+\underbrace{E[Y|D=1] - E[Y|D=0]}_{\text{Diferencia Observada}} = \underbrace{E[Y_{1} - Y_{0} | D=1]}_{\text{ATT}} + \underbrace{E[Y_{0} | D=1] - E[Y_{0} | D=0]}_{\text{Sesgo de Selección}}
+$$
+
+  * **ATT**: Efecto promedio en los tratados (*Average Treatment Effect on the Treated*).
+  * **Sesgo de Selección**: Diferencia en el resultado base ($Y_0$) entre quienes se tratan y quienes no.
+
+# Bloque 2: Experimentos Aleatorios (RCT)
+
+La **aleatorización** garantiza que el tratamiento $D_i$ sea independiente de los resultados potenciales ($Y_{1i}, Y_{0i}$).
+
+Esto implica que:
+$$ E[Y_{0i} | D_i=1] = E[Y_{0i} | D_i=0] $$
+¡El sesgo de selección desaparece\! Por tanto, la diferencia simple de medias recupera el efecto causal verdadero (ATE).
+
+## Caso de Estudio: Proyecto STAR (Tennessee)
+
+Experimento de los 80s para ver el efecto del tamaño de la clase en el rendimiento escolar.
+
+  * Tratamiento: Clases pequeñas (13-17 alumnos).
+  * Control: Clases regulares (22-25 alumnos).
+
+### 1\. Test de Balance
+
+Antes de estimar efectos, debemos verificar que la aleatorización funcionó. Las características pre-tratamiento deben ser iguales entre grupos.
+
+```{r img-star-balance}
+#| echo: false
+#| fig-cap: "Tabla de Balance Proyecto STAR"
+#| out-width: "80%"
+
+knitr::include_graphics("images/star_balance.png", error = FALSE)
+```
+
+*Nota: El p-valor conjunto no significativo indica que la aleatorización fue exitosa.*
+
+# Bloque 3: Regresión e Inferencia
+
+## Estimación por MCO
+
+En un RCT ideal, podemos estimar el efecto ($\rho$) con una regresión simple:
+
+$$ Y_i = \alpha + \rho D_i + \eta_i $$
+
+### ¿Por qué añadir controles ($X_i$)?
+
+Aunque no son necesarios para evitar sesgo (dada la aleatorización), incluirlos sirve para:
+
+1.  **Reducir la varianza** del error y ganar precisión (errores estándar más pequeños).
+2.  Controlar por el diseño si la aleatorización fue condicional (ej. estratificada por escuela).
+
+
+```{r img-star-results}
+#| echo: false
+#| fig-cap: "Resultados de Regresión Proyecto STAR"
+#| out-width: "80%"
+
+knitr::include_graphics("images/star_results.png", error = FALSE)
+```
+
+## SUTVA (Stable Unit Treatment Value Assumption)
+
+Asumimos que no hay interferencia entre unidades: el tratamiento de $i$ no afecta a $j$.
+
+  * *Violaciones*: Efectos pares (spillovers), efectos de equilibrio general.
+
+## Pruebas de Hipótesis
+
+  * **Muestras grandes**: Test-t asintótico estándar.
+  * **Muestras pequeñas**: Test Exacto de Fisher (permutaciones).
+
+
+# Referencias
+
+  * Angrist & Pischke (2009). *Mostly Harmless Econometrics*, Cap. 2.
+  * Material del curso "Econometría Aplicada I", FEN U. Chile (2025).
+

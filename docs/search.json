@@ -1,12 +1,5 @@
 [
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Econometría Aplicada I",
-    "section": "",
-    "text": "Bienvenid@. Este sitio recopila mis apuntes y ejercicios del curso Econometría Aplicada I del Magíster en Análisis Económico weekend en la Facultad de Economía y Negocios de la Universidad de Chile.\nAunque el curso se dicta oficialmente utilizando Stata, este repositorio contiene la replicación de los laboratorios y tareas utilizando R, como ejercicio personal de traducción de código y profundización en los métodos.\n\nEstructura del sitio\nAquí encontrarás:\n\nApuntes teóricos: Resúmenes de las clases expositivas y lecturas obligatorias (MHE, Mixtape).\nLaboratorios en R: Replicación de las guías prácticas (originalmente en Stata).\nVisualizaciones: Gráficos ggplot2 para ilustrar conceptos como RDD o Event Studies.\n\n\nNota: Este es un repositorio de estudio personal y no representa material oficial de la cátedra."
-  },
-  {
     "objectID": "syllabus.html",
     "href": "syllabus.html",
     "title": "Programa del Curso",
@@ -49,10 +42,87 @@
     "text": "Bibliografía Principal\n\nMostly Harmless Econometrics (Angrist & Pischke)\nCausal Inference: The Mixtape (Cunningham)"
   },
   {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Econometría Aplicada I",
+    "section": "",
+    "text": "Bienvenida/e/o. Este sitio recopila mis apuntes y ejercicios del curso Econometría Aplicada I del Magíster en Análisis Económico weekend en la Facultad de Economía y Negocios de la Universidad de Chile.\nAunque el curso se dicta oficialmente utilizando Stata, este repositorio contiene la replicación de los laboratorios y tareas utilizando R, como ejercicio personal de traducción de código y profundización en los métodos."
+  },
+  {
+    "objectID": "index.html#objetivos-del-curso",
+    "href": "index.html#objetivos-del-curso",
+    "title": "Econometría Aplicada I",
+    "section": "Objetivos del curso",
+    "text": "Objetivos del curso\n\nGeneral:\n\nQue cada estudiante implemente los principales y más recientes métodos de estimacién y test estadísticos utilizados en microeconometría, de acuerdo a la pregunta de investigación que se enfrente y los datos disponibles con énfasis en la estimación de efectos causales\n\nEspecíficos:\n\nProfundizar de manera teórica y analítica los principales modelos utilizados en microeconometría\nImplementar de manera práctica estos modelos, identificando la técnica más pertinente según la pregunta de investigación y datos disponibles\nInterpretar, evaluar y reportar los resultados de estimaciones microeconométricas"
+  },
+  {
     "objectID": "about.html",
     "href": "about.html",
     "title": "About",
     "section": "",
     "text": "About this site\n\n\nCode\n1 + 1\n\n\n[1] 2"
+  },
+  {
+    "objectID": "sesiones/01-causalidad.html",
+    "href": "sesiones/01-causalidad.html",
+    "title": "Sesión 1: Métodos de Evaluación Causal y RCT",
+    "section": "",
+    "text": "Esta sesión introduce el problema fundamental de la inferencia causal y establece el marco teórico de los Resultados Potenciales (Rubin Causal Model). Se discute por qué la correlación no implica causalidad y cómo los experimentos aleatorios (RCT) resuelven el problema del sesgo de selección."
+  },
+  {
+    "objectID": "sesiones/01-causalidad.html#causalidad-vs.-correlación",
+    "href": "sesiones/01-causalidad.html#causalidad-vs.-correlación",
+    "title": "Sesión 1: Métodos de Evaluación Causal y RCT",
+    "section": "2.1 Causalidad vs. Correlación",
+    "text": "2.1 Causalidad vs. Correlación\nMuchas decisiones requieren entender relaciones causales (\\(X \\Rightarrow Y\\)), no solo correlaciones. Observacionalmente, ambas pueden verse iguales.\nUn ejemplo clásico de correlación espuria:\n\n\n\n\n\n\nEjemplo: Nicolas Cage y Ahogamientos Existe una correlación del 66% entre las películas de Nicolas Cage y la gente que se ahoga en piscinas. Esto ilustra que \\(Corr(X,Y) \\neq 0\\) no implica causalidad.\n\n\n\n\n\n\n\n\nCorrelación espuria"
+  },
+  {
+    "objectID": "sesiones/01-causalidad.html#el-problema-del-sesgo-de-selección",
+    "href": "sesiones/01-causalidad.html#el-problema-del-sesgo-de-selección",
+    "title": "Sesión 1: Métodos de Evaluación Causal y RCT",
+    "section": "2.2 El problema del Sesgo de Selección",
+    "text": "2.2 El problema del Sesgo de Selección\nComparar grupos observacionales suele llevar a conclusiones erróneas debido a diferencias preexistentes.\nEjemplo: Salud y Hospitales\n\nDatos: Las personas que van al hospital tienen peor salud (\\(2.79\\)) que las que no van (\\(2.07\\)).\n¿Conclusión errónea?: “Ir al hospital te enferma”.\nRealidad: Hay un sesgo de selección. La gente que va al hospital ya estaba más enferma (autoselección)."
+  },
+  {
+    "objectID": "sesiones/01-causalidad.html#validez-interna-y-externa",
+    "href": "sesiones/01-causalidad.html#validez-interna-y-externa",
+    "title": "Sesión 1: Métodos de Evaluación Causal y RCT",
+    "section": "2.3 Validez Interna y Externa",
+    "text": "2.3 Validez Interna y Externa\nPara evaluar cualquier estudio empírico, analizamos dos dimensiones:\n\nValidez Interna: ¿El estimador del efecto causal es insesgado para la población estudiada?\n\nAmenazas: Variables omitidas, causalidad reversa, errores de medición.\n\nValidez Externa: ¿Se pueden generalizar los resultados a otras poblaciones o contextos?\n\nAmenazas: Diferencias institucionales, muestras no representativas (ej. voluntarios).\n\n\n\n2.3.1 Endogeneidad\nLa endogeneidad ocurre cuando \\(Cov(X, \\epsilon) \\neq 0\\). Un ejemplo clásico es la Ecuación de Mincer para el retorno a la educación:\n\\[ \\ln(y_i) = \\beta_0 + \\beta_1 S_i + \\gamma X_i + u_i \\]\nDonde \\(\\beta_1\\) suele estar sesgado hacia arriba por “habilidad” (variable omitida): la gente más hábil estudia más y gana más, sobreestimando el efecto real de la educación.\n\n\n\n\n\nProblema de identificación: Oferta y Demanda"
+  },
+  {
+    "objectID": "sesiones/01-causalidad.html#descomposición-del-sesgo",
+    "href": "sesiones/01-causalidad.html#descomposición-del-sesgo",
+    "title": "Sesión 1: Métodos de Evaluación Causal y RCT",
+    "section": "3.1 Descomposición del Sesgo",
+    "text": "3.1 Descomposición del Sesgo\nLa diferencia simple de medias (Naive Comparison) se descompone en:\n\\[\n\\underbrace{E[Y|D=1] - E[Y|D=0]}_{\\text{Diferencia Observada}} = \\underbrace{E[Y_{1} - Y_{0} | D=1]}_{\\text{ATT}} + \\underbrace{E[Y_{0} | D=1] - E[Y_{0} | D=0]}_{\\text{Sesgo de Selección}}\n\\]\n\nATT: Efecto promedio en los tratados (Average Treatment Effect on the Treated).\nSesgo de Selección: Diferencia en el resultado base (\\(Y_0\\)) entre quienes se tratan y quienes no."
+  },
+  {
+    "objectID": "sesiones/01-causalidad.html#caso-de-estudio-proyecto-star-tennessee",
+    "href": "sesiones/01-causalidad.html#caso-de-estudio-proyecto-star-tennessee",
+    "title": "Sesión 1: Métodos de Evaluación Causal y RCT",
+    "section": "4.1 Caso de Estudio: Proyecto STAR (Tennessee)",
+    "text": "4.1 Caso de Estudio: Proyecto STAR (Tennessee)\nExperimento de los 80s para ver el efecto del tamaño de la clase en el rendimiento escolar.\n\nTratamiento: Clases pequeñas (13-17 alumnos).\nControl: Clases regulares (22-25 alumnos).\n\n\n4.1.1 1. Test de Balance\nAntes de estimar efectos, debemos verificar que la aleatorización funcionó. Las características pre-tratamiento deben ser iguales entre grupos.\n\n\n\n\n\nTabla de Balance Proyecto STAR\n\n\n\n\nNota: El p-valor conjunto no significativo indica que la aleatorización fue exitosa."
+  },
+  {
+    "objectID": "sesiones/01-causalidad.html#estimación-por-mco",
+    "href": "sesiones/01-causalidad.html#estimación-por-mco",
+    "title": "Sesión 1: Métodos de Evaluación Causal y RCT",
+    "section": "5.1 Estimación por MCO",
+    "text": "5.1 Estimación por MCO\nEn un RCT ideal, podemos estimar el efecto (\\(\\rho\\)) con una regresión simple:\n\\[ Y_i = \\alpha + \\rho D_i + \\eta_i \\]\n\n5.1.1 ¿Por qué añadir controles (\\(X_i\\))?\nAunque no son necesarios para evitar sesgo (dada la aleatorización), incluirlos sirve para:\n\nReducir la varianza del error y ganar precisión (errores estándar más pequeños).\nControlar por el diseño si la aleatorización fue condicional (ej. estratificada por escuela).\n\n\n\n\n\n\nResultados de Regresión Proyecto STAR"
+  },
+  {
+    "objectID": "sesiones/01-causalidad.html#sutva-stable-unit-treatment-value-assumption",
+    "href": "sesiones/01-causalidad.html#sutva-stable-unit-treatment-value-assumption",
+    "title": "Sesión 1: Métodos de Evaluación Causal y RCT",
+    "section": "5.2 SUTVA (Stable Unit Treatment Value Assumption)",
+    "text": "5.2 SUTVA (Stable Unit Treatment Value Assumption)\nAsumimos que no hay interferencia entre unidades: el tratamiento de \\(i\\) no afecta a \\(j\\).\n\nViolaciones: Efectos pares (spillovers), efectos de equilibrio general."
+  },
+  {
+    "objectID": "sesiones/01-causalidad.html#pruebas-de-hipótesis",
+    "href": "sesiones/01-causalidad.html#pruebas-de-hipótesis",
+    "title": "Sesión 1: Métodos de Evaluación Causal y RCT",
+    "section": "5.3 Pruebas de Hipótesis",
+    "text": "5.3 Pruebas de Hipótesis\n\nMuestras grandes: Test-t asintótico estándar.\nMuestras pequeñas: Test Exacto de Fisher (permutaciones)."
   }
 ]

@@ -69,6 +69,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-485de80f1a4f724689a31f204009b840.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
@@ -177,27 +178,41 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
+    <h2 id="toc-title">En esta página</h2>
+   
   <ul>
   <li><a href="#estructura-del-sitio" id="toc-estructura-del-sitio" class="nav-link active" data-scroll-target="#estructura-del-sitio">Estructura del sitio</a></li>
+  <li><a href="#objetivos-del-curso" id="toc-objetivos-del-curso" class="nav-link" data-scroll-target="#objetivos-del-curso">Objetivos del curso</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<div class="quarto-about-jolla">
- <header id="title-block-header" class="quarto-title-block default">
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <div class="quarto-title-block"><div><h1 class="title">Econometría Aplicada I</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
-<p class="subtitle lead">Notas de clase y replicación de ejercicios en R</p>
+<p class="subtitle lead">Apuntes de clase y código R</p>
 </div>
-<div class="quarto-title-meta">
-  </div>
-</header><main class="content" id="quarto-document-content">
 
-<p>Bienvenid@. Este sitio recopila mis apuntes y ejercicios del curso <strong>Econometría Aplicada I</strong> del Magíster en Análisis Económico <em>weekend</em> en la Facultad de Economía y Negocios de la Universidad de Chile.</p>
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Bienvenida/e/o. Este sitio recopila mis apuntes y ejercicios del curso <strong>Econometría Aplicada I</strong> del Magíster en Análisis Económico <em>weekend</em> en la Facultad de Economía y Negocios de la Universidad de Chile.</p>
 <p>Aunque el curso se dicta oficialmente utilizando <strong>Stata</strong>, este repositorio contiene la <strong>replicación de los laboratorios y tareas utilizando R</strong>, como ejercicio personal de traducción de código y profundización en los métodos.</p>
 <section id="estructura-del-sitio" class="level3">
-<h3 data-anchor-id="estructura-del-sitio">Estructura del sitio</h3>
+<h3 class="anchored" data-anchor-id="estructura-del-sitio">Estructura del sitio</h3>
 <p>Aquí encontrarás:</p>
 <ul>
 <li><strong>Apuntes teóricos:</strong> Resúmenes de las clases expositivas y lecturas obligatorias (MHE, Mixtape).</li>
@@ -207,22 +222,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <blockquote class="blockquote">
 <p><em>Nota: Este es un repositorio de estudio personal y no representa material oficial de la cátedra.</em></p>
 </blockquote>
+</section>
+<section id="objetivos-del-curso" class="level2">
+<h2 class="anchored" data-anchor-id="objetivos-del-curso">Objetivos del curso</h2>
+<ul>
+<li><p><strong>General</strong>:</p>
+<ul>
+<li>Que cada estudiante implemente los principales y más recientes métodos de estimacién y test estadísticos utilizados en microeconometría, de acuerdo a la pregunta de investigación que se enfrente y los datos disponibles con énfasis en la estimación de <strong>efectos causales</strong></li>
+</ul></li>
+<li><p><strong>Específicos</strong>:</p>
+<ul>
+<li>Profundizar de manera teórica y analítica los principales modelos utilizados en microeconometría</li>
+<li>Implementar de manera práctica estos modelos, identificando la técnica más pertinente según la pregunta de investigación y datos disponibles</li>
+<li>Interpretar, evaluar y reportar los resultados de estimaciones microeconométricas</li>
+</ul></li>
+</ul>
 
 
 <!-- -->
+
 </section>
-</main> 
-  <hr class="about-sep">
-   <div class="about-links">
-  <a href="https://github.com/FranSofia/econometria-aplicada-i" class="about-link" rel="" target="">
-    <i class="bi bi-github"></i>
-     <span class="about-link-text">Repositorio</span>
-  </a>
-</div>
-</div>
- <!-- /main -->
+
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
     const isCodeAnnotation = (el) => {
       for (const clz of el.classList) {
         if (clz.startsWith('code-annotation-')) {                     
@@ -666,29 +696,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
 <div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Econometría Aplicada I"</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "Notas de clase y replicación de ejercicios en R"</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="an">about:</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">  template: jolla</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">  links:</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">    - icon: github</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">      text: Repositorio</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">      href: https://github.com/FranSofia/econometria-aplicada-i</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "Apuntes de clase y código R"</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-title: "En esta página"</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>Bienvenida/e/o. Este sitio recopila mis apuntes y ejercicios del curso **Econometría Aplicada I** del Magíster en Análisis Económico *weekend* en la Facultad de Economía y Negocios de la Universidad de Chile.</span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>Bienvenid@. Este sitio recopila mis apuntes y ejercicios del curso **Econometría Aplicada I** del Magíster en Análisis Económico *weekend* en la Facultad de Economía y Negocios de la Universidad de Chile.</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>Aunque el curso se dicta oficialmente utilizando **Stata**, este repositorio contiene la **replicación de los laboratorios y tareas utilizando R**, como ejercicio personal de traducción de código y profundización en los métodos.</span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>Aunque el curso se dicta oficialmente utilizando **Stata**, este repositorio contiene la **replicación de los laboratorios y tareas utilizando R**, como ejercicio personal de traducción de código y profundización en los métodos.</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">### Estructura del sitio</span></span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">### Estructura del sitio</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>Aquí encontrarás:</span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>Aquí encontrarás:</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Apuntes teóricos:** Resúmenes de las clases expositivas y lecturas obligatorias (MHE, Mixtape).</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Laboratorios en R:** Replicación de las guías prácticas (originalmente en Stata).</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Visualizaciones:** Gráficos <span class="in">`ggplot2`</span> para ilustrar conceptos como RDD o Event Studies.</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Apuntes teóricos:** Resúmenes de las clases expositivas y lecturas obligatorias (MHE, Mixtape).</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Laboratorios en R:** Replicación de las guías prácticas (originalmente en Stata). </span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Visualizaciones:** Gráficos <span class="in">`ggplot2`</span> para ilustrar conceptos como RDD o Event Studies.</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; *Nota: Este es un repositorio de estudio personal y no representa material oficial de la cátedra.*</span></span>
 <span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; *Nota: Este es un repositorio de estudio personal y no representa material oficial de la cátedra.*</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="fu">## Objetivos del curso</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**General**: </span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Que cada estudiante implemente los principales y más recientes métodos de estimacién y test estadísticos utilizados en microeconometría, de acuerdo a la pregunta de investigación que se enfrente y los datos disponibles con énfasis en la estimación de **efectos causales**</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Específicos**: </span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Profundizar de manera teórica y analítica los principales modelos utilizados en microeconometría</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Implementar de manera práctica estos modelos, identificando la técnica más pertinente según la pregunta de investigación y datos disponibles</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Interpretar, evaluar y reportar los resultados de estimaciones microeconométricas</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 

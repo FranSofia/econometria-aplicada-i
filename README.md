@@ -69,6 +69,6 @@ Este material está bajo licencia [CC BY-SA 4.0](https://creativecommons.org/lic
 
 ---
 
-**Semestre:** [2025-26]  
-**Última actualización:** [06 de diciembre]
+**Semestre:** Primavera II: 2025-26  
+
 
