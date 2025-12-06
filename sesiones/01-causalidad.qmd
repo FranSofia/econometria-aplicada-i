@@ -1,5 +1,4 @@
 ---
-title: "01-causalidad"
+title: "Métodos de evaluación causal y RCT"
 format: html
 ---
-
