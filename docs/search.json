@@ -1,0 +1,58 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Econometría Aplicada I",
+    "section": "",
+    "text": "Bienvenid@. Este sitio recopila mis apuntes y ejercicios del curso Econometría Aplicada I del Magíster en Análisis Económico weekend en la Facultad de Economía y Negocios de la Universidad de Chile.\nAunque el curso se dicta oficialmente utilizando Stata, este repositorio contiene la replicación de los laboratorios y tareas utilizando R, como ejercicio personal de traducción de código y profundización en los métodos.\n\nEstructura del sitio\nAquí encontrarás:\n\nApuntes teóricos: Resúmenes de las clases expositivas y lecturas obligatorias (MHE, Mixtape).\nLaboratorios en R: Replicación de las guías prácticas (originalmente en Stata).\nVisualizaciones: Gráficos ggplot2 para ilustrar conceptos como RDD o Event Studies.\n\n\nNota: Este es un repositorio de estudio personal y no representa material oficial de la cátedra."
+  },
+  {
+    "objectID": "syllabus.html",
+    "href": "syllabus.html",
+    "title": "Programa del Curso",
+    "section": "",
+    "text": "Curso: Econometría Aplicada I\nInstitución: Universidad de Chile - FEN (Postgrado)\nProfesores: Mariana Zerpa R. - Esteban Puentes E.\nAyudante: Camila Carrasco G.\nSemestre: Primavera II (noviembre-enero)"
+  },
+  {
+    "objectID": "syllabus.html#información-general",
+    "href": "syllabus.html#información-general",
+    "title": "Programa del Curso",
+    "section": "",
+    "text": "Curso: Econometría Aplicada I\nInstitución: Universidad de Chile - FEN (Postgrado)\nProfesores: Mariana Zerpa R. - Esteban Puentes E.\nAyudante: Camila Carrasco G.\nSemestre: Primavera II (noviembre-enero)"
+  },
+  {
+    "objectID": "syllabus.html#descripción-y-objetivos",
+    "href": "syllabus.html#descripción-y-objetivos",
+    "title": "Programa del Curso",
+    "section": "Descripción y Objetivos",
+    "text": "Descripción y Objetivos\nEl curso busca introducir la aplicación de herramientas de microeconometría, con énfasis en la estimación de efectos causales. Se cubren métodos como variables instrumentales, regresión discontinua y diferencias en diferencias."
+  },
+  {
+    "objectID": "syllabus.html#evaluación",
+    "href": "syllabus.html#evaluación",
+    "title": "Programa del Curso",
+    "section": "Evaluación",
+    "text": "Evaluación\n\n\n\n\n\n\n\n\n\nInstrumento\nPonderación\nFormato\nFecha\n\n\n\n\nTareas (3)\n25%\nPráctico (Stata/R)\n15 Dic, 05 Ene, 19 Ene\n\n\nControles (4)\n25%\nHíbrido (Lecturas)\n13 Dic, 19 Dic, 09 Ene, 16 Ene\n\n\nExamen\n50%\nPresencial\n24 de Enero"
+  },
+  {
+    "objectID": "syllabus.html#contenidos",
+    "href": "syllabus.html#contenidos",
+    "title": "Programa del Curso",
+    "section": "Contenidos",
+    "text": "Contenidos\n\nMétodos Causales: Endogeneidad, Evaluación Experimental, Selección en Observables.\nVariables Instrumentales (IV): Identificación y estimación.\nRegresión Discontinua (RDD): Diseños nítidos y borrosos.\nDatos de Panel: Efectos Fijos.\nDiferencias en Diferencias (DiD): y Estudios de Eventos."
+  },
+  {
+    "objectID": "syllabus.html#bibliografía-principal",
+    "href": "syllabus.html#bibliografía-principal",
+    "title": "Programa del Curso",
+    "section": "Bibliografía Principal",
+    "text": "Bibliografía Principal\n\nMostly Harmless Econometrics (Angrist & Pischke)\nCausal Inference: The Mixtape (Cunningham)"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site\n\n\nCode\n1 + 1\n\n\n[1] 2"
+  }
+]
