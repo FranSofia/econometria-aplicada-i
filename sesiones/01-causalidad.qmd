@@ -22,9 +22,9 @@ if (!require("pacman")) install.packages("pacman")
 pacman::p_load(tidyverse, kableExtra, knitr)
 ```
 
-# Introducción
+# Introducción [EN CONSTRUCCIÓN]
 
-Esta sesión introduce el problema fundamental de la inferencia causal y establece el marco teórico de los **Resultados Potenciales (Rubin Causal Model)**. Se discutiendo por qué la correlación no implica causalidad y cómo los experimentos aleatorios (RCT) resuelven el problema del sesgo de selección.
+Esta sesión introduce el problema fundamental de la inferencia causal y establece el marco teórico de los **Resultados Potenciales (Rubin Causal Model)**. Se parte discutiendo por qué la correlación no implica causalidad, sobre el sesgo de selección y cómo los experimentos aleatorios (RCT) resuelven el problema del sesgo de selección.
 
 # Bloque 1: Causalidad y Validez del análisis empírico
 
@@ -40,7 +40,7 @@ Para ello, es muy importante distinguir entre *relaciones causales* y *correlaci
 
 ## Causalidad vs. Correlación
 
-Como ya vimos, muchas relaciones entre variables pueden confundirse, sobre todo las correlaciones con las relaciones causales. Una forma típica es lo que se conoce como **correlación espúrea**. El caracter espúreo de una correlación está dado por la alta asociación (o generalmente por la alta) entre variables y que, en virtud de ella, se interprete una relación de necesidad, o peor, de causalidad. 
+Como ya vimos, muchas relaciones entre variables pueden confundirse, sobre todo las correlaciones con las relaciones causales. Una forma típica es lo que se conoce como **correlación espúrea**. El caracter espurio de una correlación está dado por la alta asociación (o generalmente por la alta) entre variables y que, en virtud de ella, se interprete una relación de necesidad, o peor, de causalidad. 
 
 Un ejemplo clásico de correlación espuria:
 
