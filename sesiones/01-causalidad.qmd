@@ -332,7 +332,36 @@ $$
 Con ello, podemos observar que el **sesgo** proviene del hecho de que aquellos que buscan tratamiento ($D_i=1$), tienen características diferentes. Por otro lado, nos encontramos con el **ATT**. El **_Average treatment effect on the treated_** (ATT) es el *efecto promedio* del tratamiento para los individuos tratados. Si los efectos son heterogéneos en la población, este es un afecto causal diferente al efecto promedio en la población (ATE). Luego lo veremos. Pero ahora, pasemos al segundo bloque para seguir profundizando. 
 
 
-# Bloque 2: Experimentos Aleatorios (RCT)
+# Bloque 2: Experimentos 
+
+## Experimentos y causalidad 
+
+Con datos observacionales, la identificación del efecto causal es complejo, aunque no imposible. Pero conviene partir cómo se captura esto con datos experimentales. Nuevamente, esto es para seguir con el concepto de **ideal experimental**: lo ideal será ahcer un un experimento donde solo modificamos $X$, dejando todo lo demás constante (*ceteris paribus*), para obser el efecto de la variación de $X$ *en* $Y$. Para algunos tipos de preguntas, pues, podemos hacer experimentos con **grupos de control aleatorio**: **RCT**, por sus cifras en inglés: *Randomized Control Trials*. 
+
+**Randomized Control Trials** (RCT's): la idea de los RCT's proviene de la medicina, por ejemplo, tomando los tipos de investigaciones para medir la efectividad de un nuevo fármaco o vacuna. En este tipo de experimentos, se elige un grupo de pacientes aquejados por la enfermedad que el nuevo fármaco pretende curar. Entonces, se podría realizar lo siguiente:
+
+  - Se asigna al azar a cada paciente a uno de tres grupos:
+    - el fármaco nuevo
+    - el fármaco en uso
+    - un placebo (sin contenido medicinal (y sin informar cuál es cuál))
+    
+  - Se compara la respuesta promedio de los tres grupos al tratamiento  
+  
+Entonces, tenemos que los pacientes no saben en qué grupo están, e idealmente los que administran los fármacos idealmente tampoco deberian saber a qué grupo pertenece cada paciente. Con ello, se podría formar un caso típico de RCT. Y, en el caso de que la respuesta de los tratados con el nuevo fármaco es significativamente mejor que la de los restantes grupos, se podría concluir que el nuevo fármaco es efectivamente mejor que el anterior. 
+
+En economía también se han realizado RCT's. Entre algunos de ellos: 
+
+  -  National Supported Work Demonstration, 1975-1979
+  -  Negative Income Tax Experiments, 1968-1979
+  -  RAND Health Insurance Experiment, 1971-1986
+  -  Moving to Opportunity, 1994-2010
+  -  Tennessee STAR Experiment, 1985-1998
+  -  Perry Preschool Program, 1960s
+  -  Progresa/Oportunidades en Mexico, 1997-1999 
+  - También hay muchos ejemplos en economía del desarrollo ([Esther Duflo: Experimentos sociales para luchar contra la pobreza](https://www.youtube.com/watch?v=0zvrGiPkVcs))
+  
+
+
 
 La **aleatorización** garantiza que el tratamiento $D_i$ sea independiente de los resultados potenciales ($Y_{1i}, Y_{0i}$).
 

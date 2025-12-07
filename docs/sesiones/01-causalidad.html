@@ -227,11 +227,12 @@ window.Quarto = {
   </ul></li>
   <li><a href="#el-problema-fundamental-de-la-inferencia-causal" id="toc-el-problema-fundamental-de-la-inferencia-causal" class="nav-link" data-scroll-target="#el-problema-fundamental-de-la-inferencia-causal"><span class="header-section-number">1.3</span> El Problema Fundamental de la Inferencia Causal</a></li>
   </ul></li>
-  <li><a href="#bloque-2-experimentos-aleatorios-rct" id="toc-bloque-2-experimentos-aleatorios-rct" class="nav-link" data-scroll-target="#bloque-2-experimentos-aleatorios-rct"><span class="header-section-number">2</span> Bloque 2: Experimentos Aleatorios (RCT)</a>
+  <li><a href="#bloque-2-experimentos" id="toc-bloque-2-experimentos" class="nav-link" data-scroll-target="#bloque-2-experimentos"><span class="header-section-number">2</span> Bloque 2: Experimentos</a>
   <ul class="collapse">
-  <li><a href="#caso-de-estudio-proyecto-star-tennessee" id="toc-caso-de-estudio-proyecto-star-tennessee" class="nav-link" data-scroll-target="#caso-de-estudio-proyecto-star-tennessee"><span class="header-section-number">2.1</span> Caso de Estudio: Proyecto STAR (Tennessee)</a>
+  <li><a href="#experimentos-y-causalidad" id="toc-experimentos-y-causalidad" class="nav-link" data-scroll-target="#experimentos-y-causalidad"><span class="header-section-number">2.1</span> Experimentos y causalidad</a></li>
+  <li><a href="#caso-de-estudio-proyecto-star-tennessee" id="toc-caso-de-estudio-proyecto-star-tennessee" class="nav-link" data-scroll-target="#caso-de-estudio-proyecto-star-tennessee"><span class="header-section-number">2.2</span> Caso de Estudio: Proyecto STAR (Tennessee)</a>
   <ul class="collapse">
-  <li><a href="#test-de-balance" id="toc-test-de-balance" class="nav-link" data-scroll-target="#test-de-balance"><span class="header-section-number">2.1.1</span> 1. Test de Balance</a></li>
+  <li><a href="#test-de-balance" id="toc-test-de-balance" class="nav-link" data-scroll-target="#test-de-balance"><span class="header-section-number">2.2.1</span> 1. Test de Balance</a></li>
   </ul></li>
   </ul></li>
   <li><a href="#bloque-3-regresión-e-inferencia" id="toc-bloque-3-regresión-e-inferencia" class="nav-link" data-scroll-target="#bloque-3-regresión-e-inferencia"><span class="header-section-number">3</span> Bloque 3: Regresión e Inferencia</a>
@@ -320,23 +321,23 @@ X \implies Y
 <p>Confundir una correlación (y peor aún: una espúrea) con una relación causal, puede llevar a errores graves. Por ejemplo, en <em>Mostly Harmless Econometrics</em> (<a href="https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf">Angrist y Pischke, 2008</a>) se muestra cómo hay una relación entre ir (o no) al hospital y el grado de “salud subjetiva”<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> reportado. Los datos son los siguientes:</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="zrthrmtrao" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#zrthrmtrao table {
+<div id="uitofjkqhk" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#uitofjkqhk table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#zrthrmtrao thead, #zrthrmtrao tbody, #zrthrmtrao tfoot, #zrthrmtrao tr, #zrthrmtrao td, #zrthrmtrao th {
+#uitofjkqhk thead, #uitofjkqhk tbody, #uitofjkqhk tfoot, #uitofjkqhk tr, #uitofjkqhk td, #uitofjkqhk th {
   border-style: none;
 }
 
-#zrthrmtrao p {
+#uitofjkqhk p {
   margin: 0;
   padding: 0;
 }
 
-#zrthrmtrao .gt_table {
+#uitofjkqhk .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -362,12 +363,12 @@ X \implies Y
   border-left-color: #D3D3D3;
 }
 
-#zrthrmtrao .gt_caption {
+#uitofjkqhk .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#zrthrmtrao .gt_title {
+#uitofjkqhk .gt_title {
   color: #FFFFFF;
   font-size: 125%;
   font-weight: initial;
@@ -379,7 +380,7 @@ X \implies Y
   border-bottom-width: 0;
 }
 
-#zrthrmtrao .gt_subtitle {
+#uitofjkqhk .gt_subtitle {
   color: #FFFFFF;
   font-size: 85%;
   font-weight: initial;
@@ -391,7 +392,7 @@ X \implies Y
   border-top-width: 0;
 }
 
-#zrthrmtrao .gt_heading {
+#uitofjkqhk .gt_heading {
   background-color: #69000C;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -403,13 +404,13 @@ X \implies Y
   border-right-color: #D3D3D3;
 }
 
-#zrthrmtrao .gt_bottom_border {
+#uitofjkqhk .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#zrthrmtrao .gt_col_headings {
+#uitofjkqhk .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -424,7 +425,7 @@ X \implies Y
   border-right-color: #D3D3D3;
 }
 
-#zrthrmtrao .gt_col_heading {
+#uitofjkqhk .gt_col_heading {
   color: #FFFFFF;
   background-color: #69000C;
   font-size: 100%;
@@ -444,7 +445,7 @@ X \implies Y
   overflow-x: hidden;
 }
 
-#zrthrmtrao .gt_column_spanner_outer {
+#uitofjkqhk .gt_column_spanner_outer {
   color: #FFFFFF;
   background-color: #69000C;
   font-size: 100%;
@@ -456,15 +457,15 @@ X \implies Y
   padding-right: 4px;
 }
 
-#zrthrmtrao .gt_column_spanner_outer:first-child {
+#uitofjkqhk .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#zrthrmtrao .gt_column_spanner_outer:last-child {
+#uitofjkqhk .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#zrthrmtrao .gt_column_spanner {
+#uitofjkqhk .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -476,11 +477,11 @@ X \implies Y
   width: 100%;
 }
 
-#zrthrmtrao .gt_spanner_row {
+#uitofjkqhk .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#zrthrmtrao .gt_group_heading {
+#uitofjkqhk .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -506,7 +507,7 @@ X \implies Y
   text-align: left;
 }
 
-#zrthrmtrao .gt_empty_group_heading {
+#uitofjkqhk .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -521,15 +522,15 @@ X \implies Y
   vertical-align: middle;
 }
 
-#zrthrmtrao .gt_from_md > :first-child {
+#uitofjkqhk .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#zrthrmtrao .gt_from_md > :last-child {
+#uitofjkqhk .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#zrthrmtrao .gt_row {
+#uitofjkqhk .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -548,7 +549,7 @@ X \implies Y
   overflow-x: hidden;
 }
 
-#zrthrmtrao .gt_stub {
+#uitofjkqhk .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -561,7 +562,7 @@ X \implies Y
   padding-right: 5px;
 }
 
-#zrthrmtrao .gt_stub_row_group {
+#uitofjkqhk .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -575,15 +576,15 @@ X \implies Y
   vertical-align: top;
 }
 
-#zrthrmtrao .gt_row_group_first td {
+#uitofjkqhk .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#zrthrmtrao .gt_row_group_first th {
+#uitofjkqhk .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#zrthrmtrao .gt_summary_row {
+#uitofjkqhk .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -593,16 +594,16 @@ X \implies Y
   padding-right: 5px;
 }
 
-#zrthrmtrao .gt_first_summary_row {
+#uitofjkqhk .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#zrthrmtrao .gt_first_summary_row.thick {
+#uitofjkqhk .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#zrthrmtrao .gt_last_summary_row {
+#uitofjkqhk .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -612,7 +613,7 @@ X \implies Y
   border-bottom-color: #D3D3D3;
 }
 
-#zrthrmtrao .gt_grand_summary_row {
+#uitofjkqhk .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -622,7 +623,7 @@ X \implies Y
   padding-right: 5px;
 }
 
-#zrthrmtrao .gt_first_grand_summary_row {
+#uitofjkqhk .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -632,7 +633,7 @@ X \implies Y
   border-top-color: #D3D3D3;
 }
 
-#zrthrmtrao .gt_last_grand_summary_row_top {
+#uitofjkqhk .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -642,11 +643,11 @@ X \implies Y
   border-bottom-color: #D3D3D3;
 }
 
-#zrthrmtrao .gt_striped {
+#uitofjkqhk .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#zrthrmtrao .gt_table_body {
+#uitofjkqhk .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -655,7 +656,7 @@ X \implies Y
   border-bottom-color: #D3D3D3;
 }
 
-#zrthrmtrao .gt_footnotes {
+#uitofjkqhk .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -669,7 +670,7 @@ X \implies Y
   border-right-color: #D3D3D3;
 }
 
-#zrthrmtrao .gt_footnote {
+#uitofjkqhk .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -678,7 +679,7 @@ X \implies Y
   padding-right: 5px;
 }
 
-#zrthrmtrao .gt_sourcenotes {
+#uitofjkqhk .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -692,7 +693,7 @@ X \implies Y
   border-right-color: #D3D3D3;
 }
 
-#zrthrmtrao .gt_sourcenote {
+#uitofjkqhk .gt_sourcenote {
   font-size: 12px;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -700,72 +701,72 @@ X \implies Y
   padding-right: 5px;
 }
 
-#zrthrmtrao .gt_left {
+#uitofjkqhk .gt_left {
   text-align: left;
 }
 
-#zrthrmtrao .gt_center {
+#uitofjkqhk .gt_center {
   text-align: center;
 }
 
-#zrthrmtrao .gt_right {
+#uitofjkqhk .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#zrthrmtrao .gt_font_normal {
+#uitofjkqhk .gt_font_normal {
   font-weight: normal;
 }
 
-#zrthrmtrao .gt_font_bold {
+#uitofjkqhk .gt_font_bold {
   font-weight: bold;
 }
 
-#zrthrmtrao .gt_font_italic {
+#uitofjkqhk .gt_font_italic {
   font-style: italic;
 }
 
-#zrthrmtrao .gt_super {
+#uitofjkqhk .gt_super {
   font-size: 65%;
 }
 
-#zrthrmtrao .gt_footnote_marks {
+#uitofjkqhk .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#zrthrmtrao .gt_asterisk {
+#uitofjkqhk .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#zrthrmtrao .gt_indent_1 {
+#uitofjkqhk .gt_indent_1 {
   text-indent: 5px;
 }
 
-#zrthrmtrao .gt_indent_2 {
+#uitofjkqhk .gt_indent_2 {
   text-indent: 10px;
 }
 
-#zrthrmtrao .gt_indent_3 {
+#uitofjkqhk .gt_indent_3 {
   text-indent: 15px;
 }
 
-#zrthrmtrao .gt_indent_4 {
+#uitofjkqhk .gt_indent_4 {
   text-indent: 20px;
 }
 
-#zrthrmtrao .gt_indent_5 {
+#uitofjkqhk .gt_indent_5 {
   text-indent: 25px;
 }
 
-#zrthrmtrao .katex-display {
+#uitofjkqhk .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#zrthrmtrao div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#uitofjkqhk div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -821,23 +822,23 @@ Resultados de Salud
 <p>El motivo de que no la haya se puede sintetizar en el siguiente concepto: <strong>sesgo de selección</strong>. En primer lugar, si miramos las características de cada grupo (quienes asisten o no al hospital), que son pre-existentes a ir o no al hospital y a declarar un buen o mal estado de salud, probablemente van a ser muy diferentes. Por ejemplo, aún no hemos visto si tienen diferencias de edad, el contexto socioeconómico, indicadores de salud <em>previos</em> a la atención, etc. Sin observar todo eso, es dificil afirmar que <em>ir</em> al hospital empeora la salud. En segundo lugar, algo que probablemente se considere de sentido común, es que probablemente las personas asisten al hospital lo hacen justamente porque tienen problemas de salud. En cambio, probablemente no tienen problemas de salud, y por eso no van a un hospital. Es decir, <strong>las personas que se atienden en un hospital son distintas a aquellas que eligen no hacerlo, pues <em>se autoseleccionan</em> en nuestro <em>tratamiento</em></strong>. A todo esto, le llamamos un problema de <strong>sesgo de selección</strong>. Por cierto, la evidencia de <a href="https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf">Angrist y Pischke (2008)</a> también se puede observar para Chile si vemos los datos de la Casen 2015<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>:</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="mruqkzxiio" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#mruqkzxiio table {
+<div id="bwnkndefxh" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#bwnkndefxh table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#mruqkzxiio thead, #mruqkzxiio tbody, #mruqkzxiio tfoot, #mruqkzxiio tr, #mruqkzxiio td, #mruqkzxiio th {
+#bwnkndefxh thead, #bwnkndefxh tbody, #bwnkndefxh tfoot, #bwnkndefxh tr, #bwnkndefxh td, #bwnkndefxh th {
   border-style: none;
 }
 
-#mruqkzxiio p {
+#bwnkndefxh p {
   margin: 0;
   padding: 0;
 }
 
-#mruqkzxiio .gt_table {
+#bwnkndefxh .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -863,12 +864,12 @@ Resultados de Salud
   border-left-color: #D3D3D3;
 }
 
-#mruqkzxiio .gt_caption {
+#bwnkndefxh .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#mruqkzxiio .gt_title {
+#bwnkndefxh .gt_title {
   color: #FFFFFF;
   font-size: 125%;
   font-weight: initial;
@@ -880,7 +881,7 @@ Resultados de Salud
   border-bottom-width: 0;
 }
 
-#mruqkzxiio .gt_subtitle {
+#bwnkndefxh .gt_subtitle {
   color: #FFFFFF;
   font-size: 85%;
   font-weight: initial;
@@ -892,7 +893,7 @@ Resultados de Salud
   border-top-width: 0;
 }
 
-#mruqkzxiio .gt_heading {
+#bwnkndefxh .gt_heading {
   background-color: #69000C;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -904,13 +905,13 @@ Resultados de Salud
   border-right-color: #D3D3D3;
 }
 
-#mruqkzxiio .gt_bottom_border {
+#bwnkndefxh .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#mruqkzxiio .gt_col_headings {
+#bwnkndefxh .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -925,7 +926,7 @@ Resultados de Salud
   border-right-color: #D3D3D3;
 }
 
-#mruqkzxiio .gt_col_heading {
+#bwnkndefxh .gt_col_heading {
   color: #FFFFFF;
   background-color: #69000C;
   font-size: 100%;
@@ -945,7 +946,7 @@ Resultados de Salud
   overflow-x: hidden;
 }
 
-#mruqkzxiio .gt_column_spanner_outer {
+#bwnkndefxh .gt_column_spanner_outer {
   color: #FFFFFF;
   background-color: #69000C;
   font-size: 100%;
@@ -957,15 +958,15 @@ Resultados de Salud
   padding-right: 4px;
 }
 
-#mruqkzxiio .gt_column_spanner_outer:first-child {
+#bwnkndefxh .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#mruqkzxiio .gt_column_spanner_outer:last-child {
+#bwnkndefxh .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#mruqkzxiio .gt_column_spanner {
+#bwnkndefxh .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -977,11 +978,11 @@ Resultados de Salud
   width: 100%;
 }
 
-#mruqkzxiio .gt_spanner_row {
+#bwnkndefxh .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#mruqkzxiio .gt_group_heading {
+#bwnkndefxh .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1007,7 +1008,7 @@ Resultados de Salud
   text-align: left;
 }
 
-#mruqkzxiio .gt_empty_group_heading {
+#bwnkndefxh .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1022,15 +1023,15 @@ Resultados de Salud
   vertical-align: middle;
 }
 
-#mruqkzxiio .gt_from_md > :first-child {
+#bwnkndefxh .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#mruqkzxiio .gt_from_md > :last-child {
+#bwnkndefxh .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#mruqkzxiio .gt_row {
+#bwnkndefxh .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1049,7 +1050,7 @@ Resultados de Salud
   overflow-x: hidden;
 }
 
-#mruqkzxiio .gt_stub {
+#bwnkndefxh .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1062,7 +1063,7 @@ Resultados de Salud
   padding-right: 5px;
 }
 
-#mruqkzxiio .gt_stub_row_group {
+#bwnkndefxh .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1076,15 +1077,15 @@ Resultados de Salud
   vertical-align: top;
 }
 
-#mruqkzxiio .gt_row_group_first td {
+#bwnkndefxh .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#mruqkzxiio .gt_row_group_first th {
+#bwnkndefxh .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#mruqkzxiio .gt_summary_row {
+#bwnkndefxh .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1094,16 +1095,16 @@ Resultados de Salud
   padding-right: 5px;
 }
 
-#mruqkzxiio .gt_first_summary_row {
+#bwnkndefxh .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#mruqkzxiio .gt_first_summary_row.thick {
+#bwnkndefxh .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#mruqkzxiio .gt_last_summary_row {
+#bwnkndefxh .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1113,7 +1114,7 @@ Resultados de Salud
   border-bottom-color: #D3D3D3;
 }
 
-#mruqkzxiio .gt_grand_summary_row {
+#bwnkndefxh .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1123,7 +1124,7 @@ Resultados de Salud
   padding-right: 5px;
 }
 
-#mruqkzxiio .gt_first_grand_summary_row {
+#bwnkndefxh .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1133,7 +1134,7 @@ Resultados de Salud
   border-top-color: #D3D3D3;
 }
 
-#mruqkzxiio .gt_last_grand_summary_row_top {
+#bwnkndefxh .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1143,11 +1144,11 @@ Resultados de Salud
   border-bottom-color: #D3D3D3;
 }
 
-#mruqkzxiio .gt_striped {
+#bwnkndefxh .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#mruqkzxiio .gt_table_body {
+#bwnkndefxh .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1156,7 +1157,7 @@ Resultados de Salud
   border-bottom-color: #D3D3D3;
 }
 
-#mruqkzxiio .gt_footnotes {
+#bwnkndefxh .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1170,7 +1171,7 @@ Resultados de Salud
   border-right-color: #D3D3D3;
 }
 
-#mruqkzxiio .gt_footnote {
+#bwnkndefxh .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1179,7 +1180,7 @@ Resultados de Salud
   padding-right: 5px;
 }
 
-#mruqkzxiio .gt_sourcenotes {
+#bwnkndefxh .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1193,7 +1194,7 @@ Resultados de Salud
   border-right-color: #D3D3D3;
 }
 
-#mruqkzxiio .gt_sourcenote {
+#bwnkndefxh .gt_sourcenote {
   font-size: 12px;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1201,72 +1202,72 @@ Resultados de Salud
   padding-right: 5px;
 }
 
-#mruqkzxiio .gt_left {
+#bwnkndefxh .gt_left {
   text-align: left;
 }
 
-#mruqkzxiio .gt_center {
+#bwnkndefxh .gt_center {
   text-align: center;
 }
 
-#mruqkzxiio .gt_right {
+#bwnkndefxh .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#mruqkzxiio .gt_font_normal {
+#bwnkndefxh .gt_font_normal {
   font-weight: normal;
 }
 
-#mruqkzxiio .gt_font_bold {
+#bwnkndefxh .gt_font_bold {
   font-weight: bold;
 }
 
-#mruqkzxiio .gt_font_italic {
+#bwnkndefxh .gt_font_italic {
   font-style: italic;
 }
 
-#mruqkzxiio .gt_super {
+#bwnkndefxh .gt_super {
   font-size: 65%;
 }
 
-#mruqkzxiio .gt_footnote_marks {
+#bwnkndefxh .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#mruqkzxiio .gt_asterisk {
+#bwnkndefxh .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#mruqkzxiio .gt_indent_1 {
+#bwnkndefxh .gt_indent_1 {
   text-indent: 5px;
 }
 
-#mruqkzxiio .gt_indent_2 {
+#bwnkndefxh .gt_indent_2 {
   text-indent: 10px;
 }
 
-#mruqkzxiio .gt_indent_3 {
+#bwnkndefxh .gt_indent_3 {
   text-indent: 15px;
 }
 
-#mruqkzxiio .gt_indent_4 {
+#bwnkndefxh .gt_indent_4 {
   text-indent: 20px;
 }
 
-#mruqkzxiio .gt_indent_5 {
+#bwnkndefxh .gt_indent_5 {
   text-indent: 25px;
 }
 
-#mruqkzxiio .katex-display {
+#bwnkndefxh .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#mruqkzxiio div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#bwnkndefxh div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1485,19 +1486,45 @@ E[y_i \mid D_i = 1] &amp;= E[y_{1i} \mid D_i = 1] \\
 \]</span> Con ello, podemos observar que el <strong>sesgo</strong> proviene del hecho de que aquellos que buscan tratamiento (<span class="math inline">\(D_i=1\)</span>), tienen características diferentes. Por otro lado, nos encontramos con el <strong>ATT</strong>. El <strong><em>Average treatment effect on the treated</em></strong> (ATT) es el <em>efecto promedio</em> del tratamiento para los individuos tratados. Si los efectos son heterogéneos en la población, este es un afecto causal diferente al efecto promedio en la población (ATE). Luego lo veremos. Pero ahora, pasemos al segundo bloque para seguir profundizando.</p>
 </section>
 </section>
-<section id="bloque-2-experimentos-aleatorios-rct" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Bloque 2: Experimentos Aleatorios (RCT)</h1>
+<section id="bloque-2-experimentos" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Bloque 2: Experimentos</h1>
+<section id="experimentos-y-causalidad" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="experimentos-y-causalidad"><span class="header-section-number">2.1</span> Experimentos y causalidad</h2>
+<p>Con datos observacionales, la identificación del efecto causal es complejo, aunque no imposible. Pero conviene partir cómo se captura esto con datos experimentales. Nuevamente, esto es para seguir con el concepto de <strong>ideal experimental</strong>: lo ideal será ahcer un un experimento donde solo modificamos <span class="math inline">\(X\)</span>, dejando todo lo demás constante (<em>ceteris paribus</em>), para obser el efecto de la variación de <span class="math inline">\(X\)</span> <em>en</em> <span class="math inline">\(Y\)</span>. Para algunos tipos de preguntas, pues, podemos hacer experimentos con <strong>grupos de control aleatorio</strong>: <strong>RCT</strong>, por sus cifras en inglés: <em>Randomized Control Trials</em>.</p>
+<p><strong>Randomized Control Trials</strong> (RCT’s): la idea de los RCT’s proviene de la medicina, por ejemplo, tomando los tipos de investigaciones para medir la efectividad de un nuevo fármaco o vacuna. En este tipo de experimentos, se elige un grupo de pacientes aquejados por la enfermedad que el nuevo fármaco pretende curar. Entonces, se podría realizar lo siguiente:</p>
+<ul>
+<li>Se asigna al azar a cada paciente a uno de tres grupos:
+<ul>
+<li>el fármaco nuevo</li>
+<li>el fármaco en uso</li>
+<li>un placebo (sin contenido medicinal (y sin informar cuál es cuál))</li>
+</ul></li>
+<li>Se compara la respuesta promedio de los tres grupos al tratamiento</li>
+</ul>
+<p>Entonces, tenemos que los pacientes no saben en qué grupo están, e idealmente los que administran los fármacos idealmente tampoco deberian saber a qué grupo pertenece cada paciente. Con ello, se podría formar un caso típico de RCT. Y, en el caso de que la respuesta de los tratados con el nuevo fármaco es significativamente mejor que la de los restantes grupos, se podría concluir que el nuevo fármaco es efectivamente mejor que el anterior.</p>
+<p>En economía también se han realizado RCT’s. Entre algunos de ellos:</p>
+<ul>
+<li>National Supported Work Demonstration, 1975-1979</li>
+<li>Negative Income Tax Experiments, 1968-1979</li>
+<li>RAND Health Insurance Experiment, 1971-1986</li>
+<li>Moving to Opportunity, 1994-2010</li>
+<li>Tennessee STAR Experiment, 1985-1998</li>
+<li>Perry Preschool Program, 1960s</li>
+<li>Progresa/Oportunidades en Mexico, 1997-1999</li>
+<li>También hay muchos ejemplos en economía del desarrollo (<a href="https://www.youtube.com/watch?v=0zvrGiPkVcs">Esther Duflo: Experimentos sociales para luchar contra la pobreza</a>)</li>
+</ul>
 <p>La <strong>aleatorización</strong> garantiza que el tratamiento <span class="math inline">\(D_i\)</span> sea independiente de los resultados potenciales (<span class="math inline">\(Y_{1i}, Y_{0i}\)</span>).</p>
 <p>Esto implica que: <span class="math display">\[ E[Y_{0i} | D_i=1] = E[Y_{0i} | D_i=0] \]</span> ¡El sesgo de selección desaparece! Por tanto, la diferencia simple de medias recupera el efecto causal verdadero (ATE).</p>
-<section id="caso-de-estudio-proyecto-star-tennessee" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="caso-de-estudio-proyecto-star-tennessee"><span class="header-section-number">2.1</span> Caso de Estudio: Proyecto STAR (Tennessee)</h2>
+</section>
+<section id="caso-de-estudio-proyecto-star-tennessee" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="caso-de-estudio-proyecto-star-tennessee"><span class="header-section-number">2.2</span> Caso de Estudio: Proyecto STAR (Tennessee)</h2>
 <p>Experimento de los 80s para ver el efecto del tamaño de la clase en el rendimiento escolar.</p>
 <ul>
 <li>Tratamiento: Clases pequeñas (13-17 alumnos).</li>
 <li>Control: Clases regulares (22-25 alumnos).</li>
 </ul>
-<section id="test-de-balance" class="level3" data-number="2.1.1">
-<h3 data-number="2.1.1" class="anchored" data-anchor-id="test-de-balance"><span class="header-section-number">2.1.1</span> 1. Test de Balance</h3>
+<section id="test-de-balance" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="test-de-balance"><span class="header-section-number">2.2.1</span> 1. Test de Balance</h3>
 <p>Antes de estimar efectos, debemos verificar que la aleatorización funcionó. Las características pre-tratamiento deben ser iguales entre grupos.</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -2357,75 +2384,104 @@ E[y_i \mid D_i = 1] &amp;= E[y_{1i} \mid D_i = 1] \\
 <span id="cb1-332"><a href="#cb1-332" aria-hidden="true" tabindex="-1"></a>Con ello, podemos observar que el **sesgo** proviene del hecho de que aquellos que buscan tratamiento ($D_i=1$), tienen características diferentes. Por otro lado, nos encontramos con el **ATT**. El **_Average treatment effect on the treated_** (ATT) es el *efecto promedio* del tratamiento para los individuos tratados. Si los efectos son heterogéneos en la población, este es un afecto causal diferente al efecto promedio en la población (ATE). Luego lo veremos. Pero ahora, pasemos al segundo bloque para seguir profundizando. </span>
 <span id="cb1-333"><a href="#cb1-333" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-334"><a href="#cb1-334" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-335"><a href="#cb1-335" aria-hidden="true" tabindex="-1"></a><span class="fu"># Bloque 2: Experimentos Aleatorios (RCT)</span></span>
+<span id="cb1-335"><a href="#cb1-335" aria-hidden="true" tabindex="-1"></a><span class="fu"># Bloque 2: Experimentos </span></span>
 <span id="cb1-336"><a href="#cb1-336" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-337"><a href="#cb1-337" aria-hidden="true" tabindex="-1"></a>La **aleatorización** garantiza que el tratamiento $D_i$ sea independiente de los resultados potenciales ($Y_{1i}, Y_{0i}$).</span>
+<span id="cb1-337"><a href="#cb1-337" aria-hidden="true" tabindex="-1"></a><span class="fu">## Experimentos y causalidad </span></span>
 <span id="cb1-338"><a href="#cb1-338" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-339"><a href="#cb1-339" aria-hidden="true" tabindex="-1"></a>Esto implica que:</span>
-<span id="cb1-340"><a href="#cb1-340" aria-hidden="true" tabindex="-1"></a>$$ E<span class="co">[</span><span class="ot">Y_{0i} | D_i=1</span><span class="co">]</span> = E<span class="co">[</span><span class="ot">Y_{0i} | D_i=0</span><span class="co">]</span> $$</span>
-<span id="cb1-341"><a href="#cb1-341" aria-hidden="true" tabindex="-1"></a>¡El sesgo de selección desaparece<span class="sc">\!</span> Por tanto, la diferencia simple de medias recupera el efecto causal verdadero (ATE).</span>
+<span id="cb1-339"><a href="#cb1-339" aria-hidden="true" tabindex="-1"></a>Con datos observacionales, la identificación del efecto causal es complejo, aunque no imposible. Pero conviene partir cómo se captura esto con datos experimentales. Nuevamente, esto es para seguir con el concepto de **ideal experimental**: lo ideal será ahcer un un experimento donde solo modificamos $X$, dejando todo lo demás constante (*ceteris paribus*), para obser el efecto de la variación de $X$ *en* $Y$. Para algunos tipos de preguntas, pues, podemos hacer experimentos con **grupos de control aleatorio**: **RCT**, por sus cifras en inglés: *Randomized Control Trials*. </span>
+<span id="cb1-340"><a href="#cb1-340" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-341"><a href="#cb1-341" aria-hidden="true" tabindex="-1"></a>**Randomized Control Trials** (RCT's): la idea de los RCT's proviene de la medicina, por ejemplo, tomando los tipos de investigaciones para medir la efectividad de un nuevo fármaco o vacuna. En este tipo de experimentos, se elige un grupo de pacientes aquejados por la enfermedad que el nuevo fármaco pretende curar. Entonces, se podría realizar lo siguiente:</span>
 <span id="cb1-342"><a href="#cb1-342" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-343"><a href="#cb1-343" aria-hidden="true" tabindex="-1"></a><span class="fu">## Caso de Estudio: Proyecto STAR (Tennessee)</span></span>
-<span id="cb1-344"><a href="#cb1-344" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-345"><a href="#cb1-345" aria-hidden="true" tabindex="-1"></a>Experimento de los 80s para ver el efecto del tamaño de la clase en el rendimiento escolar.</span>
-<span id="cb1-346"><a href="#cb1-346" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-347"><a href="#cb1-347" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Tratamiento: Clases pequeñas (13-17 alumnos).</span>
-<span id="cb1-348"><a href="#cb1-348" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Control: Clases regulares (22-25 alumnos).</span>
-<span id="cb1-349"><a href="#cb1-349" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-350"><a href="#cb1-350" aria-hidden="true" tabindex="-1"></a><span class="fu">### 1\. Test de Balance</span></span>
+<span id="cb1-343"><a href="#cb1-343" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Se asigna al azar a cada paciente a uno de tres grupos:</span>
+<span id="cb1-344"><a href="#cb1-344" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>el fármaco nuevo</span>
+<span id="cb1-345"><a href="#cb1-345" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>el fármaco en uso</span>
+<span id="cb1-346"><a href="#cb1-346" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>un placebo (sin contenido medicinal (y sin informar cuál es cuál))</span>
+<span id="cb1-347"><a href="#cb1-347" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-348"><a href="#cb1-348" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Se compara la respuesta promedio de los tres grupos al tratamiento  </span>
+<span id="cb1-349"><a href="#cb1-349" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-350"><a href="#cb1-350" aria-hidden="true" tabindex="-1"></a>Entonces, tenemos que los pacientes no saben en qué grupo están, e idealmente los que administran los fármacos idealmente tampoco deberian saber a qué grupo pertenece cada paciente. Con ello, se podría formar un caso típico de RCT. Y, en el caso de que la respuesta de los tratados con el nuevo fármaco es significativamente mejor que la de los restantes grupos, se podría concluir que el nuevo fármaco es efectivamente mejor que el anterior. </span>
 <span id="cb1-351"><a href="#cb1-351" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-352"><a href="#cb1-352" aria-hidden="true" tabindex="-1"></a>Antes de estimar efectos, debemos verificar que la aleatorización funcionó. Las características pre-tratamiento deben ser iguales entre grupos.</span>
+<span id="cb1-352"><a href="#cb1-352" aria-hidden="true" tabindex="-1"></a>En economía también se han realizado RCT's. Entre algunos de ellos: </span>
 <span id="cb1-353"><a href="#cb1-353" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-354"><a href="#cb1-354" aria-hidden="true" tabindex="-1"></a><span class="in">```{r img-star-balance}</span></span>
-<span id="cb1-355"><a href="#cb1-355" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb1-356"><a href="#cb1-356" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Tabla de Balance Proyecto STAR"</span></span>
-<span id="cb1-357"><a href="#cb1-357" aria-hidden="true" tabindex="-1"></a><span class="co">#| out-width: "80%"</span></span>
-<span id="cb1-358"><a href="#cb1-358" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-359"><a href="#cb1-359" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"images/star_balance.png"</span>, <span class="at">error =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb1-360"><a href="#cb1-360" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb1-361"><a href="#cb1-361" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-362"><a href="#cb1-362" aria-hidden="true" tabindex="-1"></a>*Nota: El p-valor conjunto no significativo indica que la aleatorización fue exitosa.*</span>
+<span id="cb1-354"><a href="#cb1-354" aria-hidden="true" tabindex="-1"></a><span class="ss">  -  </span>National Supported Work Demonstration, 1975-1979</span>
+<span id="cb1-355"><a href="#cb1-355" aria-hidden="true" tabindex="-1"></a><span class="ss">  -  </span>Negative Income Tax Experiments, 1968-1979</span>
+<span id="cb1-356"><a href="#cb1-356" aria-hidden="true" tabindex="-1"></a><span class="ss">  -  </span>RAND Health Insurance Experiment, 1971-1986</span>
+<span id="cb1-357"><a href="#cb1-357" aria-hidden="true" tabindex="-1"></a><span class="ss">  -  </span>Moving to Opportunity, 1994-2010</span>
+<span id="cb1-358"><a href="#cb1-358" aria-hidden="true" tabindex="-1"></a><span class="ss">  -  </span>Tennessee STAR Experiment, 1985-1998</span>
+<span id="cb1-359"><a href="#cb1-359" aria-hidden="true" tabindex="-1"></a><span class="ss">  -  </span>Perry Preschool Program, 1960s</span>
+<span id="cb1-360"><a href="#cb1-360" aria-hidden="true" tabindex="-1"></a><span class="ss">  -  </span>Progresa/Oportunidades en Mexico, 1997-1999 </span>
+<span id="cb1-361"><a href="#cb1-361" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>También hay muchos ejemplos en economía del desarrollo (<span class="co">[</span><span class="ot">Esther Duflo: Experimentos sociales para luchar contra la pobreza</span><span class="co">](https://www.youtube.com/watch?v=0zvrGiPkVcs)</span>)</span>
+<span id="cb1-362"><a href="#cb1-362" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb1-363"><a href="#cb1-363" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-364"><a href="#cb1-364" aria-hidden="true" tabindex="-1"></a><span class="fu"># Bloque 3: Regresión e Inferencia</span></span>
+<span id="cb1-364"><a href="#cb1-364" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-365"><a href="#cb1-365" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-366"><a href="#cb1-366" aria-hidden="true" tabindex="-1"></a><span class="fu">## Estimación por MCO</span></span>
+<span id="cb1-366"><a href="#cb1-366" aria-hidden="true" tabindex="-1"></a>La **aleatorización** garantiza que el tratamiento $D_i$ sea independiente de los resultados potenciales ($Y_{1i}, Y_{0i}$).</span>
 <span id="cb1-367"><a href="#cb1-367" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-368"><a href="#cb1-368" aria-hidden="true" tabindex="-1"></a>En un RCT ideal, podemos estimar el efecto ($\rho$) con una regresión simple:</span>
-<span id="cb1-369"><a href="#cb1-369" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-370"><a href="#cb1-370" aria-hidden="true" tabindex="-1"></a>$$ Y_i = \alpha + \rho D_i + \eta_i $$</span>
+<span id="cb1-368"><a href="#cb1-368" aria-hidden="true" tabindex="-1"></a>Esto implica que:</span>
+<span id="cb1-369"><a href="#cb1-369" aria-hidden="true" tabindex="-1"></a>$$ E<span class="co">[</span><span class="ot">Y_{0i} | D_i=1</span><span class="co">]</span> = E<span class="co">[</span><span class="ot">Y_{0i} | D_i=0</span><span class="co">]</span> $$</span>
+<span id="cb1-370"><a href="#cb1-370" aria-hidden="true" tabindex="-1"></a>¡El sesgo de selección desaparece<span class="sc">\!</span> Por tanto, la diferencia simple de medias recupera el efecto causal verdadero (ATE).</span>
 <span id="cb1-371"><a href="#cb1-371" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-372"><a href="#cb1-372" aria-hidden="true" tabindex="-1"></a><span class="fu">### ¿Por qué añadir controles ($X_i$)?</span></span>
+<span id="cb1-372"><a href="#cb1-372" aria-hidden="true" tabindex="-1"></a><span class="fu">## Caso de Estudio: Proyecto STAR (Tennessee)</span></span>
 <span id="cb1-373"><a href="#cb1-373" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-374"><a href="#cb1-374" aria-hidden="true" tabindex="-1"></a>Aunque no son necesarios para evitar sesgo (dada la aleatorización), incluirlos sirve para:</span>
+<span id="cb1-374"><a href="#cb1-374" aria-hidden="true" tabindex="-1"></a>Experimento de los 80s para ver el efecto del tamaño de la clase en el rendimiento escolar.</span>
 <span id="cb1-375"><a href="#cb1-375" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-376"><a href="#cb1-376" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>**Reducir la varianza** del error y ganar precisión (errores estándar más pequeños).</span>
-<span id="cb1-377"><a href="#cb1-377" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>Controlar por el diseño si la aleatorización fue condicional (ej. estratificada por escuela).</span>
+<span id="cb1-376"><a href="#cb1-376" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Tratamiento: Clases pequeñas (13-17 alumnos).</span>
+<span id="cb1-377"><a href="#cb1-377" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Control: Clases regulares (22-25 alumnos).</span>
 <span id="cb1-378"><a href="#cb1-378" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-379"><a href="#cb1-379" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-380"><a href="#cb1-380" aria-hidden="true" tabindex="-1"></a><span class="in">```{r img-star-results}</span></span>
-<span id="cb1-381"><a href="#cb1-381" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb1-382"><a href="#cb1-382" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Resultados de Regresión Proyecto STAR"</span></span>
-<span id="cb1-383"><a href="#cb1-383" aria-hidden="true" tabindex="-1"></a><span class="co">#| out-width: "80%"</span></span>
-<span id="cb1-384"><a href="#cb1-384" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-385"><a href="#cb1-385" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"images/star_results.png"</span>, <span class="at">error =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb1-386"><a href="#cb1-386" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-379"><a href="#cb1-379" aria-hidden="true" tabindex="-1"></a><span class="fu">### 1\. Test de Balance</span></span>
+<span id="cb1-380"><a href="#cb1-380" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-381"><a href="#cb1-381" aria-hidden="true" tabindex="-1"></a>Antes de estimar efectos, debemos verificar que la aleatorización funcionó. Las características pre-tratamiento deben ser iguales entre grupos.</span>
+<span id="cb1-382"><a href="#cb1-382" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-383"><a href="#cb1-383" aria-hidden="true" tabindex="-1"></a><span class="in">```{r img-star-balance}</span></span>
+<span id="cb1-384"><a href="#cb1-384" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb1-385"><a href="#cb1-385" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Tabla de Balance Proyecto STAR"</span></span>
+<span id="cb1-386"><a href="#cb1-386" aria-hidden="true" tabindex="-1"></a><span class="co">#| out-width: "80%"</span></span>
 <span id="cb1-387"><a href="#cb1-387" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-388"><a href="#cb1-388" aria-hidden="true" tabindex="-1"></a><span class="fu">## SUTVA (Stable Unit Treatment Value Assumption)</span></span>
-<span id="cb1-389"><a href="#cb1-389" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-390"><a href="#cb1-390" aria-hidden="true" tabindex="-1"></a>Asumimos que no hay interferencia entre unidades: el tratamiento de $i$ no afecta a $j$.</span>
-<span id="cb1-391"><a href="#cb1-391" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-392"><a href="#cb1-392" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>*Violaciones*: Efectos pares (spillovers), efectos de equilibrio general.</span>
-<span id="cb1-393"><a href="#cb1-393" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-394"><a href="#cb1-394" aria-hidden="true" tabindex="-1"></a><span class="fu">## Pruebas de Hipótesis</span></span>
-<span id="cb1-395"><a href="#cb1-395" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-396"><a href="#cb1-396" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>**Muestras grandes**: Test-t asintótico estándar.</span>
-<span id="cb1-397"><a href="#cb1-397" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>**Muestras pequeñas**: Test Exacto de Fisher (permutaciones).</span>
+<span id="cb1-388"><a href="#cb1-388" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"images/star_balance.png"</span>, <span class="at">error =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-389"><a href="#cb1-389" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-390"><a href="#cb1-390" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-391"><a href="#cb1-391" aria-hidden="true" tabindex="-1"></a>*Nota: El p-valor conjunto no significativo indica que la aleatorización fue exitosa.*</span>
+<span id="cb1-392"><a href="#cb1-392" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-393"><a href="#cb1-393" aria-hidden="true" tabindex="-1"></a><span class="fu"># Bloque 3: Regresión e Inferencia</span></span>
+<span id="cb1-394"><a href="#cb1-394" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-395"><a href="#cb1-395" aria-hidden="true" tabindex="-1"></a><span class="fu">## Estimación por MCO</span></span>
+<span id="cb1-396"><a href="#cb1-396" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-397"><a href="#cb1-397" aria-hidden="true" tabindex="-1"></a>En un RCT ideal, podemos estimar el efecto ($\rho$) con una regresión simple:</span>
 <span id="cb1-398"><a href="#cb1-398" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-399"><a href="#cb1-399" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-400"><a href="#cb1-400" aria-hidden="true" tabindex="-1"></a><span class="fu"># Referencias</span></span>
-<span id="cb1-401"><a href="#cb1-401" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-402"><a href="#cb1-402" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Angrist &amp; Pischke (2009). *Mostly Harmless Econometrics*, Cap. 2.</span>
-<span id="cb1-403"><a href="#cb1-403" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Material del curso "Econometría Aplicada I", FEN U. Chile (2025).</span></code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+<span id="cb1-399"><a href="#cb1-399" aria-hidden="true" tabindex="-1"></a>$$ Y_i = \alpha + \rho D_i + \eta_i $$</span>
+<span id="cb1-400"><a href="#cb1-400" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-401"><a href="#cb1-401" aria-hidden="true" tabindex="-1"></a><span class="fu">### ¿Por qué añadir controles ($X_i$)?</span></span>
+<span id="cb1-402"><a href="#cb1-402" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-403"><a href="#cb1-403" aria-hidden="true" tabindex="-1"></a>Aunque no son necesarios para evitar sesgo (dada la aleatorización), incluirlos sirve para:</span>
+<span id="cb1-404"><a href="#cb1-404" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-405"><a href="#cb1-405" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>**Reducir la varianza** del error y ganar precisión (errores estándar más pequeños).</span>
+<span id="cb1-406"><a href="#cb1-406" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>Controlar por el diseño si la aleatorización fue condicional (ej. estratificada por escuela).</span>
+<span id="cb1-407"><a href="#cb1-407" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-408"><a href="#cb1-408" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-409"><a href="#cb1-409" aria-hidden="true" tabindex="-1"></a><span class="in">```{r img-star-results}</span></span>
+<span id="cb1-410"><a href="#cb1-410" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb1-411"><a href="#cb1-411" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Resultados de Regresión Proyecto STAR"</span></span>
+<span id="cb1-412"><a href="#cb1-412" aria-hidden="true" tabindex="-1"></a><span class="co">#| out-width: "80%"</span></span>
+<span id="cb1-413"><a href="#cb1-413" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-414"><a href="#cb1-414" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"images/star_results.png"</span>, <span class="at">error =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-415"><a href="#cb1-415" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-416"><a href="#cb1-416" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-417"><a href="#cb1-417" aria-hidden="true" tabindex="-1"></a><span class="fu">## SUTVA (Stable Unit Treatment Value Assumption)</span></span>
+<span id="cb1-418"><a href="#cb1-418" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-419"><a href="#cb1-419" aria-hidden="true" tabindex="-1"></a>Asumimos que no hay interferencia entre unidades: el tratamiento de $i$ no afecta a $j$.</span>
+<span id="cb1-420"><a href="#cb1-420" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-421"><a href="#cb1-421" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>*Violaciones*: Efectos pares (spillovers), efectos de equilibrio general.</span>
+<span id="cb1-422"><a href="#cb1-422" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-423"><a href="#cb1-423" aria-hidden="true" tabindex="-1"></a><span class="fu">## Pruebas de Hipótesis</span></span>
+<span id="cb1-424"><a href="#cb1-424" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-425"><a href="#cb1-425" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>**Muestras grandes**: Test-t asintótico estándar.</span>
+<span id="cb1-426"><a href="#cb1-426" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>**Muestras pequeñas**: Test Exacto de Fisher (permutaciones).</span>
+<span id="cb1-427"><a href="#cb1-427" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-428"><a href="#cb1-428" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-429"><a href="#cb1-429" aria-hidden="true" tabindex="-1"></a><span class="fu"># Referencias</span></span>
+<span id="cb1-430"><a href="#cb1-430" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-431"><a href="#cb1-431" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Angrist &amp; Pischke (2009). *Mostly Harmless Econometrics*, Cap. 2.</span>
+<span id="cb1-432"><a href="#cb1-432" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Material del curso "Econometría Aplicada I", FEN U. Chile (2025).</span></code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 
