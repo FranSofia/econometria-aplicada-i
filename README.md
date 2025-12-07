@@ -2,11 +2,11 @@
 
 Sitio web del curso "Econometría aplicada I" del Magíster en Análisis Económico de la Universidad de Chile en su modalidad weekend.
 
-**Sitio web:** [https://fransofia.github.io/econometria-aplicada-i/](https://fransofia.github.io/econometria-aplicada-i/)
+**Sitio web:** <https://fransofia.github.io/econometria-aplicada-i/>
 
 ## Descripción
 
-Este repositorio y sitio web está enfocado a documentar los apuntes y trabajos que realizo como estudiante en el curso "Econometría aplicada I" del Magíster en Análisis Económico en su versión *weekend* (MAE wk) de la Universidad de Chile (UCH). 
+Este repositorio y sitio web está enfocado a documentar los apuntes y trabajos que realizo como estudiante en el curso "Econometría aplicada I" del Magíster en Análisis Económico en su versión *weekend* (MAE wk) de la Universidad de Chile (UCH).
 
 ## Contenido
 
@@ -18,7 +18,7 @@ Este repositorio y sitio web está enfocado a documentar los apuntes y trabajos 
 
 ## Estructura del proyecto
 
-```
+```         
 econometria-aplicada-i/
 ├── _quarto.yml           # Configuración 
 ├── index.qmd             # Portada
@@ -38,22 +38,23 @@ econometria-aplicada-i/
 
 Este sitio está construido con:
 
-- [Quarto](https://quarto.org/) - Sistema de publicación científica y técnica
-- [R](https://www.r-project.org/) - Lenguaje de programación estadístico
-- [GitHub Pages](https://pages.github.com/) - Hosting gratuito
+-   [Quarto](https://quarto.org/) - Sistema de publicación científica y técnica
+-   [R](https://www.r-project.org/) - Lenguaje de programación estadístico
+-   [GitHub Pages](https://pages.github.com/) - Hosting gratuito
 
+2.  Abre el proyecto en RStudio
 
-2. Abre el proyecto en RStudio
+3.  Instala Quarto desde [quarto.org](https://quarto.org/docs/get-started/)
 
-3. Instala Quarto desde [quarto.org](https://quarto.org/docs/get-started/)
+4.  Previsualiza el sitio:
 
-4. Previsualiza el sitio:
-```bash
+``` bash
 quarto preview
 ```
 
-5. Renderiza el sitio completo:
-```bash
+5.  Renderiza el sitio completo:
+
+``` bash
 quarto render
 ```
 
@@ -63,12 +64,10 @@ Este material está bajo licencia [CC BY-SA 4.0](https://creativecommons.org/lic
 
 ## Contacto
 
-[Fran Sofía Núñez Rebolledo]  
-[fnunezre@fen.uchile.lc]  
-[Universidad de Chile e Instituto Nacional de Estadísticas]
+\[Fran Sofía Núñez Rebolledo\]\
+\[fnunezre\@fen.uchile.lc\]\
+\[Universidad de Chile e Instituto Nacional de Estadísticas\]
 
----
+------------------------------------------------------------------------
 
-**Semestre:** Primavera II: 2025-26  
-
-
+**Semestre:** Primavera II: 2025-26

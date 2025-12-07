@@ -24,19 +24,29 @@ pacman::p_load(tidyverse, kableExtra, knitr)
 
 # Introducción
 
-Esta sesión introduce el problema fundamental de la inferencia causal y establece el marco teórico de los **Resultados Potenciales (Rubin Causal Model)**. Se discute por qué la correlación no implica causalidad y cómo los experimentos aleatorios (RCT) resuelven el problema del sesgo de selección.
+Esta sesión introduce el problema fundamental de la inferencia causal y establece el marco teórico de los **Resultados Potenciales (Rubin Causal Model)**. Se discutiendo por qué la correlación no implica causalidad y cómo los experimentos aleatorios (RCT) resuelven el problema del sesgo de selección.
 
-# Bloque 1: Causalidad y Validez
+# Bloque 1: Causalidad y Validez del análisis empírico
+
+Hay muchas decisiones en economía, política, negocios, etc., que implican la comprensión correcta de la relación entre las variables implicadas. Por ejemplo, muchas veces vamos a querer testear hipótesis: ¿Existe la discriminación racial en la asignación de créditos hipotecarios? ¿En la decisión de usar la herramienta de la prisión preventiva? ¿Son iguales los salarios entre hombres y mujeres con el mismo nivel de educación y experiencia laboral? Por otro lado, también muchas veces vamos a querer cuantificar efectos (relación causal): ¿cuánto aumenta el desempeño académico de los estudiantes al reducir el tamaño de la clase? ¿Cuál es el efecto del aumento del salario mínimo en el desempleo?
+
+Todas estas respuestas requieren una respuesta numérica y una medida de precisión que acompañe dicha respuesta, para saber el grado de error conocido. No obstante, también requiere la comprensión correcta del *tipo* de relación que une a las variables, i.e., distinguir la naturaleza de la relación entre $X$ e $Y$. 
+
+En líneas generales, o al menos para este curso, nos va interesar la relaciones *causales* entre variables. Es decir, una relación que establezca la naturaleza del vínculo de nuestras variables tal que: 
+$$
+X \implies Y
+$$
+Para ello, es muy importante distinguir entre *relaciones causales* y *correlaciones*. Sobre todo, porque, **observacionalmente** las relaciones de correllación *pueden verse* iguales a las de causalidad. No obstante, **correlación no implica causalidad**
 
 ## Causalidad vs. Correlación
 
-Muchas decisiones requieren entender relaciones causales ($X \Rightarrow Y$), no solo correlaciones. Observacionalmente, ambas pueden verse iguales.
+Como ya vimos, muchas relaciones entre variables pueden confundirse, sobre todo las correlaciones con las relaciones causales. Una forma típica es lo que se conoce como **correlación espúrea**. El caracter espúreo de una correlación está dado por la alta asociación (o generalmente por la alta) entre variables y que, en virtud de ella, se interprete una relación de necesidad, o peor, de causalidad. 
 
 Un ejemplo clásico de correlación espuria:
 
 ::: {.callout-note appearance="simple"}
 **Ejemplo: Nicolas Cage y Ahogamientos**
-Existe una correlación del 66% entre las películas de Nicolas Cage y la gente que se ahoga en piscinas. Esto ilustra que $Corr(X,Y) \neq 0$ no implica causalidad.
+Existe una correlación del 66% entre las películas de Nicolas Cage y la gente que se ahoga en piscinas. No obstante, sabemos que Nicolás Cage y sus películas no causan que más personas se ahoguen. Esto ilustra que $Corr(X,Y) \neq 0$ no implica causalidad, por más fuerte que sea el grado de asociación.
 :::
 
 ```{r img-spurious}
@@ -46,6 +56,59 @@ Existe una correlación del 66% entre las películas de Nicolas Cage y la gente 
 
 knitr::include_graphics("images/spurious.png", error = FALSE)
 ```
+
+Confundir una correlación (y peor aún: una espúrea) con una relación causal, puede llevar a errores graves. Por ejemplo, en *Mostly Harmless Econometrics* ([Angrist y Pischke, 2008](https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf)) se muestra cómo hay una relación entre ir (o no) al hospital y el grado de "salud subjetiva"^[Esto se mide con la pregunta que realiza la Encuesta Nacinoal de Salud (NHIS): "Would you say your health in general is excellent, very good, good, fair, poor?" donde 1 es "excellent health" y 5 es "poor health"] reportado. Los datos son los siguientes: 
+
+```{r tablas-seleccion-usa}
+#| echo: false
+#| warning: false
+
+# --- TABLA 1: DATOS USA ---
+datos_usa <- data.frame(
+  Grupo = c("Hospital", "No Hospital"),
+  N = c("7,774", "90,049"),
+  Media_Salud = c(2.79, 2.07),
+  Error_Std = c(0.014, 0.003)
+)
+
+kbl(datos_usa, 
+    caption = "Tabla 1: Comparación de medias en EE.UU. (NHIS)",
+    col.names = c("Grupo", "N", 
+                  "Salud Promedio (1=Excelente, 5=Muy Mal)",
+                  "Error Est.")) |> 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = F) |> 
+  add_header_above(c(" " = 2, "Resultados de Salud" = 2)) |> 
+  footnote(general = "Fuente: Angrist & Pischke (2008). Diferencia de medias: 0.71 (t=58.9).")
+
+```
+
+Como se puede observar, la salud promedio de las personas que no asisten al hospital reportan que, en promedio, tienen un estado de salud mejor a los que asisten ($2{,}79 > 2{,}07$), pues el promedio de los que no asisten al hospital es más cercano al 1 ("Excelente salud") que los que sí asisten. Pero, ¿esto significa que *asistir al hospital* **_empeora_** *la salud*? Suena ridículo dicho así (o quizás no), pero lo cierto es que este tipo de relaciones se suelen establecer.  
+
+
+```{r tablas-seleccion-chile}
+#| echo: false
+#| warning: false
+
+
+# --- TABLA 2: DATOS CHILE ---
+datos_chile <- data.frame(
+  Grupo = c("Hospital", "No Hospital"),
+  N = c("4,849", "40,816"),
+  Media_Salud = c(4.23, 4.93),
+  Error_Std = c(0.022, 0.007)
+)
+
+kbl(datos_chile, 
+    caption = "Tabla 2: Evidencia similar para Chile (CASEN 2015)",
+    col.names = c("Grupo", "N", "Salud Promedio (1=Muy Mal, 7=Muy Bien)", 
+                  "Error Est.")) |>
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), 
+                full_width = F) |>
+  add_header_above(c(" " = 2, "Resultados de Salud" = 2)) |>
+  footnote(general = "Fuente: Elaboración propia con CASEN 2015. Diferencia de medias: 0.70 (t=33.1).")
+```
+
+
 
 ## El problema del Sesgo de Selección
 
