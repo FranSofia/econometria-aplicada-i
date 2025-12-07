@@ -19,10 +19,10 @@ editor: visual
 
 # Carga de librerías para manipulación y tablas
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(tidyverse, kableExtra, knitr)
+pacman::p_load(tidyverse, kableExtra, knitr, gt) 
 ```
 
-# Introducción [EN CONSTRUCCIÓN]
+# Introducción [EN CONSTRUCCIÓN] {-}
 
 Esta sesión introduce el problema fundamental de la inferencia causal y establece el marco teórico de los **Resultados Potenciales (Rubin Causal Model)**. Se parte discutiendo por qué la correlación no implica causalidad, sobre el sesgo de selección y cómo los experimentos aleatorios (RCT) resuelven el problema del sesgo de selección.
 
@@ -64,107 +64,273 @@ Confundir una correlación (y peor aún: una espúrea) con una relación causal,
 #| warning: false
 
 # --- TABLA 1: DATOS USA ---
-datos_usa <- data.frame(
+data.frame(
   Grupo = c("Hospital", "No Hospital"),
   N = c("7,774", "90,049"),
   Media_Salud = c(2.79, 2.07),
   Error_Std = c(0.014, 0.003)
-)
-
-kbl(datos_usa, 
-    caption = "Tabla 1: Comparación de medias en EE.UU. (NHIS)",
-    col.names = c("Grupo", "N", 
-                  "Salud Promedio (1=Excelente, 5=Muy Mal)",
-                  "Error Est.")) |> 
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = F) |> 
-  add_header_above(c(" " = 2, "Resultados de Salud" = 2)) |> 
-  footnote(general = "Fuente: Angrist & Pischke (2008). Diferencia de medias: 0.71 (t=58.9).")
-
+) |> 
+  gt() |> 
+  tab_header(
+    title = md("**Tabla 1:** Comparación de medias en EE.UU. (NHIS)")
+  ) |> 
+  # Renombramos columnas para que se vean bonitas
+  cols_label(
+    Grupo = "Grupo",
+    N = "N",
+    Media_Salud = "Salud Promedio (1=Excelente, 5=Muy Mal)",
+    Error_Std = "Error Est."
+  ) |> 
+  # Creamos el encabezado agrupado (el header rojo de antes)
+  tab_spanner(
+    label = "Resultados de Salud",
+    columns = c(Media_Salud, Error_Std)
+  ) |> 
+  # Añadimos la nota al pie (se ajustará automáticamente al ancho total)
+  tab_source_note(
+    source_note = "Fuente: Angrist & Pischke (2008). Diferencia de medias: 0.71 (t=58.9)."
+  ) |> 
+  # Estilo visual (Ancho 100%, alineación izq, filas rayadas)
+  tab_options(
+    heading.background.color = "#69000C",
+    column_labels.background.color = "#69000C",
+    table.border.top.color = "#69000C",
+    table.border.bottom.color = "#69000C",
+    source_notes.font.size = px(12)
+  )
 ```
 
-Como se puede observar, la salud promedio de las personas que no asisten al hospital reportan que, en promedio, tienen un estado de salud mejor a los que asisten ($2{,}79 > 2{,}07$), pues el promedio de los que no asisten al hospital es más cercano al 1 ("Excelente salud") que los que sí asisten. Pero, ¿esto significa que *asistir al hospital* **_empeora_** *la salud*? Suena ridículo dicho así (o quizás no), pero lo cierto es que este tipo de relaciones se suelen establecer.  
+Como se puede observar, la salud promedio de las personas que no asisten al hospital reportan que, en promedio, tienen un estado de salud mejor a los que asisten ($2{,}79 > 2{,}07$), pues el promedio de los que no asisten al hospital es más cercano al 1 ("Excelente salud") que los que sí asisten. Pero, ¿esto significa que *asistir al hospital* **_empeora_** *la salud*? Suena ridículo dicho así (o quizás no), pero lo cierto es que este tipo de relaciones se suelen establecer. Es más, ¿por qué suena ridiculo? ¿Qué es lo raro en que las personas que van al hospital tienen en promedio problemas de salud mas graves? En realidad, esto es así, pero eso no significa que *ir* a un hospital empeora la salud, es decir, no hay una relación causal. Pero, ¿por qué no la hay? 
+
+El motivo de que no la haya se puede sintetizar en el siguiente concepto: **sesgo de selección**. En primer lugar, si miramos las características de cada grupo (quienes asisten o no al hospital), que son pre-existentes a ir o no al hospital y a declarar un buen o mal estado de salud, probablemente van a ser muy diferentes. Por ejemplo, aún no hemos visto si tienen diferencias de edad, el contexto socioeconómico, indicadores de salud *previos* a la atención, etc. Sin observar todo eso, es dificil afirmar que *ir* al hospital empeora la salud. En segundo lugar, algo que probablemente se considere de sentido común, es que probablemente las personas asisten al hospital lo hacen justamente porque tienen problemas de salud. En cambio, probablemente no tienen problemas de salud, y por eso no van a un hospital. Es decir, **las personas que se atienden en un hospital son distintas a aquellas que eligen no hacerlo, pues _se autoseleccionan_ en nuestro _tratamiento_**. A todo esto, le llamamos un problema de **sesgo de selección**. Por cierto, la evidencia de  [Angrist y Pischke (2008)](https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf) también se puede observar para Chile si vemos los datos de la Casen 2015^[Ojo, aquí la escala es otra y está invertida. Primero no es de 1 a 5, sino de 1 a 7. Y aquí 1 es el peor puntaje y 7 el mejor. A diferencia que en la NHIS que 1 era el mejor puntaje y 5 el peor]:  
 
 
 ```{r tablas-seleccion-chile}
 #| echo: false
 #| warning: false
 
-
 # --- TABLA 2: DATOS CHILE ---
-datos_chile <- data.frame(
+data.frame(
   Grupo = c("Hospital", "No Hospital"),
   N = c("4,849", "40,816"),
   Media_Salud = c(4.23, 4.93),
   Error_Std = c(0.022, 0.007)
-)
-
-kbl(datos_chile, 
-    caption = "Tabla 2: Evidencia similar para Chile (CASEN 2015)",
-    col.names = c("Grupo", "N", "Salud Promedio (1=Muy Mal, 7=Muy Bien)", 
-                  "Error Est.")) |>
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), 
-                full_width = F) |>
-  add_header_above(c(" " = 2, "Resultados de Salud" = 2)) |>
-  footnote(general = "Fuente: Elaboración propia con CASEN 2015. Diferencia de medias: 0.70 (t=33.1).")
+) |> 
+  gt() |> 
+  tab_header(
+    title = md("**Tabla 2:** Evidencia similar para Chile (CASEN 2015)")
+  ) |> 
+  cols_label(
+    Grupo = "Grupo",
+    N = "N",
+    Media_Salud = "Salud Promedio (1=Muy Mal, 7=Muy Bien)",
+    Error_Std = "Error Est."
+  ) |> 
+  tab_spanner(
+    label = "Resultados de Salud",
+    columns = c(Media_Salud, Error_Std)
+  ) |> 
+  tab_source_note(
+    source_note = "Fuente: Elaboración propia con CASEN 2015. Diferencia de medias: 0.70 (t=33.1)."
+  ) |> 
+  tab_options(
+    heading.background.color = "#69000C",
+    column_labels.background.color = "#69000C",
+    table.border.top.color = "#69000C",
+    table.border.bottom.color = "#69000C",
+    source_notes.font.size = px(12)
+  )
 ```
 
 
+### El problema de Selección (Formalización)
 
-## El problema del Sesgo de Selección
+Hasta ahora hemos hablado intuitivamente sobre por qué comparar promedios directos nos lleva a errores. Para ser rigurosos, debemos formalizar esto utilizando el lenguaje de los **Resultados Potenciales** (*Potential Outcomes*), el bloque fundamental de la econometría moderna. Con ello, nos adelantaremos unos pasos, pero después lo retomamos de nuevo. 
 
-Comparar grupos observacionales suele llevar a conclusiones erróneas debido a diferencias preexistentes.
+Siguiendo a [Angrist y Pischke (2008)](https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf), imaginemos que el tratamiento (ir al hospital) es una variable binaria $D_i = \{0, 1\}$. El interés radica en saber si el resultado de salud $Y_i$ es afectado por este tratamiento.
 
-**Ejemplo: Salud y Hospitales** 
+Entonces, para cada individuo $i$, existen dos "vidas paralelas" o resultados potenciales:
 
-  * Datos: Las personas que van al hospital tienen peor salud ($2.79$) que las que no van ($2.07$).
-  * ¿Conclusión errónea?: "Ir al hospital te enferma".
-  * **Realidad**: Hay un **sesgo de selección**. La gente que va al hospital ya estaba más enferma (autoselección).
+* $Y_{1i}$: El estado de salud si la persona **va** al hospital ($D_i=1$).
+* $Y_{0i}$: El estado de salud si la persona **no va** al hospital ($D_i=0$).
 
-## Validez Interna y Externa
+El efecto causal para un individuo sería la diferencia entre estos dos estados: $\tau_i = Y_{1i} - Y_{0i}$. El problema fundamental de la inferencia causal es que **nunca podemos observar ambos resultados simultáneamente** para la misma persona. Solo observamos lo que realmente ocurrió:
+
+$$
+Y_i = \begin{cases}
+Y_{1i} & \text{si } D_i = 1 \\
+Y_{0i} & \text{si } D_i = 0
+\end{cases}
+$$
+
+Lo cual se puede reescribir como:
+$$Y_i = Y_{0i} + (Y_{1i} - Y_{0i})D_i$$
+
+#### Descomposición de la Diferencia Observada
+
+Cuando ingenuamente comparamos el promedio de salud de los hospitalizados con los no hospitalizados, estamos calculando la **Diferencia de Medias Observada**. Matemáticamente, esto se descompone en dos partes muy distintas:
+
+$$
+\underbrace{E[Y_i | D_i=1] - E[Y_i | D_i=0]}_{\text{Diferencia Observada}} = \underbrace{E[Y_{1i} - Y_{0i} | D_i=1]}_{\text{ATT}} + \underbrace{E[Y_{0i} | D_i=1] - E[Y_{0i} | D_i=0]}_{\text{Sesgo de Selección}}
+$$
+
+1.  **El Efecto Promedio en los Tratados (ATT):** $E[Y_{1i} - Y_{0i} | D_i=1]$. Esto es lo que *queremos* medir: ¿cuánto mejoró (o empeoró) la salud de quienes fueron al hospital *gracias* a ir al hospital?
+2.  **El Sesgo de Selección:** $E[Y_{0i} | D_i=1] - E[Y_{0i} | D_i=0]$. Esta es la parte "sucia". Es la diferencia en la salud base ($Y_{0i}$) entre quienes fueron al hospital y quienes no.
+
+Volviendo a nuestro ejemplo: como las personas que van al hospital suelen estar más enfermas de base, su $Y_{0i}$ (salud sin tratamiento) es mucho peor que el de las personas que se quedan en casa. Esto hace que el término de **Sesgo de Selección sea negativo** y muy grande, opacando cualquier efecto positivo (ATT) que el hospital pudiera tener.
+
+En resumen, la "Comparación Naive" mezcla el efecto causal con la autoselección de los individuos. El objetivo de la econometría (y de los RCT que veremos a continuación) es eliminar este segundo término para aislar el efecto causal verdadero.
+
+### Sintesis pre validez del análisis empírico
+
+Entonces, volviendo al problema de la causalidad (y la correlación). Sabiendo que el problema del sesgo de selección (*selection bias*) subyace a la dificultad de identificar el carácter causal de una relación entre variables, veremos que la relación entre variables y la naturaleza entre estas es fundamental para identificar efectos causales. Por ejemplo, para el diseño de políticas públicas, va ser distinto lo que ocurre con $Y$ si una política altera el valor de $X$ si: 
+
+  - $X \implies Y$
+  - $Z \implies Y \quad \wedge \quad Z \implies X$
+  - $Y \implies X$
+
+Esquemáticamente, la distintas relaciones entre $X,Y$, se pueden resumir así: 
+
+```{r img-causalidad}
+#| echo: false
+#| fig-cap: "Relaciones de causalidad"
+#| out-width: "80%"
+
+knitr::include_graphics("images/causality_xy.png", error = FALSE)
+```
+
+En este contexto, la correlación entre $X$ e $Y$ no es muy informativa sobre el efecto causal de cambiar $X$ en $Y$. Para solucionar esto, vamos a arrancar el curso con el **ideal experimental**
+
+En esta sesión, veremos que los datos *experimentales* son muy útiles para establecer causaldiad. A su vez, a lo largo de todo el curso, veremos como pensar en el **experimento ideal** nos puede orientar y ayudar a encontrar relaciones causales en datos que no son necesariamente experimentales (observacionales la mayoría de veces). Con ello, vamos a poder responder una serie de preguntas económicas que organizan una investigación. Podemos resumir estas en 4 preguntas que nos permitirán abordar efectos causales en la investigación científica de la economía: 
+
+  1. ¿Cuál es la relación **causal** de interés?
+    - Relación causal permite predecir consecuencias 
+  
+  2. ¿Cuál es el **experimento ideal** para capturar el efecto causal?
+    - No siempre vamos a tener que realizar un experimento, pero si tenerlo como ideal. Un diseño experimental suele ser costoso, difícil y muchas veces anti ético.  
+    
+  3. ¿Cuál es la estrategia de **identificación**?
+    - Uso de datos observacionales para *aproximarse* a un experimento
+    
+  4. ¿Cuál es el modo de **inferencia** estadística?
+    - Población bajo estudio y construcción de errores estándar
+  
+## Validez del análisis empírico
+
+Partamos con las siguientes preguntas: 
+
+  - ¿Qué hace que un análisis empírico sea fiable? 
+  - ¿Cuándo proporciona la regresión múltiple un estimador útil del efecto causal? 
+
+Estas preguntas las vamos a responder en dos claves en la sesión: estudiando trabajos empíricos, papers o análisis estadísticos y estableciendo un marco para evaluar estudios estadísticos en general basado en dos conceptos: **validez interna** y **validez externa**. 
+
+### Validez Interna y Externa
 
 Para evaluar cualquier estudio empírico, analizamos dos dimensiones:
 
-1.  **Validez Interna**: ¿El estimador del efecto causal es insesgado para la población estudiada?
-      * *Amenazas*: Variables omitidas, causalidad reversa, errores de medición.
-2.  **Validez Externa**: ¿Se pueden generalizar los resultados a otras poblaciones o contextos?
-      * *Amenazas*: Diferencias institucionales, muestras no representativas (ej. voluntarios).
+1.  **Validez Interna**: Un estudio es válido internamente si sus ingerencias estadísticas acerca de los efectos causales son válidad para la población y el escenario estudiados.
+2.  **Validez Externa**: Un estudio es válido externamente si sus ingerencias pueden generalizarse a otraas poblaciones y escenarios.
 
+Cuando hablamos de población estudiada *vs* la población de interés, podemos señalar la siguiente diferencia: 
+
+  - **Población estudiada**: individuos que componen la **muestra**. 
+  - **Población de interés**: individuos a los que se le aplicará inferencia causal, la población a la que se busca generalizar los resultados de la muestra. 
+  
+    - Ejemplos: vacunas en ratones (muestra) *vs* vacunas en humanos (población); reducir tamaño de clases en educación primaria *vs* secundaria (población); incentivos a la participación labboral de hombres *vs* mujeres; comportamiento en monopoly *vs* vida real (escenario); crecimiento de hortalizas en invernadero *vs* campo abierto (escenario). 
+
+#### Amenazas a la validez externa
+
+Estas surgen a partir de las diferencias entre la población y el escenario estudiado y la población y el escenario de interés. Es decir, si la población estudiada y la de interés difieren en que la población estudiada elegida es *distinta* a la población interés, entonces el efecto causal estimado podría no ser el mismo. Esto ocurre por ejemplo con los ratones y los humanos. A su vez, si hay diferentes escenarios en la muestra y la población de interés, por ejemplo, en el entorno institucional, legal, físico, aún cuando la población estudiada coincida con la de interés, entonces el efecto causal podría no ser el mismo. 
+
+Así, mientras más ceercanos la población y el escenario del *estudio* con la población y escenario de interés, más fuertes serán las razones para la validez externa. Ahora bien, cuando hay amenezas, también hay soluciones: diseñar un estudio externamente válido; comparar resultados de estudios anteriores en diferentes poblaciones y escenarios (meta-análisis); etc. 
+
+
+#### Amenazas a la validez interna
+
+La validez interna de los análisis empírico (por ejemplo en regresiones múltiples) son internamente válidos si: 
+
+  - El modelo está bien especificado 
+  - Los estimadores son insesgados y consistentes 
+  - Los errores estándar proporcionan intervalos de confianza con un nivel de confianza deseado 
+  
+Pero hay amenazas si: 
+
+  1. Problemas de especficación del modelo
+  2. Omisión de variables relevantes 
+  3. Causalidad reversa (simultaneidad)
+  4. Datos faltantes y sesgo de selección
+  5. Error de medición 
+  
 ### Endogeneidad
 
-La endogeneidad ocurre cuando $Cov(X, \epsilon) \neq 0$. Un ejemplo clásico es la **Ecuación de Mincer** para el retorno a la educación:
+La endogeneidad (y su opuesto: la exogeneidad) de una(s) variable(s) es un tema fundamental para la econometría. Esta ocurre cuando $\mbox{cov}(X, u) \neq 0$. También muchas veces en modelos de regresión vamos a decir que hay exogeneidad cuando hay *correlación* entre una variable explicativa y el término de error, i.e., $\mbox{cor}(X, u) \neq 0$. Esta puede surgir por error de medición, omisión de variables relevantes, simulteaneidad, entre otras. Un ejemplo donde se podría presentar esto es el ejemplo clásico es la **Ecuación de Mincer** para el retorno a la educación:
+$$ \ln y_i = \beta_0 + \beta_1 S_i + \gamma' X_i + u_i $$
+donde $y_i$ son ingresos laborales (con logaritmo aplicado), $S_i$ es años de educación, $X_i$ es un vector de variables de control. El parámetro de interés es $\beta_1$ que se puede interpretar como la tasa de retorno a la educación. En la Ecuación de Mincer, podríamos tener problemas de estimación por endogeneidad por: 
 
-$$ \ln(y_i) = \beta_0 + \beta_1 S_i + \gamma X_i + u_i $$
+  - Sesgo por variable omitida: "habilidad".
+    - Estudiantes con más habilidades les va mejor en la universidad y además tienen mayores ingresos
+    - Las habilidades sin multidimensionales, difíciles de medir, y no suele haber información disponible en la mayoría de las fuentes de datos comúnmente utilizadas. 
+    
+  - Sesgo de selección
+    - Ingresos son observables para aquellos que se encuentran trabajando 
+    - Las personas que eligen hacer más años de educación probablemente son las que tienen más para ganar (mayor retorno esperado)
+    
+  - Error de medición
+    - La escolaridad está medida con errores: *i*) es difícil es determinar los años de escolaridad (sobre todo por las trayectorias académicas divergentes); *ii*) gran varianza en la calidad de la educación (números de años es una medida imperfecta, si se toma la escolaridad ajustada por calidad). 
 
-Donde $\beta_1$ suele estar sesgado hacia arriba por "habilidad" (variable omitida): la gente más hábil estudia más *y* gana más, sobreestimando el efecto real de la educación.
+
+Otro ejemplo podría ser la medición de la relación oferta y demanda. Por ejemplo, en un modelo de regresión: los precios son endógenos. En regresiones de precios sobre cantidades, los resultados pueden deberse tanto a cambios en la demanda como en la oferta: 
 
 ```{r img-supply-demand}
 #| echo: false
 #| fig-cap: "Problema de identificación: Oferta y Demanda"
-#| out-width: "60%"
+#| out-width: "90%"
 
 knitr::include_graphics("images/supply_demand.png", error = FALSE)
 ```
 
-# El Problema Fundamental de la Inferencia Causal
+## El Problema Fundamental de la Inferencia Causal
 
-Definimos los **Resultados Potenciales**:
+Aquí tenemos que volver a lo que adelantamos en la formalización del *selection bias*. La mayoría de las veces que debemos conformarnos con datos obtenidos en contextos no experimentales (observacionales). Según [Holland (1986)](https://fitelson.org/woodward/holland.pdf), el problema fundamental de la inferencia causal es que: si $X$ es la causa e $Y$ el resultados, una vez que cambia $X$ y, por lo tanto, cambia $Y$, no es posible observar qué hubiese ocurrido con $Y$ en ausencia del cambio. Es decir, no es posible visualizar empíricamente este escenario por su carácter contrafactual.  
 
-  * $Y_{1i}$: Resultado si individuo $i$ recibe tratamiento ($D_i=1$).
-  * $Y_{0i}$: Resultado si individuo $i$ NO recibe tratamiento ($D_i=0$).
-
-El efecto causal individual es $\tau_i = Y_{1i} - Y_{0i}$.
-El problema es que **nunca observamos ambos resultados para la misma persona** simultáneamente.
-
-## Descomposición del Sesgo
-
-La diferencia simple de medias (Naive Comparison) se descompone en:
-
+Entonces, tomemos lo que dijimos antes: supongamos que cada individuo de la población objetivo puede ser *potencialmente tratado*. Diseñemos, pues, una variable *dummy*, $D$, que toma el valor 1 si se recibe tratamiento, 0 si no. Es decir, 
 $$
-\underbrace{E[Y|D=1] - E[Y|D=0]}_{\text{Diferencia Observada}} = \underbrace{E[Y_{1} - Y_{0} | D=1]}_{\text{ATT}} + \underbrace{E[Y_{0} | D=1] - E[Y_{0} | D=0]}_{\text{Sesgo de Selección}}
+y_i = 
+\begin{cases}
+  y_{1i}, & \quad \text{si } D_i =1\\
+  y_{0i}, & \quad \text{si } D_i =0\\
+\end{cases}
 $$
+lo cual, como ya vimos,  podemos escribir la variable resultado en función de los resultados potenciales: 
+$$
+y_i = y_{0i}+(y_{1i}-y_{0i})D_i
+$$
+donde $y_{1i}$ es el resultado de la persona $i$ si recibe tratamiento, $y_{0i}$ es su resultado si no lo recibe. Entonces, también como ya mencionamos, el **efecto causal del tratamiento** para el inidividuo $y_i$ será
+$$
+\tau_i = y_{1i}- y_{0i}
+$$
+Ahora bien, ahora surge un problema central, ya mencionado por [Holland (1986)](https://fitelson.org/woodward/holland.pdf): nunca observamos *ambos* resultados para *un mismo* individuo. Entonces, lo que debemos preguntarnos es ¿qué obtenemos si comparamos los resultados promedios de individuos tratados y no tratados? Lo que se obtiene es lo siguiente: 
 
-  * **ATT**: Efecto promedio en los tratados (*Average Treatment Effect on the Treated*).
-  * **Sesgo de Selección**: Diferencia en el resultado base ($Y_0$) entre quienes se tratan y quienes no.
+**No tratados**: 
+  $$E[y_i\mid D_i =0]= \color{red}{E[y_{0i} \mid D_i = 0]} $$
+**Tratados**:
+  $$
+\begin{aligned}
+E[y_i \mid D_i = 1] &= E[y_{1i} \mid D_i = 1] \\
+&= \color{red}{E[y_{0i} \mid D_i = 1]} 
+   + \color{red}{E[y_{1i} - y_{0i} \mid D_i = 1]} \\
+&= \color{red}{E[y_{0i} \mid D_i = 1]} 
+   + \color{red}{E[\tau_i \mid D_i = 1]}
+\end{aligned}
+  $$
+Entonces, tomando la diferencia entre ambos grupos, $E[y_i \mid D_i = 1]- E[y_i\mid D_i =0]$, llegamos al resultado que habíamos anunciado antes: 
+$$
+\begin{aligned}
+  E[y_i \mid D_i = 1]- E[y_i\mid D_i =0] = \underbrace{E[y_{1i} - y_{0i} \mid D_i=1]}_{\text{ATT}} + \underbrace{E[y_{0i} \mid D_i=1] - E[y_{0i}\mid D_i=0]}_{\text{Sesgo de Seleccion}}
+\end{aligned}
+$$
+Con ello, podemos observar que el **sesgo** proviene del hecho de que aquellos que buscan tratamiento ($D_i=1$), tienen características diferentes. Por otro lado, nos encontramos con el **ATT**. El **_Average treatment effect on the treated_** (ATT) es el *efecto promedio* del tratamiento para los individuos tratados. Si los efectos son heterogéneos en la población, este es un afecto causal diferente al efecto promedio en la población (ATE). Luego lo veremos. Pero ahora, pasemos al segundo bloque para seguir profundizando. 
+
 
 # Bloque 2: Experimentos Aleatorios (RCT)
 
