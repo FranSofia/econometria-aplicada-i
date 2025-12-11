@@ -104,6 +104,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -230,10 +233,11 @@ window.Quarto = {
   <li><a href="#bloque-2-experimentos" id="toc-bloque-2-experimentos" class="nav-link" data-scroll-target="#bloque-2-experimentos"><span class="header-section-number">2</span> Bloque 2: Experimentos</a>
   <ul class="collapse">
   <li><a href="#experimentos-y-causalidad" id="toc-experimentos-y-causalidad" class="nav-link" data-scroll-target="#experimentos-y-causalidad"><span class="header-section-number">2.1</span> Experimentos y causalidad</a></li>
-  <li><a href="#caso-de-estudio-proyecto-star-tennessee" id="toc-caso-de-estudio-proyecto-star-tennessee" class="nav-link" data-scroll-target="#caso-de-estudio-proyecto-star-tennessee"><span class="header-section-number">2.2</span> Caso de Estudio: Proyecto STAR (Tennessee)</a>
+  <li><a href="#asignación-aleatoria" id="toc-asignación-aleatoria" class="nav-link" data-scroll-target="#asignación-aleatoria"><span class="header-section-number">2.2</span> Asignación aleatoria</a>
   <ul class="collapse">
-  <li><a href="#test-de-balance" id="toc-test-de-balance" class="nav-link" data-scroll-target="#test-de-balance"><span class="header-section-number">2.2.1</span> 1. Test de Balance</a></li>
+  <li><a href="#la-solución-experimental-por-qué-funciona-la-aleatorización" id="toc-la-solución-experimental-por-qué-funciona-la-aleatorización" class="nav-link" data-scroll-target="#la-solución-experimental-por-qué-funciona-la-aleatorización"><span class="header-section-number">2.2.1</span> La Solución Experimental: Por qué funciona la Aleatorización</a></li>
   </ul></li>
+  <li><a href="#experimentos-aleatorizados-proyecto-star" id="toc-experimentos-aleatorizados-proyecto-star" class="nav-link" data-scroll-target="#experimentos-aleatorizados-proyecto-star"><span class="header-section-number">2.3</span> Experimentos aleatorizados: Proyecto STAR</a></li>
   </ul></li>
   <li><a href="#bloque-3-regresión-e-inferencia" id="toc-bloque-3-regresión-e-inferencia" class="nav-link" data-scroll-target="#bloque-3-regresión-e-inferencia"><span class="header-section-number">3</span> Bloque 3: Regresión e Inferencia</a>
   <ul class="collapse">
@@ -321,23 +325,23 @@ X \implies Y
 <p>Confundir una correlación (y peor aún: una espúrea) con una relación causal, puede llevar a errores graves. Por ejemplo, en <em>Mostly Harmless Econometrics</em> (<a href="https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf">Angrist y Pischke, 2008</a>) se muestra cómo hay una relación entre ir (o no) al hospital y el grado de “salud subjetiva”<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> reportado. Los datos son los siguientes:</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="uitofjkqhk" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#uitofjkqhk table {
+<div id="jumppiocid" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#jumppiocid table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#uitofjkqhk thead, #uitofjkqhk tbody, #uitofjkqhk tfoot, #uitofjkqhk tr, #uitofjkqhk td, #uitofjkqhk th {
+#jumppiocid thead, #jumppiocid tbody, #jumppiocid tfoot, #jumppiocid tr, #jumppiocid td, #jumppiocid th {
   border-style: none;
 }
 
-#uitofjkqhk p {
+#jumppiocid p {
   margin: 0;
   padding: 0;
 }
 
-#uitofjkqhk .gt_table {
+#jumppiocid .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -363,12 +367,12 @@ X \implies Y
   border-left-color: #D3D3D3;
 }
 
-#uitofjkqhk .gt_caption {
+#jumppiocid .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#uitofjkqhk .gt_title {
+#jumppiocid .gt_title {
   color: #FFFFFF;
   font-size: 125%;
   font-weight: initial;
@@ -380,7 +384,7 @@ X \implies Y
   border-bottom-width: 0;
 }
 
-#uitofjkqhk .gt_subtitle {
+#jumppiocid .gt_subtitle {
   color: #FFFFFF;
   font-size: 85%;
   font-weight: initial;
@@ -392,7 +396,7 @@ X \implies Y
   border-top-width: 0;
 }
 
-#uitofjkqhk .gt_heading {
+#jumppiocid .gt_heading {
   background-color: #69000C;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -404,13 +408,13 @@ X \implies Y
   border-right-color: #D3D3D3;
 }
 
-#uitofjkqhk .gt_bottom_border {
+#jumppiocid .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#uitofjkqhk .gt_col_headings {
+#jumppiocid .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -425,7 +429,7 @@ X \implies Y
   border-right-color: #D3D3D3;
 }
 
-#uitofjkqhk .gt_col_heading {
+#jumppiocid .gt_col_heading {
   color: #FFFFFF;
   background-color: #69000C;
   font-size: 100%;
@@ -445,7 +449,7 @@ X \implies Y
   overflow-x: hidden;
 }
 
-#uitofjkqhk .gt_column_spanner_outer {
+#jumppiocid .gt_column_spanner_outer {
   color: #FFFFFF;
   background-color: #69000C;
   font-size: 100%;
@@ -457,15 +461,15 @@ X \implies Y
   padding-right: 4px;
 }
 
-#uitofjkqhk .gt_column_spanner_outer:first-child {
+#jumppiocid .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#uitofjkqhk .gt_column_spanner_outer:last-child {
+#jumppiocid .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#uitofjkqhk .gt_column_spanner {
+#jumppiocid .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -477,11 +481,11 @@ X \implies Y
   width: 100%;
 }
 
-#uitofjkqhk .gt_spanner_row {
+#jumppiocid .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#uitofjkqhk .gt_group_heading {
+#jumppiocid .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -507,7 +511,7 @@ X \implies Y
   text-align: left;
 }
 
-#uitofjkqhk .gt_empty_group_heading {
+#jumppiocid .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -522,15 +526,15 @@ X \implies Y
   vertical-align: middle;
 }
 
-#uitofjkqhk .gt_from_md > :first-child {
+#jumppiocid .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#uitofjkqhk .gt_from_md > :last-child {
+#jumppiocid .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#uitofjkqhk .gt_row {
+#jumppiocid .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -549,7 +553,7 @@ X \implies Y
   overflow-x: hidden;
 }
 
-#uitofjkqhk .gt_stub {
+#jumppiocid .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -562,7 +566,7 @@ X \implies Y
   padding-right: 5px;
 }
 
-#uitofjkqhk .gt_stub_row_group {
+#jumppiocid .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -576,15 +580,15 @@ X \implies Y
   vertical-align: top;
 }
 
-#uitofjkqhk .gt_row_group_first td {
+#jumppiocid .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#uitofjkqhk .gt_row_group_first th {
+#jumppiocid .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#uitofjkqhk .gt_summary_row {
+#jumppiocid .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -594,16 +598,16 @@ X \implies Y
   padding-right: 5px;
 }
 
-#uitofjkqhk .gt_first_summary_row {
+#jumppiocid .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#uitofjkqhk .gt_first_summary_row.thick {
+#jumppiocid .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#uitofjkqhk .gt_last_summary_row {
+#jumppiocid .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -613,7 +617,7 @@ X \implies Y
   border-bottom-color: #D3D3D3;
 }
 
-#uitofjkqhk .gt_grand_summary_row {
+#jumppiocid .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -623,7 +627,7 @@ X \implies Y
   padding-right: 5px;
 }
 
-#uitofjkqhk .gt_first_grand_summary_row {
+#jumppiocid .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -633,7 +637,7 @@ X \implies Y
   border-top-color: #D3D3D3;
 }
 
-#uitofjkqhk .gt_last_grand_summary_row_top {
+#jumppiocid .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -643,11 +647,11 @@ X \implies Y
   border-bottom-color: #D3D3D3;
 }
 
-#uitofjkqhk .gt_striped {
+#jumppiocid .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#uitofjkqhk .gt_table_body {
+#jumppiocid .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -656,7 +660,7 @@ X \implies Y
   border-bottom-color: #D3D3D3;
 }
 
-#uitofjkqhk .gt_footnotes {
+#jumppiocid .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -670,7 +674,7 @@ X \implies Y
   border-right-color: #D3D3D3;
 }
 
-#uitofjkqhk .gt_footnote {
+#jumppiocid .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -679,7 +683,7 @@ X \implies Y
   padding-right: 5px;
 }
 
-#uitofjkqhk .gt_sourcenotes {
+#jumppiocid .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -693,7 +697,7 @@ X \implies Y
   border-right-color: #D3D3D3;
 }
 
-#uitofjkqhk .gt_sourcenote {
+#jumppiocid .gt_sourcenote {
   font-size: 12px;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -701,72 +705,72 @@ X \implies Y
   padding-right: 5px;
 }
 
-#uitofjkqhk .gt_left {
+#jumppiocid .gt_left {
   text-align: left;
 }
 
-#uitofjkqhk .gt_center {
+#jumppiocid .gt_center {
   text-align: center;
 }
 
-#uitofjkqhk .gt_right {
+#jumppiocid .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#uitofjkqhk .gt_font_normal {
+#jumppiocid .gt_font_normal {
   font-weight: normal;
 }
 
-#uitofjkqhk .gt_font_bold {
+#jumppiocid .gt_font_bold {
   font-weight: bold;
 }
 
-#uitofjkqhk .gt_font_italic {
+#jumppiocid .gt_font_italic {
   font-style: italic;
 }
 
-#uitofjkqhk .gt_super {
+#jumppiocid .gt_super {
   font-size: 65%;
 }
 
-#uitofjkqhk .gt_footnote_marks {
+#jumppiocid .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#uitofjkqhk .gt_asterisk {
+#jumppiocid .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#uitofjkqhk .gt_indent_1 {
+#jumppiocid .gt_indent_1 {
   text-indent: 5px;
 }
 
-#uitofjkqhk .gt_indent_2 {
+#jumppiocid .gt_indent_2 {
   text-indent: 10px;
 }
 
-#uitofjkqhk .gt_indent_3 {
+#jumppiocid .gt_indent_3 {
   text-indent: 15px;
 }
 
-#uitofjkqhk .gt_indent_4 {
+#jumppiocid .gt_indent_4 {
   text-indent: 20px;
 }
 
-#uitofjkqhk .gt_indent_5 {
+#jumppiocid .gt_indent_5 {
   text-indent: 25px;
 }
 
-#uitofjkqhk .katex-display {
+#jumppiocid .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#uitofjkqhk div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#jumppiocid div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -822,23 +826,23 @@ Resultados de Salud
 <p>El motivo de que no la haya se puede sintetizar en el siguiente concepto: <strong>sesgo de selección</strong>. En primer lugar, si miramos las características de cada grupo (quienes asisten o no al hospital), que son pre-existentes a ir o no al hospital y a declarar un buen o mal estado de salud, probablemente van a ser muy diferentes. Por ejemplo, aún no hemos visto si tienen diferencias de edad, el contexto socioeconómico, indicadores de salud <em>previos</em> a la atención, etc. Sin observar todo eso, es dificil afirmar que <em>ir</em> al hospital empeora la salud. En segundo lugar, algo que probablemente se considere de sentido común, es que probablemente las personas asisten al hospital lo hacen justamente porque tienen problemas de salud. En cambio, probablemente no tienen problemas de salud, y por eso no van a un hospital. Es decir, <strong>las personas que se atienden en un hospital son distintas a aquellas que eligen no hacerlo, pues <em>se autoseleccionan</em> en nuestro <em>tratamiento</em></strong>. A todo esto, le llamamos un problema de <strong>sesgo de selección</strong>. Por cierto, la evidencia de <a href="https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf">Angrist y Pischke (2008)</a> también se puede observar para Chile si vemos los datos de la Casen 2015<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>:</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="bwnkndefxh" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#bwnkndefxh table {
+<div id="xgavltdnrc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#xgavltdnrc table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#bwnkndefxh thead, #bwnkndefxh tbody, #bwnkndefxh tfoot, #bwnkndefxh tr, #bwnkndefxh td, #bwnkndefxh th {
+#xgavltdnrc thead, #xgavltdnrc tbody, #xgavltdnrc tfoot, #xgavltdnrc tr, #xgavltdnrc td, #xgavltdnrc th {
   border-style: none;
 }
 
-#bwnkndefxh p {
+#xgavltdnrc p {
   margin: 0;
   padding: 0;
 }
 
-#bwnkndefxh .gt_table {
+#xgavltdnrc .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -864,12 +868,12 @@ Resultados de Salud
   border-left-color: #D3D3D3;
 }
 
-#bwnkndefxh .gt_caption {
+#xgavltdnrc .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#bwnkndefxh .gt_title {
+#xgavltdnrc .gt_title {
   color: #FFFFFF;
   font-size: 125%;
   font-weight: initial;
@@ -881,7 +885,7 @@ Resultados de Salud
   border-bottom-width: 0;
 }
 
-#bwnkndefxh .gt_subtitle {
+#xgavltdnrc .gt_subtitle {
   color: #FFFFFF;
   font-size: 85%;
   font-weight: initial;
@@ -893,7 +897,7 @@ Resultados de Salud
   border-top-width: 0;
 }
 
-#bwnkndefxh .gt_heading {
+#xgavltdnrc .gt_heading {
   background-color: #69000C;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -905,13 +909,13 @@ Resultados de Salud
   border-right-color: #D3D3D3;
 }
 
-#bwnkndefxh .gt_bottom_border {
+#xgavltdnrc .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#bwnkndefxh .gt_col_headings {
+#xgavltdnrc .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -926,7 +930,7 @@ Resultados de Salud
   border-right-color: #D3D3D3;
 }
 
-#bwnkndefxh .gt_col_heading {
+#xgavltdnrc .gt_col_heading {
   color: #FFFFFF;
   background-color: #69000C;
   font-size: 100%;
@@ -946,7 +950,7 @@ Resultados de Salud
   overflow-x: hidden;
 }
 
-#bwnkndefxh .gt_column_spanner_outer {
+#xgavltdnrc .gt_column_spanner_outer {
   color: #FFFFFF;
   background-color: #69000C;
   font-size: 100%;
@@ -958,15 +962,15 @@ Resultados de Salud
   padding-right: 4px;
 }
 
-#bwnkndefxh .gt_column_spanner_outer:first-child {
+#xgavltdnrc .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#bwnkndefxh .gt_column_spanner_outer:last-child {
+#xgavltdnrc .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#bwnkndefxh .gt_column_spanner {
+#xgavltdnrc .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -978,11 +982,11 @@ Resultados de Salud
   width: 100%;
 }
 
-#bwnkndefxh .gt_spanner_row {
+#xgavltdnrc .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#bwnkndefxh .gt_group_heading {
+#xgavltdnrc .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1008,7 +1012,7 @@ Resultados de Salud
   text-align: left;
 }
 
-#bwnkndefxh .gt_empty_group_heading {
+#xgavltdnrc .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1023,15 +1027,15 @@ Resultados de Salud
   vertical-align: middle;
 }
 
-#bwnkndefxh .gt_from_md > :first-child {
+#xgavltdnrc .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#bwnkndefxh .gt_from_md > :last-child {
+#xgavltdnrc .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#bwnkndefxh .gt_row {
+#xgavltdnrc .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1050,7 +1054,7 @@ Resultados de Salud
   overflow-x: hidden;
 }
 
-#bwnkndefxh .gt_stub {
+#xgavltdnrc .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1063,7 +1067,7 @@ Resultados de Salud
   padding-right: 5px;
 }
 
-#bwnkndefxh .gt_stub_row_group {
+#xgavltdnrc .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1077,15 +1081,15 @@ Resultados de Salud
   vertical-align: top;
 }
 
-#bwnkndefxh .gt_row_group_first td {
+#xgavltdnrc .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#bwnkndefxh .gt_row_group_first th {
+#xgavltdnrc .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#bwnkndefxh .gt_summary_row {
+#xgavltdnrc .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1095,16 +1099,16 @@ Resultados de Salud
   padding-right: 5px;
 }
 
-#bwnkndefxh .gt_first_summary_row {
+#xgavltdnrc .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#bwnkndefxh .gt_first_summary_row.thick {
+#xgavltdnrc .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#bwnkndefxh .gt_last_summary_row {
+#xgavltdnrc .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1114,7 +1118,7 @@ Resultados de Salud
   border-bottom-color: #D3D3D3;
 }
 
-#bwnkndefxh .gt_grand_summary_row {
+#xgavltdnrc .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1124,7 +1128,7 @@ Resultados de Salud
   padding-right: 5px;
 }
 
-#bwnkndefxh .gt_first_grand_summary_row {
+#xgavltdnrc .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1134,7 +1138,7 @@ Resultados de Salud
   border-top-color: #D3D3D3;
 }
 
-#bwnkndefxh .gt_last_grand_summary_row_top {
+#xgavltdnrc .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1144,11 +1148,11 @@ Resultados de Salud
   border-bottom-color: #D3D3D3;
 }
 
-#bwnkndefxh .gt_striped {
+#xgavltdnrc .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#bwnkndefxh .gt_table_body {
+#xgavltdnrc .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1157,7 +1161,7 @@ Resultados de Salud
   border-bottom-color: #D3D3D3;
 }
 
-#bwnkndefxh .gt_footnotes {
+#xgavltdnrc .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1171,7 +1175,7 @@ Resultados de Salud
   border-right-color: #D3D3D3;
 }
 
-#bwnkndefxh .gt_footnote {
+#xgavltdnrc .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1180,7 +1184,7 @@ Resultados de Salud
   padding-right: 5px;
 }
 
-#bwnkndefxh .gt_sourcenotes {
+#xgavltdnrc .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1194,7 +1198,7 @@ Resultados de Salud
   border-right-color: #D3D3D3;
 }
 
-#bwnkndefxh .gt_sourcenote {
+#xgavltdnrc .gt_sourcenote {
   font-size: 12px;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1202,72 +1206,72 @@ Resultados de Salud
   padding-right: 5px;
 }
 
-#bwnkndefxh .gt_left {
+#xgavltdnrc .gt_left {
   text-align: left;
 }
 
-#bwnkndefxh .gt_center {
+#xgavltdnrc .gt_center {
   text-align: center;
 }
 
-#bwnkndefxh .gt_right {
+#xgavltdnrc .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#bwnkndefxh .gt_font_normal {
+#xgavltdnrc .gt_font_normal {
   font-weight: normal;
 }
 
-#bwnkndefxh .gt_font_bold {
+#xgavltdnrc .gt_font_bold {
   font-weight: bold;
 }
 
-#bwnkndefxh .gt_font_italic {
+#xgavltdnrc .gt_font_italic {
   font-style: italic;
 }
 
-#bwnkndefxh .gt_super {
+#xgavltdnrc .gt_super {
   font-size: 65%;
 }
 
-#bwnkndefxh .gt_footnote_marks {
+#xgavltdnrc .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#bwnkndefxh .gt_asterisk {
+#xgavltdnrc .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#bwnkndefxh .gt_indent_1 {
+#xgavltdnrc .gt_indent_1 {
   text-indent: 5px;
 }
 
-#bwnkndefxh .gt_indent_2 {
+#xgavltdnrc .gt_indent_2 {
   text-indent: 10px;
 }
 
-#bwnkndefxh .gt_indent_3 {
+#xgavltdnrc .gt_indent_3 {
   text-indent: 15px;
 }
 
-#bwnkndefxh .gt_indent_4 {
+#xgavltdnrc .gt_indent_4 {
   text-indent: 20px;
 }
 
-#bwnkndefxh .gt_indent_5 {
+#xgavltdnrc .gt_indent_5 {
   text-indent: 25px;
 }
 
-#bwnkndefxh .katex-display {
+#xgavltdnrc .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#bwnkndefxh div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#xgavltdnrc div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1513,19 +1517,136 @@ E[y_i \mid D_i = 1] &amp;= E[y_{1i} \mid D_i = 1] \\
 <li>Progresa/Oportunidades en Mexico, 1997-1999</li>
 <li>También hay muchos ejemplos en economía del desarrollo (<a href="https://www.youtube.com/watch?v=0zvrGiPkVcs">Esther Duflo: Experimentos sociales para luchar contra la pobreza</a>)</li>
 </ul>
-<p>La <strong>aleatorización</strong> garantiza que el tratamiento <span class="math inline">\(D_i\)</span> sea independiente de los resultados potenciales (<span class="math inline">\(Y_{1i}, Y_{0i}\)</span>).</p>
-<p>Esto implica que: <span class="math display">\[ E[Y_{0i} | D_i=1] = E[Y_{0i} | D_i=0] \]</span> ¡El sesgo de selección desaparece! Por tanto, la diferencia simple de medias recupera el efecto causal verdadero (ATE).</p>
 </section>
-<section id="caso-de-estudio-proyecto-star-tennessee" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="caso-de-estudio-proyecto-star-tennessee"><span class="header-section-number">2.2</span> Caso de Estudio: Proyecto STAR (Tennessee)</h2>
-<p>Experimento de los 80s para ver el efecto del tamaño de la clase en el rendimiento escolar.</p>
+<section id="asignación-aleatoria" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="asignación-aleatoria"><span class="header-section-number">2.2</span> Asignación aleatoria</h2>
+<p>Entendiendo la idea de los RCT’s, veamos un concepto fundamental de los diseños experimentales. Pero antes, retomemos un poco. Hasta aquí tenemos lo siguiente:</p>
+<ol type="1">
+<li>Un experimento define a un grupo de tramiento y otro de control. De aquí existen dos resultados posibles:</li>
+</ol>
 <ul>
-<li>Tratamiento: Clases pequeñas (13-17 alumnos).</li>
-<li>Control: Clases regulares (22-25 alumnos).</li>
+<li>Resultado con tratamiento <span class="math inline">\(y_{1i}\)</span></li>
+<li>Resultado sin tratamiento <span class="math inline">\(y_{0i}\)</span></li>
 </ul>
-<section id="test-de-balance" class="level3" data-number="2.2.1">
-<h3 data-number="2.2.1" class="anchored" data-anchor-id="test-de-balance"><span class="header-section-number">2.2.1</span> 1. Test de Balance</h3>
-<p>Antes de estimar efectos, debemos verificar que la aleatorización funcionó. Las características pre-tratamiento deben ser iguales entre grupos.</p>
+<ol start="2" type="1">
+<li>Solo podemos observar uno de los dos resultados para <span class="math inline">\(i\)</span>. Para ello, definimos la asignación de tratamiento con una variable de tratamiento <span class="math inline">\(D_i\)</span>, que nos permite identificar: <span class="math display">\[
+y_i =
+\begin{cases}
+  y_{1i}, &amp; \quad \text{si } D_i =1\\
+  y_{0i}, &amp; \quad \text{si } D_i =0\\
+\end{cases}
+\]</span></li>
+<li>El efecto causal del tratamiento es <span class="math display">\[
+\tau_i =y_{1i}-y_{0i}
+\]</span> pero no se puede observar directamente <span class="math inline">\(\tau_i\)</span>.</li>
+<li>Dado que no se puede observar <span class="math inline">\(\tau_i\)</span>, se dfine el efecto promedio del tratamiento (ATE) como <span class="math display">\[
+E[\tau_i] = E[y_{1i}-y_{0i}]
+\]</span> y el efecto promedio <em>sobre</em> los tratados (ATT) como <span class="math display">\[
+E[\tau_i \mid D_i =1] = E[y_{1i}-y_{0i}\mid D_i =1]
+\]</span></li>
+<li>Al tratar con el problema econométrico, recordemos qué pasaba cuando tomabamos la diferencia entre ambios grupos: <span class="math display">\[
+E[y_{1i} \mid D_i = 1] - E[y_{0i} \mid D_i =0]
+\]</span> que es equivalente a <span class="math display">\[
+E[y_{1i} \mid D_i = 1] - E[y_{0i} \mid D_i = 1] + E[y_{0i} \mid D_i = 1] - E[y_{0i} \mid D_i = 0]
+\]</span> donde <span class="math inline">\(E[y_{1i} \mid D_i = 1]- E[y_{0i} \mid D_i = 1]\)</span>: ATT; y <span class="math inline">\(E[y_{0i} \mid D_i = 1]- E[y_{0i} \mid D_i = 0] \neq 0\)</span>: Sesgo de selección (SS). Entonces teníamos que <span class="math display">\[
+E[y_{1i} \mid D_i = 1]-E[y_{0i} \mid D_i = 0] = ATT+ SS
+\]</span> No obstante, la comparación del promedio de los grupos <strong>no</strong> nos da <em>per se</em> el efecto del tratamiento (de hecho, no siempre es cero). Si no que, esto lo obtendremos con la aleatorización.</li>
+</ol>
+<section id="la-solución-experimental-por-qué-funciona-la-aleatorización" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="la-solución-experimental-por-qué-funciona-la-aleatorización"><span class="header-section-number">2.2.1</span> La Solución Experimental: Por qué funciona la Aleatorización</h3>
+<p>Como vimos en la sección anterior, el sesgo de selección surge porque las personas se “autoseleccionan” en el tratamiento basándose en sus características (y por ende, en sus resultados potenciales). Quienes van al hospital (<span class="math inline">\(D_i=1\)</span>) tienen, <em>de base</em>, una salud (<span class="math inline">\(Y_{0i}\)</span>) peor que quienes no van. La asignación aleatoria (Random Assignment) resuelve este problema de raíz. ¿Cómo? <strong>Desvinculando el tratamiento de las características del individuo</strong>.</p>
+<p>En un RCT, la asignación del tratamiento <span class="math inline">\(D_i\)</span> es decidida por un mecanismo aleatorio (una moneda, una lotería, un generador de números aleatorios). Esto implica una propiedad estadística fundamental descrita por <a href="https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf">Angrist y Pischke (2008)</a>: <strong>la independencia</strong>: <span class="math display">\[\{Y_{1i}, Y_{0i}\} \perp \!\!\! \perp D_i\]</span></p>
+<p>Esto se lee así: los resultados potenciales son independientes del estatus de tratamiento. En palabras simples: el hecho de que seas asignado al grupo de tratamiento o al de control no tiene <strong>nada</strong> que ver con tu salud previa, tu motivación, tu inteligencia o tu nivel socioeconómico. Es puro azar. Esta independencia es la herramienta más poderosa de la econometría experimental. Nos permite afirmar que, en promedio, los individuos del grupo de control son idénticos a los del grupo de tratamiento <em>antes</em> de la intervención.</p>
+<section id="la-derivación-formal" class="level4" data-number="2.2.1.1">
+<h4 data-number="2.2.1.1" class="anchored" data-anchor-id="la-derivación-formal"><span class="header-section-number">2.2.1.1</span> La Derivación Formal</h4>
+<p>Esta independencia nos permite hacer una “magia” matemática. Recordemos nuestra descomposición de la diferencia de medias observada:</p>
+<p><span class="math display">\[
+\underbrace{E[Y_i | D_i=1] - E[Y_i | D_i=0]}_{\text{Diferencia Observada}} = \underbrace{E[Y_{1i} | D_i=1] - E[Y_{0i} | D_i=1]}_{\text{ATT}} + \underbrace{E[Y_{0i} | D_i=1] - E[Y_{0i} | D_i=0]}_{\text{Sesgo de Selección}}
+\]</span></p>
+<p>Bajo aleatorización, el término de sesgo de selección desaparece. Siguiendo a <a href="https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf">A&amp;P (2008)</a>, la lógica es la siguiente: dado que <span class="math inline">\(D_i\)</span> es independiente de <span class="math inline">\(Y_{0i}\)</span>, el promedio del resultado potencial “sin tratamiento” (<span class="math inline">\(Y_{0i}\)</span>) es estadísticamente idéntico en ambos grupos.</p>
+<p><span class="math display">\[E[Y_{0i} | D_i = 1] = E[Y_{0i} | D_i = 0] = E[Y_{0i}]\]</span></p>
+<p>Esto es lo que A&amp;Pe llaman la capacidad de <strong>“intercambiar”</strong> (<em>swap</em>) términos. Podemos usar el resultado observado del grupo de control (<span class="math inline">\(E[Y_{0i} | D_i=0]\)</span>) como un contrafactual perfecto para el grupo de tratamiento.</p>
+</section>
+<section id="el-resultado-ate-att" class="level4" data-number="2.2.1.2">
+<h4 data-number="2.2.1.2" class="anchored" data-anchor-id="el-resultado-ate-att"><span class="header-section-number">2.2.1.2</span> El Resultado: ATE = ATT</h4>
+<p>Si el sesgo de selección es cero, la ecuación se simplifica dramáticamente:</p>
+<p><span class="math display">\[
+\begin{aligned}
+E[Y_i | D_i=1] - E[Y_i | D_i=0] &amp;= E[Y_{1i} | D_i=1] - E[Y_{0i} | D_i=1] \\
+&amp;= E[Y_{1i} - Y_{0i} | D_i=1] \\
+&amp;= E[Y_{1i} - Y_{0i}]
+\end{aligned}
+\]</span></p>
+<p>Bajo aleatorización, la diferencia de medias simple no solo recupera el Efecto Promedio en los Tratados (ATT), sino que, como la muestra es representativa y la asignación es aleatoria, este es igual al <strong>Efecto Promedio del Tratamiento (ATE)</strong> poblacional <a href="https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf">(Angrist y Pischke, 2008)</a>.</p>
+<div class="callout callout-style-simple callout-tip no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Intuición Económica:</strong> En el ejemplo del hospital de A&amp;P, si forzáramos a una muestra aleatoria de la población a ir al hospital (independientemente de si están enfermos o no), eliminaríamos el hecho de que “los enfermos buscan tratamiento”. Así, compararíamos la salud de un grupo promedio hospitalizado versus un grupo promedio no hospitalizado. La diferencia sería, indiscutiblemente, el efecto causal de la atención médica.</p>
+</div>
+</div>
+</div>
+<p>En suma, si <span class="math inline">\(D_i\)</span> es asignado al azar, entonces es independiente de <span class="math inline">\(y_i\)</span>, tal que <span class="math display">\[
+E[y_{1i} \mid D_i = 1] = E[y_{1i} \mid D_i = 0] = E[y_{1i}] .
+\]</span> Luego, teníamos que el efecto del tratamiento es el siguiente: <span class="math display">\[
+E[y_{1i}\mid D_i =1]-E[y_{0i}\mid D_i =0] = ATT
+\]</span> por lo que ahora: <span class="math display">\[
+E[y_{1i}\mid D_i =1] - E[y_{0i}\mid D_i =1] = E[y_{1i}-y_{0i}].
+\]</span> Es decir, que el ATT coincide con el ATE. Además, vale la pena mencionar que el <em>estimador</em> de ATE se puede calcualr como diferencia de medias: <span class="math display">\[
+\bar{Y}\mid D_i = 1 - \bar{Y}\mid D_i = 0
+\]</span> Por último, una sintesis hasta aquí de lo que llevamos de manera esquemática:</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+
+    %% Nodos principales
+    P["Población"]
+    M["Muestra"]
+    GT["Grupo tratamiento"]
+    GC["Grupo control"]
+
+    %% Nodos de texto (etiquetas en cajas)
+    T1["Muestreo Aleatorio&lt;br/&gt;Validez Externa"]
+    T2["Asignación Aleatoria&lt;br/&gt;Validez Interna"]
+    T3["Asignación Aleatoria&lt;br/&gt;Validez Interna"]
+
+    %% Conexiones
+    P --&gt; T1 --&gt; M
+    M --&gt; T2 --&gt; GT
+    M --&gt; T3 --&gt; GC
+
+    %% Estilo de cajas principales
+    classDef main fill:#f6eeee,stroke:#666,stroke-width:1px,color:#8b0000
+    class P,M,GT,GC main
+
+    %% Estilo de cajas de texto intermedias
+    classDef label fill:#ededed,stroke:#ededed,color:#8b0000,font-size:12px
+    class T1,T2,T3 label
+
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="experimentos-aleatorizados-proyecto-star" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="experimentos-aleatorizados-proyecto-star"><span class="header-section-number">2.3</span> Experimentos aleatorizados: Proyecto STAR</h2>
+<p>Algo que no hemos mencionado hasta ahora: para un experimento aleatorio, en general vamos a necesitar un número lo suficientemente <strong>grande</strong> de personas en cada grupo. Por ejemplo, si tenemos solo 1 personas en cada grupo, es muy probable que estas dos personas difieran en cosas distintas generando sesgo por selección. En cambio, si tenemos grupos con un <span class="math inline">\(n\)</span> lo suficientemente grande e individuos elegidos al azar, entonces, aunque <em>cada</em> individuo sea diferente, la mayoría de las características serán similares <em>en promedio</em>. A esto también le llamamos <em>en expectativa</em>, pues calculamos el valor esperado por notación generalmente como ya vimos.</p>
+<p>Pero, ¿cómo sabemos que el tamaño <span class="math inline">\(n\)</span> influye de tal manera? Bueno, por la propiedad estadística de la <strong>Ley de los Grandes Números</strong>: el promedio muestral se acerca al promedio poblacional a medida que aumenta el tamaño de la muestra. El promedio poblacional se llama <em>esperanza matemática</em>, <span class="math inline">\(E[y]\)</span>. Entonces, <span class="math inline">\(\bar{y} \to E[y]\)</span>.</p>
+<p>Luego de aleatorizar, se debe chequear que los grupos de tratamiento y de control no tinene diferencias en variables observables (características y variable de resultado), <strong>previo a la intervención</strong>. Veamos cómo ocurre esto con una investigación empírica real: el Proyecto STAR (<em>Student/Teacher Achievement Ratio</em>), ejecutado durante los 80s en Tennessee (US), donde se redujo el tamaño de la clase de pre-escolares. La asignación aleatoria de estudiantes en 3 grupos</p>
+<ul>
+<li>Tratamiento: 1) Clases pequeñas (13-17 alumnos).</li>
+<li>Control: 2) Clases regulares (22-25 alumnos) y un asistente de profesor a tiempo parcial; o 3) clases regulares con un asistente de profesor a tiempo completo.</li>
+</ul>
+<p>Así, una de las primeras preguntas que hay que plantearse sobre un experimento aleatorio es “si la aleatorización ha logrado equilibrar con éxito las características de los sujetos entre los diferentes grupos de tratamiento” <a href="https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf">(Angrist y Pischke, 2008, p.&nbsp;14, <em>traducción propia</em>)</a>. Para ello, se suele comparar resultados previos al tratamiento y/u otras covariables. Los datos de STAR, no obstante, no incluyen las puntuaciones de las pruebas previas al tratamiento, pero es posible examinar caracteristicas personales como la raza y la edad. A&amp;P muestran la siguiente tabla, en la cual debemos verificar que la aleatorización funcionó. Las características pre-tratamiento deben ser iguales entre grupos:</p>
 <div class="cell">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -1536,8 +1657,18 @@ E[y_i \mid D_i = 1] &amp;= E[y_{1i} \mid D_i = 1] \\
 </div>
 </div>
 </div>
-<p><em>Nota: El p-valor conjunto no significativo indica que la aleatorización fue exitosa.</em></p>
-</section>
+<p>Entonces, el “tratamiento” serían las clases pequeñas (Columna “<em>Small</em>”) y los dos controles diferenciados por clases regulares (igual de grandes que antes), pero con la diferenciación del profe a tiempo completo o parcial. Las variables relevantes en verdad son las 3 primeras: 1. Almuerzo gratis, 2. Blanco/asiático y 3. Edad en 1985. Se presentan medias, por lo que sería, por ejemplo, para 1: 47% de los alumnos recibían almuerzo gratuito en salas pequeñas, 48% en regulares y 50% en regulares con profe asistente. Como vemos, coinciden los valores en casi todas. Al rededor del 50% tiene almuerzo gratis en todas los tipos de salas (nivel socioeconómico (bajo) similar), al rededor de 2/3 son blancos o asiaticos y la edad promedio en 1985 era casi de 5 años y medio. El joint <span class="math inline">\(p-\)</span><em>value</em> (es un <span class="math inline">\(F-\)</span><em>test</em>) indica si hay diferencias significativas estadísticamente habblando. COmo vemos, ninguna <span class="math inline">\(p&lt;0.05\)</span>, por lo que no hay diferencias signidicativas entre los grupos de control y el tratado. Esto indica que son grupos con características similares<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p>
+<p>Por lo tanto, son grupos balanceados. Además, dado que “la aleatorización elimina el sesgo de selección, la diferencia en los resultados entre los grupos de tratamiento refleja el efecto causal medio del tamaño de la clase (en relación con las clases normales con un asistente a tiempo parcial)” <a href="https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf">(Angrist y Pischke, 2008, p.&nbsp;15, <em>traducción propia</em>)</a>. En la práctica, la diferencia en las medias entre los grupos de tratamiento y control puede obtenerse a partir de una regresión de las puntuaciones de las pruebas sobre variables <em>dummy</em> para cada grupo de tratamiento, un punto que se trata aquí con una tabla, pero que después profundizaremos con más detenimiento. En cualquier caso, la tabla es la siguiente (solo para adelantar, luego la analizamos bien):</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/regression-to-balance.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption>Estimaciones experimentales del efecto de la asignación del tamaño de clase en los puntajes de los exámenes</figcaption>
+</figure>
+</div>
+</div>
+</div>
 </section>
 </section>
 <section id="bloque-3-regresión-e-inferencia" class="level1" data-number="3">
@@ -1598,6 +1729,7 @@ E[y_i \mid D_i = 1] &amp;= E[y_{1i} \mid D_i = 1] \\
 <ol>
 <li id="fn1"><p>Esto se mide con la pregunta que realiza la Encuesta Nacinoal de Salud (NHIS): “Would you say your health in general is excellent, very good, good, fair, poor?” donde 1 es “excellent health” y 5 es “poor health”<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>Ojo, aquí la escala es otra y está invertida. Primero no es de 1 a 5, sino de 1 a 7. Y aquí 1 es el peor puntaje y 7 el mejor. A diferencia que en la NHIS que 1 era el mejor puntaje y 5 el peor<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>La atrición son los casos perdidos porque se cambiaron de colegio o cualquier otro motivo<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -2413,75 +2545,220 @@ E[y_i \mid D_i = 1] &amp;= E[y_{1i} \mid D_i = 1] \\
 <span id="cb1-361"><a href="#cb1-361" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>También hay muchos ejemplos en economía del desarrollo (<span class="co">[</span><span class="ot">Esther Duflo: Experimentos sociales para luchar contra la pobreza</span><span class="co">](https://www.youtube.com/watch?v=0zvrGiPkVcs)</span>)</span>
 <span id="cb1-362"><a href="#cb1-362" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb1-363"><a href="#cb1-363" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-364"><a href="#cb1-364" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-364"><a href="#cb1-364" aria-hidden="true" tabindex="-1"></a><span class="fu">## Asignación aleatoria</span></span>
 <span id="cb1-365"><a href="#cb1-365" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-366"><a href="#cb1-366" aria-hidden="true" tabindex="-1"></a>La **aleatorización** garantiza que el tratamiento $D_i$ sea independiente de los resultados potenciales ($Y_{1i}, Y_{0i}$).</span>
+<span id="cb1-366"><a href="#cb1-366" aria-hidden="true" tabindex="-1"></a>Entendiendo la idea de los RCT's, veamos un concepto fundamental de los diseños experimentales. Pero antes, retomemos un poco. Hasta aquí tenemos lo siguiente: </span>
 <span id="cb1-367"><a href="#cb1-367" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-368"><a href="#cb1-368" aria-hidden="true" tabindex="-1"></a>Esto implica que:</span>
-<span id="cb1-369"><a href="#cb1-369" aria-hidden="true" tabindex="-1"></a>$$ E<span class="co">[</span><span class="ot">Y_{0i} | D_i=1</span><span class="co">]</span> = E<span class="co">[</span><span class="ot">Y_{0i} | D_i=0</span><span class="co">]</span> $$</span>
-<span id="cb1-370"><a href="#cb1-370" aria-hidden="true" tabindex="-1"></a>¡El sesgo de selección desaparece<span class="sc">\!</span> Por tanto, la diferencia simple de medias recupera el efecto causal verdadero (ATE).</span>
-<span id="cb1-371"><a href="#cb1-371" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-372"><a href="#cb1-372" aria-hidden="true" tabindex="-1"></a><span class="fu">## Caso de Estudio: Proyecto STAR (Tennessee)</span></span>
-<span id="cb1-373"><a href="#cb1-373" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-374"><a href="#cb1-374" aria-hidden="true" tabindex="-1"></a>Experimento de los 80s para ver el efecto del tamaño de la clase en el rendimiento escolar.</span>
-<span id="cb1-375"><a href="#cb1-375" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-376"><a href="#cb1-376" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Tratamiento: Clases pequeñas (13-17 alumnos).</span>
-<span id="cb1-377"><a href="#cb1-377" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Control: Clases regulares (22-25 alumnos).</span>
-<span id="cb1-378"><a href="#cb1-378" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-379"><a href="#cb1-379" aria-hidden="true" tabindex="-1"></a><span class="fu">### 1\. Test de Balance</span></span>
-<span id="cb1-380"><a href="#cb1-380" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-381"><a href="#cb1-381" aria-hidden="true" tabindex="-1"></a>Antes de estimar efectos, debemos verificar que la aleatorización funcionó. Las características pre-tratamiento deben ser iguales entre grupos.</span>
-<span id="cb1-382"><a href="#cb1-382" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-383"><a href="#cb1-383" aria-hidden="true" tabindex="-1"></a><span class="in">```{r img-star-balance}</span></span>
-<span id="cb1-384"><a href="#cb1-384" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb1-385"><a href="#cb1-385" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Tabla de Balance Proyecto STAR"</span></span>
-<span id="cb1-386"><a href="#cb1-386" aria-hidden="true" tabindex="-1"></a><span class="co">#| out-width: "80%"</span></span>
-<span id="cb1-387"><a href="#cb1-387" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-388"><a href="#cb1-388" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"images/star_balance.png"</span>, <span class="at">error =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb1-389"><a href="#cb1-389" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb1-390"><a href="#cb1-390" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-391"><a href="#cb1-391" aria-hidden="true" tabindex="-1"></a>*Nota: El p-valor conjunto no significativo indica que la aleatorización fue exitosa.*</span>
-<span id="cb1-392"><a href="#cb1-392" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-393"><a href="#cb1-393" aria-hidden="true" tabindex="-1"></a><span class="fu"># Bloque 3: Regresión e Inferencia</span></span>
-<span id="cb1-394"><a href="#cb1-394" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-395"><a href="#cb1-395" aria-hidden="true" tabindex="-1"></a><span class="fu">## Estimación por MCO</span></span>
-<span id="cb1-396"><a href="#cb1-396" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-397"><a href="#cb1-397" aria-hidden="true" tabindex="-1"></a>En un RCT ideal, podemos estimar el efecto ($\rho$) con una regresión simple:</span>
-<span id="cb1-398"><a href="#cb1-398" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-399"><a href="#cb1-399" aria-hidden="true" tabindex="-1"></a>$$ Y_i = \alpha + \rho D_i + \eta_i $$</span>
-<span id="cb1-400"><a href="#cb1-400" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-401"><a href="#cb1-401" aria-hidden="true" tabindex="-1"></a><span class="fu">### ¿Por qué añadir controles ($X_i$)?</span></span>
-<span id="cb1-402"><a href="#cb1-402" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-403"><a href="#cb1-403" aria-hidden="true" tabindex="-1"></a>Aunque no son necesarios para evitar sesgo (dada la aleatorización), incluirlos sirve para:</span>
-<span id="cb1-404"><a href="#cb1-404" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-405"><a href="#cb1-405" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>**Reducir la varianza** del error y ganar precisión (errores estándar más pequeños).</span>
-<span id="cb1-406"><a href="#cb1-406" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>Controlar por el diseño si la aleatorización fue condicional (ej. estratificada por escuela).</span>
+<span id="cb1-368"><a href="#cb1-368" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Un experimento define a un grupo de tramiento y otro de control. De aquí existen dos resultados posibles: </span>
+<span id="cb1-369"><a href="#cb1-369" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-370"><a href="#cb1-370" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Resultado con tratamiento $y_{1i}$</span>
+<span id="cb1-371"><a href="#cb1-371" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Resultado sin tratamiento $y_{0i}$</span>
+<span id="cb1-372"><a href="#cb1-372" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-373"><a href="#cb1-373" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Solo podemos observar uno de los dos resultados para $i$. Para ello, definimos la asignación de tratamiento con una variable de tratamiento $D_i$, que nos permite identificar: </span>
+<span id="cb1-374"><a href="#cb1-374" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-375"><a href="#cb1-375" aria-hidden="true" tabindex="-1"></a>y_i = </span>
+<span id="cb1-376"><a href="#cb1-376" aria-hidden="true" tabindex="-1"></a>\begin{cases}</span>
+<span id="cb1-377"><a href="#cb1-377" aria-hidden="true" tabindex="-1"></a>  y_{1i}, &amp; \quad \text{si } D_i =1<span class="sc">\\</span></span>
+<span id="cb1-378"><a href="#cb1-378" aria-hidden="true" tabindex="-1"></a>  y_{0i}, &amp; \quad \text{si } D_i =0<span class="sc">\\</span></span>
+<span id="cb1-379"><a href="#cb1-379" aria-hidden="true" tabindex="-1"></a>\end{cases}</span>
+<span id="cb1-380"><a href="#cb1-380" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-381"><a href="#cb1-381" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>El efecto causal del tratamiento es</span>
+<span id="cb1-382"><a href="#cb1-382" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-383"><a href="#cb1-383" aria-hidden="true" tabindex="-1"></a>\tau_i =y_{1i}-y_{0i}</span>
+<span id="cb1-384"><a href="#cb1-384" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-385"><a href="#cb1-385" aria-hidden="true" tabindex="-1"></a>pero no se puede observar directamente $\tau_i$. </span>
+<span id="cb1-386"><a href="#cb1-386" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>Dado que no se puede observar $\tau_i$, se dfine el efecto promedio del tratamiento (ATE) como </span>
+<span id="cb1-387"><a href="#cb1-387" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-388"><a href="#cb1-388" aria-hidden="true" tabindex="-1"></a>E<span class="co">[</span><span class="ot">\tau_i</span><span class="co">]</span> = E<span class="co">[</span><span class="ot">y_{1i}-y_{0i}</span><span class="co">]</span> </span>
+<span id="cb1-389"><a href="#cb1-389" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-390"><a href="#cb1-390" aria-hidden="true" tabindex="-1"></a>y el efecto promedio *sobre* los tratados (ATT) como</span>
+<span id="cb1-391"><a href="#cb1-391" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-392"><a href="#cb1-392" aria-hidden="true" tabindex="-1"></a>E<span class="co">[</span><span class="ot">\tau_i \mid D_i =1</span><span class="co">]</span> = E<span class="co">[</span><span class="ot">y_{1i}-y_{0i}\mid D_i =1</span><span class="co">]</span> </span>
+<span id="cb1-393"><a href="#cb1-393" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-394"><a href="#cb1-394" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>Al tratar con el problema econométrico, recordemos qué pasaba cuando tomabamos la diferencia entre ambios grupos: </span>
+<span id="cb1-395"><a href="#cb1-395" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-396"><a href="#cb1-396" aria-hidden="true" tabindex="-1"></a>E<span class="co">[</span><span class="ot">y_{1i} \mid D_i = 1</span><span class="co">]</span> - E<span class="co">[</span><span class="ot">y_{0i} \mid D_i =0</span><span class="co">]</span></span>
+<span id="cb1-397"><a href="#cb1-397" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-398"><a href="#cb1-398" aria-hidden="true" tabindex="-1"></a>que es equivalente a </span>
+<span id="cb1-399"><a href="#cb1-399" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-400"><a href="#cb1-400" aria-hidden="true" tabindex="-1"></a>E<span class="co">[</span><span class="ot">y_{1i} \mid D_i = 1</span><span class="co">]</span> - E<span class="co">[</span><span class="ot">y_{0i} \mid D_i = 1</span><span class="co">]</span> + E<span class="co">[</span><span class="ot">y_{0i} \mid D_i = 1</span><span class="co">]</span> - E<span class="co">[</span><span class="ot">y_{0i} \mid D_i = 0</span><span class="co">]</span></span>
+<span id="cb1-401"><a href="#cb1-401" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-402"><a href="#cb1-402" aria-hidden="true" tabindex="-1"></a>donde $E<span class="co">[</span><span class="ot">y_{1i} \mid D_i = 1</span><span class="co">]</span>- E<span class="co">[</span><span class="ot">y_{0i} \mid D_i = 1</span><span class="co">]</span>$: ATT; y $E<span class="co">[</span><span class="ot">y_{0i} \mid D_i = 1</span><span class="co">]</span>- E<span class="co">[</span><span class="ot">y_{0i} \mid D_i = 0</span><span class="co">]</span> \neq 0$: Sesgo de selección (SS). Entonces teníamos que</span>
+<span id="cb1-403"><a href="#cb1-403" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-404"><a href="#cb1-404" aria-hidden="true" tabindex="-1"></a>E<span class="co">[</span><span class="ot">y_{1i} \mid D_i = 1</span><span class="co">]</span>-E<span class="co">[</span><span class="ot">y_{0i} \mid D_i = 0</span><span class="co">]</span> = ATT+ SS</span>
+<span id="cb1-405"><a href="#cb1-405" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-406"><a href="#cb1-406" aria-hidden="true" tabindex="-1"></a>No obstante, la comparación del promedio de los grupos **no** nos da *per se* el efecto del tratamiento (de hecho, no siempre es cero). Si no que, esto lo obtendremos con la aleatorización. </span>
 <span id="cb1-407"><a href="#cb1-407" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-408"><a href="#cb1-408" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-409"><a href="#cb1-409" aria-hidden="true" tabindex="-1"></a><span class="in">```{r img-star-results}</span></span>
-<span id="cb1-410"><a href="#cb1-410" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb1-411"><a href="#cb1-411" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Resultados de Regresión Proyecto STAR"</span></span>
-<span id="cb1-412"><a href="#cb1-412" aria-hidden="true" tabindex="-1"></a><span class="co">#| out-width: "80%"</span></span>
-<span id="cb1-413"><a href="#cb1-413" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-414"><a href="#cb1-414" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"images/star_results.png"</span>, <span class="at">error =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb1-415"><a href="#cb1-415" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-408"><a href="#cb1-408" aria-hidden="true" tabindex="-1"></a><span class="fu">### La Solución Experimental: Por qué funciona la Aleatorización</span></span>
+<span id="cb1-409"><a href="#cb1-409" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-410"><a href="#cb1-410" aria-hidden="true" tabindex="-1"></a>Como vimos en la sección anterior, el sesgo de selección surge porque las personas se "autoseleccionan" en el tratamiento basándose en sus características (y por ende, en sus resultados potenciales). Quienes van al hospital ($D_i=1$) tienen, *de base*, una salud ($Y_{0i}$) peor que quienes no van. La asignación aleatoria (Random Assignment) resuelve este problema de raíz. ¿Cómo? **Desvinculando el tratamiento de las características del individuo**.</span>
+<span id="cb1-411"><a href="#cb1-411" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-412"><a href="#cb1-412" aria-hidden="true" tabindex="-1"></a>En un RCT, la asignación del tratamiento $D_i$ es decidida por un mecanismo aleatorio (una moneda, una lotería, un generador de números aleatorios). Esto implica una propiedad estadística fundamental descrita por <span class="co">[</span><span class="ot">Angrist y Pischke (2008)</span><span class="co">](https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf)</span>: **la independencia**:</span>
+<span id="cb1-413"><a href="#cb1-413" aria-hidden="true" tabindex="-1"></a>$$<span class="sc">\{</span>Y_{1i}, Y_{0i}<span class="sc">\}</span> \perp <span class="sc">\!\!\!</span> \perp D_i$$</span>
+<span id="cb1-414"><a href="#cb1-414" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-415"><a href="#cb1-415" aria-hidden="true" tabindex="-1"></a>Esto se lee así: los resultados potenciales son independientes del estatus de tratamiento. En palabras simples: el hecho de que seas asignado al grupo de tratamiento o al de control no tiene **nada** que ver con tu salud previa, tu motivación, tu inteligencia o tu nivel socioeconómico. Es puro azar. Esta independencia es la herramienta más poderosa de la econometría experimental. Nos permite afirmar que, en promedio, los individuos del grupo de control son idénticos a los del grupo de tratamiento *antes* de la intervención.</span>
 <span id="cb1-416"><a href="#cb1-416" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-417"><a href="#cb1-417" aria-hidden="true" tabindex="-1"></a><span class="fu">## SUTVA (Stable Unit Treatment Value Assumption)</span></span>
+<span id="cb1-417"><a href="#cb1-417" aria-hidden="true" tabindex="-1"></a><span class="fu">#### La Derivación Formal</span></span>
 <span id="cb1-418"><a href="#cb1-418" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-419"><a href="#cb1-419" aria-hidden="true" tabindex="-1"></a>Asumimos que no hay interferencia entre unidades: el tratamiento de $i$ no afecta a $j$.</span>
+<span id="cb1-419"><a href="#cb1-419" aria-hidden="true" tabindex="-1"></a>Esta independencia nos permite hacer una "magia" matemática. Recordemos nuestra descomposición de la diferencia de medias observada:</span>
 <span id="cb1-420"><a href="#cb1-420" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-421"><a href="#cb1-421" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>*Violaciones*: Efectos pares (spillovers), efectos de equilibrio general.</span>
-<span id="cb1-422"><a href="#cb1-422" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-423"><a href="#cb1-423" aria-hidden="true" tabindex="-1"></a><span class="fu">## Pruebas de Hipótesis</span></span>
+<span id="cb1-421"><a href="#cb1-421" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-422"><a href="#cb1-422" aria-hidden="true" tabindex="-1"></a>\underbrace{E<span class="co">[</span><span class="ot">Y_i | D_i=1</span><span class="co">]</span> - E<span class="co">[</span><span class="ot">Y_i | D_i=0</span><span class="co">]</span>}_{\text{Diferencia Observada}} = \underbrace{E[Y_{1i} | D_i=1] - E[Y_{0i} | D_i=1]}_{\text{ATT}} + \underbrace{E[Y_{0i} | D_i=1] - E[Y_{0i} | D_i=0]}_{\text{Sesgo de Selección}}</span>
+<span id="cb1-423"><a href="#cb1-423" aria-hidden="true" tabindex="-1"></a>$$</span>
 <span id="cb1-424"><a href="#cb1-424" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-425"><a href="#cb1-425" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>**Muestras grandes**: Test-t asintótico estándar.</span>
-<span id="cb1-426"><a href="#cb1-426" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>**Muestras pequeñas**: Test Exacto de Fisher (permutaciones).</span>
-<span id="cb1-427"><a href="#cb1-427" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-425"><a href="#cb1-425" aria-hidden="true" tabindex="-1"></a>Bajo aleatorización, el término de sesgo de selección desaparece. Siguiendo a <span class="co">[</span><span class="ot">A&amp;P (2008)</span><span class="co">](https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf)</span>, la lógica es la siguiente: dado que $D_i$ es independiente de $Y_{0i}$, el promedio del resultado potencial "sin tratamiento" ($Y_{0i}$) es estadísticamente idéntico en ambos grupos.</span>
+<span id="cb1-426"><a href="#cb1-426" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-427"><a href="#cb1-427" aria-hidden="true" tabindex="-1"></a>$$E<span class="co">[</span><span class="ot">Y_{0i} | D_i = 1</span><span class="co">]</span> = E<span class="co">[</span><span class="ot">Y_{0i} | D_i = 0</span><span class="co">]</span> = E<span class="co">[</span><span class="ot">Y_{0i}</span><span class="co">]</span>$$</span>
 <span id="cb1-428"><a href="#cb1-428" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-429"><a href="#cb1-429" aria-hidden="true" tabindex="-1"></a><span class="fu"># Referencias</span></span>
+<span id="cb1-429"><a href="#cb1-429" aria-hidden="true" tabindex="-1"></a>Esto es lo que A&amp;Pe llaman la capacidad de **"intercambiar"** (*swap*) términos. Podemos usar el resultado observado del grupo de control ($E<span class="co">[</span><span class="ot">Y_{0i} | D_i=0</span><span class="co">]</span>$) como un contrafactual perfecto para el grupo de tratamiento.</span>
 <span id="cb1-430"><a href="#cb1-430" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-431"><a href="#cb1-431" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Angrist &amp; Pischke (2009). *Mostly Harmless Econometrics*, Cap. 2.</span>
-<span id="cb1-432"><a href="#cb1-432" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Material del curso "Econometría Aplicada I", FEN U. Chile (2025).</span></code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+<span id="cb1-431"><a href="#cb1-431" aria-hidden="true" tabindex="-1"></a><span class="fu">#### El Resultado: ATE = ATT</span></span>
+<span id="cb1-432"><a href="#cb1-432" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-433"><a href="#cb1-433" aria-hidden="true" tabindex="-1"></a>Si el sesgo de selección es cero, la ecuación se simplifica dramáticamente:</span>
+<span id="cb1-434"><a href="#cb1-434" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-435"><a href="#cb1-435" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-436"><a href="#cb1-436" aria-hidden="true" tabindex="-1"></a>\begin{aligned}</span>
+<span id="cb1-437"><a href="#cb1-437" aria-hidden="true" tabindex="-1"></a>E<span class="co">[</span><span class="ot">Y_i | D_i=1</span><span class="co">]</span> - E<span class="co">[</span><span class="ot">Y_i | D_i=0</span><span class="co">]</span> &amp;= E<span class="co">[</span><span class="ot">Y_{1i} | D_i=1</span><span class="co">]</span> - E<span class="co">[</span><span class="ot">Y_{0i} | D_i=1</span><span class="co">]</span> <span class="sc">\\</span></span>
+<span id="cb1-438"><a href="#cb1-438" aria-hidden="true" tabindex="-1"></a>&amp;= E<span class="co">[</span><span class="ot">Y_{1i} - Y_{0i} | D_i=1</span><span class="co">]</span> <span class="sc">\\</span></span>
+<span id="cb1-439"><a href="#cb1-439" aria-hidden="true" tabindex="-1"></a>&amp;= E<span class="co">[</span><span class="ot">Y_{1i} - Y_{0i}</span><span class="co">]</span></span>
+<span id="cb1-440"><a href="#cb1-440" aria-hidden="true" tabindex="-1"></a>\end{aligned}</span>
+<span id="cb1-441"><a href="#cb1-441" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-442"><a href="#cb1-442" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-443"><a href="#cb1-443" aria-hidden="true" tabindex="-1"></a>Bajo aleatorización, la diferencia de medias simple no solo recupera el Efecto Promedio en los Tratados (ATT), sino que, como la muestra es representativa y la asignación es aleatoria, este es igual al **Efecto Promedio del Tratamiento (ATE)** poblacional <span class="co">[</span><span class="ot">(Angrist y Pischke, 2008)</span><span class="co">](https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf)</span>.</span>
+<span id="cb1-444"><a href="#cb1-444" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-445"><a href="#cb1-445" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip appearance="minimal"}</span>
+<span id="cb1-446"><a href="#cb1-446" aria-hidden="true" tabindex="-1"></a>**Intuición Económica:**</span>
+<span id="cb1-447"><a href="#cb1-447" aria-hidden="true" tabindex="-1"></a>En el ejemplo del hospital de A&amp;P, si forzáramos a una muestra aleatoria de la población a ir al hospital (independientemente de si están enfermos o no), eliminaríamos el hecho de que "los enfermos buscan tratamiento". Así, compararíamos la salud de un grupo promedio hospitalizado versus un grupo promedio no hospitalizado. La diferencia sería, indiscutiblemente, el efecto causal de la atención médica.</span>
+<span id="cb1-448"><a href="#cb1-448" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-449"><a href="#cb1-449" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-450"><a href="#cb1-450" aria-hidden="true" tabindex="-1"></a>En suma, si $D_i$ es asignado al azar, entonces es independiente de $y_i$, tal que </span>
+<span id="cb1-451"><a href="#cb1-451" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-452"><a href="#cb1-452" aria-hidden="true" tabindex="-1"></a>E<span class="co">[</span><span class="ot">y_{1i} \mid D_i = 1</span><span class="co">]</span> = E<span class="co">[</span><span class="ot">y_{1i} \mid D_i = 0</span><span class="co">]</span> = E<span class="co">[</span><span class="ot">y_{1i}</span><span class="co">]</span> .</span>
+<span id="cb1-453"><a href="#cb1-453" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-454"><a href="#cb1-454" aria-hidden="true" tabindex="-1"></a>Luego, teníamos que el efecto del tratamiento es el siguiente: </span>
+<span id="cb1-455"><a href="#cb1-455" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-456"><a href="#cb1-456" aria-hidden="true" tabindex="-1"></a>E<span class="co">[</span><span class="ot">y_{1i}\mid D_i =1</span><span class="co">]</span>-E<span class="co">[</span><span class="ot">y_{0i}\mid D_i =0</span><span class="co">]</span> = ATT </span>
+<span id="cb1-457"><a href="#cb1-457" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-458"><a href="#cb1-458" aria-hidden="true" tabindex="-1"></a>por lo que ahora: </span>
+<span id="cb1-459"><a href="#cb1-459" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-460"><a href="#cb1-460" aria-hidden="true" tabindex="-1"></a>E<span class="co">[</span><span class="ot">y_{1i}\mid D_i =1</span><span class="co">]</span> - E<span class="co">[</span><span class="ot">y_{0i}\mid D_i =1</span><span class="co">]</span> = E<span class="co">[</span><span class="ot">y_{1i}-y_{0i}</span><span class="co">]</span>.</span>
+<span id="cb1-461"><a href="#cb1-461" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-462"><a href="#cb1-462" aria-hidden="true" tabindex="-1"></a>Es decir, que el ATT coincide con el ATE. Además, vale la pena mencionar que el *estimador* de ATE se puede calcualr como diferencia de medias:</span>
+<span id="cb1-463"><a href="#cb1-463" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-464"><a href="#cb1-464" aria-hidden="true" tabindex="-1"></a>\bar{Y}\mid D_i = 1 - \bar{Y}\mid D_i = 0</span>
+<span id="cb1-465"><a href="#cb1-465" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-466"><a href="#cb1-466" aria-hidden="true" tabindex="-1"></a>Por último, una sintesis hasta aquí de lo que llevamos de manera esquemática: </span>
+<span id="cb1-467"><a href="#cb1-467" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-470"><a href="#cb1-470" aria-hidden="true" tabindex="-1"></a><span class="in">```{mermaid}</span></span>
+<span id="cb1-471"><a href="#cb1-471" aria-hidden="true" tabindex="-1"></a>flowchart LR</span>
+<span id="cb1-472"><a href="#cb1-472" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-473"><a href="#cb1-473" aria-hidden="true" tabindex="-1"></a>    %% Nodos principales</span>
+<span id="cb1-474"><a href="#cb1-474" aria-hidden="true" tabindex="-1"></a>    P[<span class="ot">"</span><span class="st">Población</span><span class="ot">"</span>]</span>
+<span id="cb1-475"><a href="#cb1-475" aria-hidden="true" tabindex="-1"></a>    M[<span class="ot">"</span><span class="st">Muestra</span><span class="ot">"</span>]</span>
+<span id="cb1-476"><a href="#cb1-476" aria-hidden="true" tabindex="-1"></a>    GT[<span class="ot">"</span><span class="st">Grupo tratamiento</span><span class="ot">"</span>]</span>
+<span id="cb1-477"><a href="#cb1-477" aria-hidden="true" tabindex="-1"></a>    GC[<span class="ot">"</span><span class="st">Grupo control</span><span class="ot">"</span>]</span>
+<span id="cb1-478"><a href="#cb1-478" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-479"><a href="#cb1-479" aria-hidden="true" tabindex="-1"></a>    %% Nodos de texto (etiquetas en cajas)</span>
+<span id="cb1-480"><a href="#cb1-480" aria-hidden="true" tabindex="-1"></a>    T1[<span class="ot">"</span><span class="st">Muestreo Aleatorio&lt;br/&gt;Validez Externa</span><span class="ot">"</span>]</span>
+<span id="cb1-481"><a href="#cb1-481" aria-hidden="true" tabindex="-1"></a>    T2[<span class="ot">"</span><span class="st">Asignación Aleatoria&lt;br/&gt;Validez Interna</span><span class="ot">"</span>]</span>
+<span id="cb1-482"><a href="#cb1-482" aria-hidden="true" tabindex="-1"></a>    T3[<span class="ot">"</span><span class="st">Asignación Aleatoria&lt;br/&gt;Validez Interna</span><span class="ot">"</span>]</span>
+<span id="cb1-483"><a href="#cb1-483" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-484"><a href="#cb1-484" aria-hidden="true" tabindex="-1"></a>    %% Conexiones</span>
+<span id="cb1-485"><a href="#cb1-485" aria-hidden="true" tabindex="-1"></a>    P --&gt; T1 --&gt; M</span>
+<span id="cb1-486"><a href="#cb1-486" aria-hidden="true" tabindex="-1"></a>    M --&gt; T2 --&gt; GT</span>
+<span id="cb1-487"><a href="#cb1-487" aria-hidden="true" tabindex="-1"></a>    M --&gt; T3 --&gt; GC</span>
+<span id="cb1-488"><a href="#cb1-488" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-489"><a href="#cb1-489" aria-hidden="true" tabindex="-1"></a>    %% Estilo de cajas principales</span>
+<span id="cb1-490"><a href="#cb1-490" aria-hidden="true" tabindex="-1"></a>    classDef main fill:<span class="co">#f6eeee,stroke:#666,stroke-width:1px,color:#8b0000</span></span>
+<span id="cb1-491"><a href="#cb1-491" aria-hidden="true" tabindex="-1"></a>    class P,M,GT,GC main</span>
+<span id="cb1-492"><a href="#cb1-492" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-493"><a href="#cb1-493" aria-hidden="true" tabindex="-1"></a>    %% Estilo de cajas de texto intermedias</span>
+<span id="cb1-494"><a href="#cb1-494" aria-hidden="true" tabindex="-1"></a>    classDef label fill:<span class="co">#ededed,stroke:#ededed,color:#8b0000,font-size:12px</span></span>
+<span id="cb1-495"><a href="#cb1-495" aria-hidden="true" tabindex="-1"></a>    class T1,T2,T3 label</span>
+<span id="cb1-496"><a href="#cb1-496" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-497"><a href="#cb1-497" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-498"><a href="#cb1-498" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-499"><a href="#cb1-499" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-500"><a href="#cb1-500" aria-hidden="true" tabindex="-1"></a><span class="fu">## Experimentos aleatorizados: Proyecto STAR </span></span>
+<span id="cb1-501"><a href="#cb1-501" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-502"><a href="#cb1-502" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-503"><a href="#cb1-503" aria-hidden="true" tabindex="-1"></a>Algo que no hemos mencionado hasta ahora: para un experimento aleatorio, en general vamos a necesitar un número lo suficientemente **grande** de personas en cada grupo. Por ejemplo, si tenemos solo 1 personas en cada grupo, es muy probable que estas dos personas difieran en cosas distintas generando sesgo por selección. En cambio, si tenemos grupos con un $n$ lo suficientemente grande e individuos elegidos al azar, entonces, aunque *cada* individuo sea diferente, la mayoría de las características serán similares *en promedio*. A esto también le llamamos *en expectativa*, pues calculamos el valor esperado por notación generalmente como ya vimos. </span>
+<span id="cb1-504"><a href="#cb1-504" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-505"><a href="#cb1-505" aria-hidden="true" tabindex="-1"></a>Pero, ¿cómo sabemos que el tamaño $n$ influye de tal manera? Bueno, por la propiedad estadística de la **Ley de los Grandes Números**: el promedio muestral se acerca al promedio poblacional a medida que aumenta el tamaño de la muestra. El promedio poblacional se llama *esperanza matemática*, $E<span class="co">[</span><span class="ot">y</span><span class="co">]</span>$. Entonces, $\bar{y} \to E<span class="co">[</span><span class="ot">y</span><span class="co">]</span>$. </span>
+<span id="cb1-506"><a href="#cb1-506" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-507"><a href="#cb1-507" aria-hidden="true" tabindex="-1"></a>Luego de aleatorizar, se debe chequear que los grupos de tratamiento y de control no tinene diferencias en variables observables (características y variable de resultado), **previo a la intervención**. Veamos cómo ocurre esto con una investigación empírica real: el Proyecto STAR (*Student/Teacher Achievement Ratio*), ejecutado durante los 80s en Tennessee (US), donde se redujo el tamaño de la clase de pre-escolares. La asignación aleatoria de estudiantes en 3 grupos</span>
+<span id="cb1-508"><a href="#cb1-508" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-509"><a href="#cb1-509" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Tratamiento: 1) Clases pequeñas (13-17 alumnos).</span>
+<span id="cb1-510"><a href="#cb1-510" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Control: 2) Clases regulares (22-25 alumnos) y un asistente de profesor a tiempo parcial; o 3) clases regulares con un asistente de profesor a tiempo completo.</span>
+<span id="cb1-511"><a href="#cb1-511" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-512"><a href="#cb1-512" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-513"><a href="#cb1-513" aria-hidden="true" tabindex="-1"></a>Así, una de las primeras preguntas que hay que plantearse sobre un experimento aleatorio es "si la aleatorización ha logrado equilibrar con éxito las características de los sujetos entre los diferentes grupos de tratamiento" <span class="co">[</span><span class="ot">(Angrist y Pischke, 2008, p. 14, *traducción propia*)</span><span class="co">](https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf)</span>. Para ello, se suele comparar resultados previos al tratamiento y/u otras covariables. Los datos de STAR, no obstante, no incluyen las puntuaciones de las pruebas previas al tratamiento, pero es posible examinar caracteristicas personales como la raza y la edad. A&amp;P muestran la siguiente tabla, en la cual debemos verificar que la aleatorización funcionó. Las características pre-tratamiento deben ser iguales entre grupos:</span>
+<span id="cb1-514"><a href="#cb1-514" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-515"><a href="#cb1-515" aria-hidden="true" tabindex="-1"></a><span class="in">```{r img-star-balance}</span></span>
+<span id="cb1-516"><a href="#cb1-516" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb1-517"><a href="#cb1-517" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Tabla de Balance Proyecto STAR"</span></span>
+<span id="cb1-518"><a href="#cb1-518" aria-hidden="true" tabindex="-1"></a><span class="co">#| out-width: "80%"</span></span>
+<span id="cb1-519"><a href="#cb1-519" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-520"><a href="#cb1-520" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"images/star_balance.png"</span>, <span class="at">error =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-521"><a href="#cb1-521" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-522"><a href="#cb1-522" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-523"><a href="#cb1-523" aria-hidden="true" tabindex="-1"></a>Entonces, el "tratamiento" serían las clases pequeñas (Columna "*Small*") y los dos controles diferenciados por clases regulares (igual de grandes que antes), pero con la diferenciación del profe a tiempo completo o parcial. Las variables relevantes en verdad son las 3 primeras: 1. Almuerzo gratis, 2. Blanco/asiático y 3. Edad en 1985. Se presentan medias, por lo que sería, por ejemplo, para 1: 47% de los alumnos recibían almuerzo gratuito en salas pequeñas, 48% en regulares y 50% en regulares con profe asistente. Como vemos, coinciden los valores en casi todas. Al rededor del 50% tiene almuerzo gratis en todas los tipos de salas (nivel socioeconómico (bajo) similar), al rededor de 2/3 son blancos o asiaticos y la edad promedio en 1985 era casi de 5 años y medio. El joint $p-$*value* (es un $F-$*test*) indica si hay diferencias significativas estadísticamente habblando. COmo vemos, ninguna $p&lt;0.05$, por lo que no hay diferencias signidicativas entre los grupos de control y el tratado. Esto indica que son grupos con características similares^<span class="co">[</span><span class="ot">La atrición son los casos perdidos porque se cambiaron de colegio o cualquier otro motivo</span><span class="co">]</span>.</span>
+<span id="cb1-524"><a href="#cb1-524" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-525"><a href="#cb1-525" aria-hidden="true" tabindex="-1"></a>Por lo tanto, son grupos balanceados. Además, dado que "la aleatorización elimina el sesgo de selección, la diferencia en los resultados entre los grupos de tratamiento refleja el efecto causal medio del tamaño de la clase (en relación con las clases normales con un asistente a tiempo parcial)" <span class="co">[</span><span class="ot">(Angrist y Pischke, 2008, p. 15, *traducción propia*)</span><span class="co">](https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf)</span>. En la práctica, la diferencia en las medias entre los grupos de tratamiento y control puede obtenerse</span>
+<span id="cb1-526"><a href="#cb1-526" aria-hidden="true" tabindex="-1"></a>a partir de una regresión de las puntuaciones de las pruebas sobre variables *dummy* para cada grupo de tratamiento, un punto que se trata aquí con una tabla, pero que después profundizaremos con más detenimiento. En cualquier caso, la tabla es la siguiente (solo para adelantar, luego la analizamos bien):</span>
+<span id="cb1-527"><a href="#cb1-527" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-528"><a href="#cb1-528" aria-hidden="true" tabindex="-1"></a><span class="in">```{r img-star-balance-regression}</span></span>
+<span id="cb1-529"><a href="#cb1-529" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb1-530"><a href="#cb1-530" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Estimaciones experimentales del efecto de la asignación del tamaño de clase en los puntajes de los exámenes"</span></span>
+<span id="cb1-531"><a href="#cb1-531" aria-hidden="true" tabindex="-1"></a><span class="co">#| out-width: "80%"</span></span>
+<span id="cb1-532"><a href="#cb1-532" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-533"><a href="#cb1-533" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"images/regression-to-balance.png"</span>, <span class="at">error =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-534"><a href="#cb1-534" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-535"><a href="#cb1-535" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-536"><a href="#cb1-536" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-537"><a href="#cb1-537" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-538"><a href="#cb1-538" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-539"><a href="#cb1-539" aria-hidden="true" tabindex="-1"></a><span class="fu"># Bloque 3: Regresión e Inferencia</span></span>
+<span id="cb1-540"><a href="#cb1-540" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-541"><a href="#cb1-541" aria-hidden="true" tabindex="-1"></a><span class="fu">## Estimación por MCO</span></span>
+<span id="cb1-542"><a href="#cb1-542" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-543"><a href="#cb1-543" aria-hidden="true" tabindex="-1"></a>En un RCT ideal, podemos estimar el efecto ($\rho$) con una regresión simple:</span>
+<span id="cb1-544"><a href="#cb1-544" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-545"><a href="#cb1-545" aria-hidden="true" tabindex="-1"></a>$$ Y_i = \alpha + \rho D_i + \eta_i $$</span>
+<span id="cb1-546"><a href="#cb1-546" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-547"><a href="#cb1-547" aria-hidden="true" tabindex="-1"></a><span class="fu">### ¿Por qué añadir controles ($X_i$)?</span></span>
+<span id="cb1-548"><a href="#cb1-548" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-549"><a href="#cb1-549" aria-hidden="true" tabindex="-1"></a>Aunque no son necesarios para evitar sesgo (dada la aleatorización), incluirlos sirve para:</span>
+<span id="cb1-550"><a href="#cb1-550" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-551"><a href="#cb1-551" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>**Reducir la varianza** del error y ganar precisión (errores estándar más pequeños).</span>
+<span id="cb1-552"><a href="#cb1-552" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>Controlar por el diseño si la aleatorización fue condicional (ej. estratificada por escuela).</span>
+<span id="cb1-553"><a href="#cb1-553" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-554"><a href="#cb1-554" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-555"><a href="#cb1-555" aria-hidden="true" tabindex="-1"></a><span class="in">```{r img-star-results}</span></span>
+<span id="cb1-556"><a href="#cb1-556" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb1-557"><a href="#cb1-557" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Resultados de Regresión Proyecto STAR"</span></span>
+<span id="cb1-558"><a href="#cb1-558" aria-hidden="true" tabindex="-1"></a><span class="co">#| out-width: "80%"</span></span>
+<span id="cb1-559"><a href="#cb1-559" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-560"><a href="#cb1-560" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"images/star_results.png"</span>, <span class="at">error =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-561"><a href="#cb1-561" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-562"><a href="#cb1-562" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-563"><a href="#cb1-563" aria-hidden="true" tabindex="-1"></a><span class="fu">## SUTVA (Stable Unit Treatment Value Assumption)</span></span>
+<span id="cb1-564"><a href="#cb1-564" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-565"><a href="#cb1-565" aria-hidden="true" tabindex="-1"></a>Asumimos que no hay interferencia entre unidades: el tratamiento de $i$ no afecta a $j$.</span>
+<span id="cb1-566"><a href="#cb1-566" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-567"><a href="#cb1-567" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>*Violaciones*: Efectos pares (spillovers), efectos de equilibrio general.</span>
+<span id="cb1-568"><a href="#cb1-568" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-569"><a href="#cb1-569" aria-hidden="true" tabindex="-1"></a><span class="fu">## Pruebas de Hipótesis</span></span>
+<span id="cb1-570"><a href="#cb1-570" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-571"><a href="#cb1-571" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>**Muestras grandes**: Test-t asintótico estándar.</span>
+<span id="cb1-572"><a href="#cb1-572" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>**Muestras pequeñas**: Test Exacto de Fisher (permutaciones).</span>
+<span id="cb1-573"><a href="#cb1-573" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-574"><a href="#cb1-574" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-575"><a href="#cb1-575" aria-hidden="true" tabindex="-1"></a><span class="fu"># Referencias</span></span>
+<span id="cb1-576"><a href="#cb1-576" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-577"><a href="#cb1-577" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Angrist &amp; Pischke (2009). *Mostly Harmless Econometrics*, Cap. 2.</span>
+<span id="cb1-578"><a href="#cb1-578" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Material del curso "Econometría Aplicada I", FEN U. Chile (2025).</span>
+</code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 

@@ -361,24 +361,154 @@ En economía también se han realizado RCT's. Entre algunos de ellos:
   - También hay muchos ejemplos en economía del desarrollo ([Esther Duflo: Experimentos sociales para luchar contra la pobreza](https://www.youtube.com/watch?v=0zvrGiPkVcs))
   
 
+## Asignación aleatoria
+
+Entendiendo la idea de los RCT's, veamos un concepto fundamental de los diseños experimentales. Pero antes, retomemos un poco. Hasta aquí tenemos lo siguiente: 
+
+1. Un experimento define a un grupo de tramiento y otro de control. De aquí existen dos resultados posibles: 
+
+  - Resultado con tratamiento $y_{1i}$
+  - Resultado sin tratamiento $y_{0i}$
+
+2. Solo podemos observar uno de los dos resultados para $i$. Para ello, definimos la asignación de tratamiento con una variable de tratamiento $D_i$, que nos permite identificar: 
+$$
+y_i = 
+\begin{cases}
+  y_{1i}, & \quad \text{si } D_i =1\\
+  y_{0i}, & \quad \text{si } D_i =0\\
+\end{cases}
+$$
+3. El efecto causal del tratamiento es
+$$
+\tau_i =y_{1i}-y_{0i}
+$$
+pero no se puede observar directamente $\tau_i$. 
+4. Dado que no se puede observar $\tau_i$, se dfine el efecto promedio del tratamiento (ATE) como 
+$$
+E[\tau_i] = E[y_{1i}-y_{0i}] 
+$$
+y el efecto promedio *sobre* los tratados (ATT) como
+$$
+E[\tau_i \mid D_i =1] = E[y_{1i}-y_{0i}\mid D_i =1] 
+$$
+5. Al tratar con el problema econométrico, recordemos qué pasaba cuando tomabamos la diferencia entre ambios grupos: 
+$$
+E[y_{1i} \mid D_i = 1] - E[y_{0i} \mid D_i =0]
+$$
+que es equivalente a 
+$$
+E[y_{1i} \mid D_i = 1] - E[y_{0i} \mid D_i = 1] + E[y_{0i} \mid D_i = 1] - E[y_{0i} \mid D_i = 0]
+$$
+donde $E[y_{1i} \mid D_i = 1]- E[y_{0i} \mid D_i = 1]$: ATT; y $E[y_{0i} \mid D_i = 1]- E[y_{0i} \mid D_i = 0] \neq 0$: Sesgo de selección (SS). Entonces teníamos que
+$$
+E[y_{1i} \mid D_i = 1]-E[y_{0i} \mid D_i = 0] = ATT+ SS
+$$
+No obstante, la comparación del promedio de los grupos **no** nos da *per se* el efecto del tratamiento (de hecho, no siempre es cero). Si no que, esto lo obtendremos con la aleatorización. 
+
+### La Solución Experimental: Por qué funciona la Aleatorización
+
+Como vimos en la sección anterior, el sesgo de selección surge porque las personas se "autoseleccionan" en el tratamiento basándose en sus características (y por ende, en sus resultados potenciales). Quienes van al hospital ($D_i=1$) tienen, *de base*, una salud ($Y_{0i}$) peor que quienes no van. La asignación aleatoria (Random Assignment) resuelve este problema de raíz. ¿Cómo? **Desvinculando el tratamiento de las características del individuo**.
+
+En un RCT, la asignación del tratamiento $D_i$ es decidida por un mecanismo aleatorio (una moneda, una lotería, un generador de números aleatorios). Esto implica una propiedad estadística fundamental descrita por [Angrist y Pischke (2008)](https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf): **la independencia**:
+$$\{Y_{1i}, Y_{0i}\} \perp \!\!\! \perp D_i$$
+
+Esto se lee así: los resultados potenciales son independientes del estatus de tratamiento. En palabras simples: el hecho de que seas asignado al grupo de tratamiento o al de control no tiene **nada** que ver con tu salud previa, tu motivación, tu inteligencia o tu nivel socioeconómico. Es puro azar. Esta independencia es la herramienta más poderosa de la econometría experimental. Nos permite afirmar que, en promedio, los individuos del grupo de control son idénticos a los del grupo de tratamiento *antes* de la intervención.
+
+#### La Derivación Formal
+
+Esta independencia nos permite hacer una "magia" matemática. Recordemos nuestra descomposición de la diferencia de medias observada:
+
+$$
+\underbrace{E[Y_i | D_i=1] - E[Y_i | D_i=0]}_{\text{Diferencia Observada}} = \underbrace{E[Y_{1i} | D_i=1] - E[Y_{0i} | D_i=1]}_{\text{ATT}} + \underbrace{E[Y_{0i} | D_i=1] - E[Y_{0i} | D_i=0]}_{\text{Sesgo de Selección}}
+$$
+
+Bajo aleatorización, el término de sesgo de selección desaparece. Siguiendo a [A&P (2008)](https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf), la lógica es la siguiente: dado que $D_i$ es independiente de $Y_{0i}$, el promedio del resultado potencial "sin tratamiento" ($Y_{0i}$) es estadísticamente idéntico en ambos grupos.
+
+$$E[Y_{0i} | D_i = 1] = E[Y_{0i} | D_i = 0] = E[Y_{0i}]$$
+
+Esto es lo que A&Pe llaman la capacidad de **"intercambiar"** (*swap*) términos. Podemos usar el resultado observado del grupo de control ($E[Y_{0i} | D_i=0]$) como un contrafactual perfecto para el grupo de tratamiento.
+
+#### El Resultado: ATE = ATT
+
+Si el sesgo de selección es cero, la ecuación se simplifica dramáticamente:
+
+$$
+\begin{aligned}
+E[Y_i | D_i=1] - E[Y_i | D_i=0] &= E[Y_{1i} | D_i=1] - E[Y_{0i} | D_i=1] \\
+&= E[Y_{1i} - Y_{0i} | D_i=1] \\
+&= E[Y_{1i} - Y_{0i}]
+\end{aligned}
+$$
+
+Bajo aleatorización, la diferencia de medias simple no solo recupera el Efecto Promedio en los Tratados (ATT), sino que, como la muestra es representativa y la asignación es aleatoria, este es igual al **Efecto Promedio del Tratamiento (ATE)** poblacional [(Angrist y Pischke, 2008)](https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf).
+
+::: {.callout-tip appearance="minimal"}
+**Intuición Económica:**
+En el ejemplo del hospital de A&P, si forzáramos a una muestra aleatoria de la población a ir al hospital (independientemente de si están enfermos o no), eliminaríamos el hecho de que "los enfermos buscan tratamiento". Así, compararíamos la salud de un grupo promedio hospitalizado versus un grupo promedio no hospitalizado. La diferencia sería, indiscutiblemente, el efecto causal de la atención médica.
+:::
+
+En suma, si $D_i$ es asignado al azar, entonces es independiente de $y_i$, tal que 
+$$
+E[y_{1i} \mid D_i = 1] = E[y_{1i} \mid D_i = 0] = E[y_{1i}] .
+$$
+Luego, teníamos que el efecto del tratamiento es el siguiente: 
+$$
+E[y_{1i}\mid D_i =1]-E[y_{0i}\mid D_i =0] = ATT 
+$$
+por lo que ahora: 
+$$
+E[y_{1i}\mid D_i =1] - E[y_{0i}\mid D_i =1] = E[y_{1i}-y_{0i}].
+$$
+Es decir, que el ATT coincide con el ATE. Además, vale la pena mencionar que el *estimador* de ATE se puede calcualr como diferencia de medias:
+$$
+\bar{Y}\mid D_i = 1 - \bar{Y}\mid D_i = 0
+$$
+Por último, una sintesis hasta aquí de lo que llevamos de manera esquemática: 
+
+```{mermaid}
+flowchart LR
+
+    %% Nodos principales
+    P["Población"]
+    M["Muestra"]
+    GT["Grupo tratamiento"]
+    GC["Grupo control"]
+
+    %% Nodos de texto (etiquetas en cajas)
+    T1["Muestreo Aleatorio<br/>Validez Externa"]
+    T2["Asignación Aleatoria<br/>Validez Interna"]
+    T3["Asignación Aleatoria<br/>Validez Interna"]
+
+    %% Conexiones
+    P --> T1 --> M
+    M --> T2 --> GT
+    M --> T3 --> GC
+
+    %% Estilo de cajas principales
+    classDef main fill:#f6eeee,stroke:#666,stroke-width:1px,color:#8b0000
+    class P,M,GT,GC main
+
+    %% Estilo de cajas de texto intermedias
+    classDef label fill:#ededed,stroke:#ededed,color:#8b0000,font-size:12px
+    class T1,T2,T3 label
+
+```
 
 
-La **aleatorización** garantiza que el tratamiento $D_i$ sea independiente de los resultados potenciales ($Y_{1i}, Y_{0i}$).
+## Experimentos aleatorizados: Proyecto STAR 
 
-Esto implica que:
-$$ E[Y_{0i} | D_i=1] = E[Y_{0i} | D_i=0] $$
-¡El sesgo de selección desaparece\! Por tanto, la diferencia simple de medias recupera el efecto causal verdadero (ATE).
 
-## Caso de Estudio: Proyecto STAR (Tennessee)
+Algo que no hemos mencionado hasta ahora: para un experimento aleatorio, en general vamos a necesitar un número lo suficientemente **grande** de personas en cada grupo. Por ejemplo, si tenemos solo 1 personas en cada grupo, es muy probable que estas dos personas difieran en cosas distintas generando sesgo por selección. En cambio, si tenemos grupos con un $n$ lo suficientemente grande e individuos elegidos al azar, entonces, aunque *cada* individuo sea diferente, la mayoría de las características serán similares *en promedio*. A esto también le llamamos *en expectativa*, pues calculamos el valor esperado por notación generalmente como ya vimos. 
 
-Experimento de los 80s para ver el efecto del tamaño de la clase en el rendimiento escolar.
+Pero, ¿cómo sabemos que el tamaño $n$ influye de tal manera? Bueno, por la propiedad estadística de la **Ley de los Grandes Números**: el promedio muestral se acerca al promedio poblacional a medida que aumenta el tamaño de la muestra. El promedio poblacional se llama *esperanza matemática*, $E[y]$. Entonces, $\bar{y} \to E[y]$. 
 
-  * Tratamiento: Clases pequeñas (13-17 alumnos).
-  * Control: Clases regulares (22-25 alumnos).
+Luego de aleatorizar, se debe chequear que los grupos de tratamiento y de control no tinene diferencias en variables observables (características y variable de resultado), **previo a la intervención**. Veamos cómo ocurre esto con una investigación empírica real: el Proyecto STAR (*Student/Teacher Achievement Ratio*), ejecutado durante los 80s en Tennessee (US), donde se redujo el tamaño de la clase de pre-escolares. La asignación aleatoria de estudiantes en 3 grupos
 
-### 1\. Test de Balance
-
-Antes de estimar efectos, debemos verificar que la aleatorización funcionó. Las características pre-tratamiento deben ser iguales entre grupos.
+  * Tratamiento: 1) Clases pequeñas (13-17 alumnos).
+  * Control: 2) Clases regulares (22-25 alumnos) y un asistente de profesor a tiempo parcial; o 3) clases regulares con un asistente de profesor a tiempo completo.
+  
+  
+Así, una de las primeras preguntas que hay que plantearse sobre un experimento aleatorio es "si la aleatorización ha logrado equilibrar con éxito las características de los sujetos entre los diferentes grupos de tratamiento" [(Angrist y Pischke, 2008, p. 14, *traducción propia*)](https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf). Para ello, se suele comparar resultados previos al tratamiento y/u otras covariables. Los datos de STAR, no obstante, no incluyen las puntuaciones de las pruebas previas al tratamiento, pero es posible examinar caracteristicas personales como la raza y la edad. A&P muestran la siguiente tabla, en la cual debemos verificar que la aleatorización funcionó. Las características pre-tratamiento deben ser iguales entre grupos:
 
 ```{r img-star-balance}
 #| echo: false
@@ -388,7 +518,21 @@ Antes de estimar efectos, debemos verificar que la aleatorización funcionó. La
 knitr::include_graphics("images/star_balance.png", error = FALSE)
 ```
 
-*Nota: El p-valor conjunto no significativo indica que la aleatorización fue exitosa.*
+Entonces, el "tratamiento" serían las clases pequeñas (Columna "*Small*") y los dos controles diferenciados por clases regulares (igual de grandes que antes), pero con la diferenciación del profe a tiempo completo o parcial. Las variables relevantes en verdad son las 3 primeras: 1. Almuerzo gratis, 2. Blanco/asiático y 3. Edad en 1985. Se presentan medias, por lo que sería, por ejemplo, para 1: 47% de los alumnos recibían almuerzo gratuito en salas pequeñas, 48% en regulares y 50% en regulares con profe asistente. Como vemos, coinciden los valores en casi todas. Al rededor del 50% tiene almuerzo gratis en todas los tipos de salas (nivel socioeconómico (bajo) similar), al rededor de 2/3 son blancos o asiaticos y la edad promedio en 1985 era casi de 5 años y medio. El joint $p-$*value* (es un $F-$*test*) indica si hay diferencias significativas estadísticamente habblando. COmo vemos, ninguna $p<0.05$, por lo que no hay diferencias signidicativas entre los grupos de control y el tratado. Esto indica que son grupos con características similares^[La atrición son los casos perdidos porque se cambiaron de colegio o cualquier otro motivo].
+
+Por lo tanto, son grupos balanceados. Además, dado que "la aleatorización elimina el sesgo de selección, la diferencia en los resultados entre los grupos de tratamiento refleja el efecto causal medio del tamaño de la clase (en relación con las clases normales con un asistente a tiempo parcial)" [(Angrist y Pischke, 2008, p. 15, *traducción propia*)](https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf). En la práctica, la diferencia en las medias entre los grupos de tratamiento y control puede obtenerse
+a partir de una regresión de las puntuaciones de las pruebas sobre variables *dummy* para cada grupo de tratamiento, un punto que se trata aquí con una tabla, pero que después profundizaremos con más detenimiento. En cualquier caso, la tabla es la siguiente (solo para adelantar, luego la analizamos bien):
+
+```{r img-star-balance-regression}
+#| echo: false
+#| fig-cap: "Estimaciones experimentales del efecto de la asignación del tamaño de clase en los puntajes de los exámenes"
+#| out-width: "80%"
+
+knitr::include_graphics("images/regression-to-balance.png", error = FALSE)
+```
+
+
+
 
 # Bloque 3: Regresión e Inferencia
 
