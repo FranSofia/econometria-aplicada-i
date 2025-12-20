@@ -10,11 +10,11 @@ Este repositorio y sitio web está enfocado a documentar los apuntes y trabajos 
 
 ## Contenido
 
-1.  **Métodos Causales:** Endogeneidad, Evaluación Experimental, Selección en Observables.
+1.  **Métodos Causales:** Endogeneidad, Evaluación Experimental, Selección en Observables y Regresiones
 2.  **Variables Instrumentales (IV):** Identificación y estimación.
-3.  **Regresión Discontinua (RDD):** Diseños nítidos y borrosos.
-4.  **Datos de Panel:** Efectos Fijos.
-5.  **Diferencias en Diferencias (DiD):** y Estudios de Eventos.
+3.  **Regresión Discontinua (RDD):** Diseños nítidos y borrosos. Comienzo de DiD
+4.  **Datos de Panel, Efectos Fijos, Diferencias en Diferencias (DiD) y Estudios de Eventos**.
+5.  **Matching**
 
 ## Estructura del proyecto
 
