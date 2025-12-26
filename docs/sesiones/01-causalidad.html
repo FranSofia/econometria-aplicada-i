@@ -249,7 +249,11 @@ window.Quarto = {
   <li><a href="#bloque-3-regresión-e-inferencia" id="toc-bloque-3-regresión-e-inferencia" class="nav-link" data-scroll-target="#bloque-3-regresión-e-inferencia"><span class="header-section-number">3</span> Bloque 3: Regresión e Inferencia</a>
   <ul class="collapse">
   <li><a href="#análisis-de-regresión-en-experimentos" id="toc-análisis-de-regresión-en-experimentos" class="nav-link" data-scroll-target="#análisis-de-regresión-en-experimentos"><span class="header-section-number">3.1</span> Análisis de regresión en experimentos</a></li>
-  <li><a href="#asignación-aleatoria-condicional" id="toc-asignación-aleatoria-condicional" class="nav-link" data-scroll-target="#asignación-aleatoria-condicional"><span class="header-section-number">3.2</span> Asignación aleatoria condicional</a></li>
+  <li><a href="#asignación-aleatoria-condicional" id="toc-asignación-aleatoria-condicional" class="nav-link" data-scroll-target="#asignación-aleatoria-condicional"><span class="header-section-number">3.2</span> Asignación aleatoria condicional</a>
+  <ul class="collapse">
+  <li><a href="#aleatorización-estratificada-stratified-randomization" id="toc-aleatorización-estratificada-stratified-randomization" class="nav-link" data-scroll-target="#aleatorización-estratificada-stratified-randomization"><span class="header-section-number">3.2.1</span> Aleatorización Estratificada (Stratified Randomization)</a></li>
+  <li><a href="#aleatorización-por-conglomerados-cluster-randomization" id="toc-aleatorización-por-conglomerados-cluster-randomization" class="nav-link" data-scroll-target="#aleatorización-por-conglomerados-cluster-randomization"><span class="header-section-number">3.2.2</span> Aleatorización por Conglomerados (Cluster Randomization)</a></li>
+  </ul></li>
   <li><a href="#sutva-stable-unit-treatment-value-assumption" id="toc-sutva-stable-unit-treatment-value-assumption" class="nav-link" data-scroll-target="#sutva-stable-unit-treatment-value-assumption"><span class="header-section-number">3.3</span> SUTVA (Stable Unit Treatment Value Assumption)</a></li>
   <li><a href="#pruebas-de-hipótesis" id="toc-pruebas-de-hipótesis" class="nav-link" data-scroll-target="#pruebas-de-hipótesis"><span class="header-section-number">3.4</span> Pruebas de Hipótesis</a></li>
   </ul></li>
@@ -330,23 +334,23 @@ X \implies Y
 <p>Confundir una correlación (y peor aún: una espúrea) con una relación causal, puede llevar a errores graves. Por ejemplo, en <em>Mostly Harmless Econometrics</em> (<a href="https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf">Angrist y Pischke, 2008</a>) se muestra cómo hay una relación entre ir (o no) al hospital y el grado de “salud subjetiva”<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> reportado. Los datos son los siguientes:</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="qdevsbxgkf" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#qdevsbxgkf table {
+<div id="jxdoqjbhjm" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#jxdoqjbhjm table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#qdevsbxgkf thead, #qdevsbxgkf tbody, #qdevsbxgkf tfoot, #qdevsbxgkf tr, #qdevsbxgkf td, #qdevsbxgkf th {
+#jxdoqjbhjm thead, #jxdoqjbhjm tbody, #jxdoqjbhjm tfoot, #jxdoqjbhjm tr, #jxdoqjbhjm td, #jxdoqjbhjm th {
   border-style: none;
 }
 
-#qdevsbxgkf p {
+#jxdoqjbhjm p {
   margin: 0;
   padding: 0;
 }
 
-#qdevsbxgkf .gt_table {
+#jxdoqjbhjm .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -372,12 +376,12 @@ X \implies Y
   border-left-color: #D3D3D3;
 }
 
-#qdevsbxgkf .gt_caption {
+#jxdoqjbhjm .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#qdevsbxgkf .gt_title {
+#jxdoqjbhjm .gt_title {
   color: #FFFFFF;
   font-size: 125%;
   font-weight: initial;
@@ -389,7 +393,7 @@ X \implies Y
   border-bottom-width: 0;
 }
 
-#qdevsbxgkf .gt_subtitle {
+#jxdoqjbhjm .gt_subtitle {
   color: #FFFFFF;
   font-size: 85%;
   font-weight: initial;
@@ -401,7 +405,7 @@ X \implies Y
   border-top-width: 0;
 }
 
-#qdevsbxgkf .gt_heading {
+#jxdoqjbhjm .gt_heading {
   background-color: #69000C;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -413,13 +417,13 @@ X \implies Y
   border-right-color: #D3D3D3;
 }
 
-#qdevsbxgkf .gt_bottom_border {
+#jxdoqjbhjm .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#qdevsbxgkf .gt_col_headings {
+#jxdoqjbhjm .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -434,7 +438,7 @@ X \implies Y
   border-right-color: #D3D3D3;
 }
 
-#qdevsbxgkf .gt_col_heading {
+#jxdoqjbhjm .gt_col_heading {
   color: #FFFFFF;
   background-color: #69000C;
   font-size: 100%;
@@ -454,7 +458,7 @@ X \implies Y
   overflow-x: hidden;
 }
 
-#qdevsbxgkf .gt_column_spanner_outer {
+#jxdoqjbhjm .gt_column_spanner_outer {
   color: #FFFFFF;
   background-color: #69000C;
   font-size: 100%;
@@ -466,15 +470,15 @@ X \implies Y
   padding-right: 4px;
 }
 
-#qdevsbxgkf .gt_column_spanner_outer:first-child {
+#jxdoqjbhjm .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#qdevsbxgkf .gt_column_spanner_outer:last-child {
+#jxdoqjbhjm .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#qdevsbxgkf .gt_column_spanner {
+#jxdoqjbhjm .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -486,11 +490,11 @@ X \implies Y
   width: 100%;
 }
 
-#qdevsbxgkf .gt_spanner_row {
+#jxdoqjbhjm .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#qdevsbxgkf .gt_group_heading {
+#jxdoqjbhjm .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -516,7 +520,7 @@ X \implies Y
   text-align: left;
 }
 
-#qdevsbxgkf .gt_empty_group_heading {
+#jxdoqjbhjm .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -531,15 +535,15 @@ X \implies Y
   vertical-align: middle;
 }
 
-#qdevsbxgkf .gt_from_md > :first-child {
+#jxdoqjbhjm .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#qdevsbxgkf .gt_from_md > :last-child {
+#jxdoqjbhjm .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#qdevsbxgkf .gt_row {
+#jxdoqjbhjm .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -558,7 +562,7 @@ X \implies Y
   overflow-x: hidden;
 }
 
-#qdevsbxgkf .gt_stub {
+#jxdoqjbhjm .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -571,7 +575,7 @@ X \implies Y
   padding-right: 5px;
 }
 
-#qdevsbxgkf .gt_stub_row_group {
+#jxdoqjbhjm .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -585,15 +589,15 @@ X \implies Y
   vertical-align: top;
 }
 
-#qdevsbxgkf .gt_row_group_first td {
+#jxdoqjbhjm .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#qdevsbxgkf .gt_row_group_first th {
+#jxdoqjbhjm .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#qdevsbxgkf .gt_summary_row {
+#jxdoqjbhjm .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -603,16 +607,16 @@ X \implies Y
   padding-right: 5px;
 }
 
-#qdevsbxgkf .gt_first_summary_row {
+#jxdoqjbhjm .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#qdevsbxgkf .gt_first_summary_row.thick {
+#jxdoqjbhjm .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#qdevsbxgkf .gt_last_summary_row {
+#jxdoqjbhjm .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -622,7 +626,7 @@ X \implies Y
   border-bottom-color: #D3D3D3;
 }
 
-#qdevsbxgkf .gt_grand_summary_row {
+#jxdoqjbhjm .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -632,7 +636,7 @@ X \implies Y
   padding-right: 5px;
 }
 
-#qdevsbxgkf .gt_first_grand_summary_row {
+#jxdoqjbhjm .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -642,7 +646,7 @@ X \implies Y
   border-top-color: #D3D3D3;
 }
 
-#qdevsbxgkf .gt_last_grand_summary_row_top {
+#jxdoqjbhjm .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -652,11 +656,11 @@ X \implies Y
   border-bottom-color: #D3D3D3;
 }
 
-#qdevsbxgkf .gt_striped {
+#jxdoqjbhjm .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#qdevsbxgkf .gt_table_body {
+#jxdoqjbhjm .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -665,7 +669,7 @@ X \implies Y
   border-bottom-color: #D3D3D3;
 }
 
-#qdevsbxgkf .gt_footnotes {
+#jxdoqjbhjm .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -679,7 +683,7 @@ X \implies Y
   border-right-color: #D3D3D3;
 }
 
-#qdevsbxgkf .gt_footnote {
+#jxdoqjbhjm .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -688,7 +692,7 @@ X \implies Y
   padding-right: 5px;
 }
 
-#qdevsbxgkf .gt_sourcenotes {
+#jxdoqjbhjm .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -702,7 +706,7 @@ X \implies Y
   border-right-color: #D3D3D3;
 }
 
-#qdevsbxgkf .gt_sourcenote {
+#jxdoqjbhjm .gt_sourcenote {
   font-size: 12px;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -710,72 +714,72 @@ X \implies Y
   padding-right: 5px;
 }
 
-#qdevsbxgkf .gt_left {
+#jxdoqjbhjm .gt_left {
   text-align: left;
 }
 
-#qdevsbxgkf .gt_center {
+#jxdoqjbhjm .gt_center {
   text-align: center;
 }
 
-#qdevsbxgkf .gt_right {
+#jxdoqjbhjm .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#qdevsbxgkf .gt_font_normal {
+#jxdoqjbhjm .gt_font_normal {
   font-weight: normal;
 }
 
-#qdevsbxgkf .gt_font_bold {
+#jxdoqjbhjm .gt_font_bold {
   font-weight: bold;
 }
 
-#qdevsbxgkf .gt_font_italic {
+#jxdoqjbhjm .gt_font_italic {
   font-style: italic;
 }
 
-#qdevsbxgkf .gt_super {
+#jxdoqjbhjm .gt_super {
   font-size: 65%;
 }
 
-#qdevsbxgkf .gt_footnote_marks {
+#jxdoqjbhjm .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#qdevsbxgkf .gt_asterisk {
+#jxdoqjbhjm .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#qdevsbxgkf .gt_indent_1 {
+#jxdoqjbhjm .gt_indent_1 {
   text-indent: 5px;
 }
 
-#qdevsbxgkf .gt_indent_2 {
+#jxdoqjbhjm .gt_indent_2 {
   text-indent: 10px;
 }
 
-#qdevsbxgkf .gt_indent_3 {
+#jxdoqjbhjm .gt_indent_3 {
   text-indent: 15px;
 }
 
-#qdevsbxgkf .gt_indent_4 {
+#jxdoqjbhjm .gt_indent_4 {
   text-indent: 20px;
 }
 
-#qdevsbxgkf .gt_indent_5 {
+#jxdoqjbhjm .gt_indent_5 {
   text-indent: 25px;
 }
 
-#qdevsbxgkf .katex-display {
+#jxdoqjbhjm .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#qdevsbxgkf div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#jxdoqjbhjm div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -831,23 +835,23 @@ Resultados de Salud
 <p>El motivo de que no la haya se puede sintetizar en el siguiente concepto: <strong>sesgo de selección</strong>. En primer lugar, si miramos las características de cada grupo (quienes asisten o no al hospital), que son pre-existentes a ir o no al hospital y a declarar un buen o mal estado de salud, probablemente van a ser muy diferentes. Por ejemplo, aún no hemos visto si tienen diferencias de edad, el contexto socioeconómico, indicadores de salud <em>previos</em> a la atención, etc. Sin observar todo eso, es dificil afirmar que <em>ir</em> al hospital empeora la salud. En segundo lugar, algo que probablemente se considere de sentido común, es que probablemente las personas asisten al hospital lo hacen justamente porque tienen problemas de salud. En cambio, probablemente no tienen problemas de salud, y por eso no van a un hospital. Es decir, <strong>las personas que se atienden en un hospital son distintas a aquellas que eligen no hacerlo, pues <em>se autoseleccionan</em> en nuestro <em>tratamiento</em></strong>. A todo esto, le llamamos un problema de <strong>sesgo de selección</strong>. Por cierto, la evidencia de <a href="https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf">Angrist y Pischke (2008)</a> también se puede observar para Chile si vemos los datos de la Casen 2015<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>:</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="jhbvwgmvxs" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#jhbvwgmvxs table {
+<div id="rbzstvuguq" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#rbzstvuguq table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#jhbvwgmvxs thead, #jhbvwgmvxs tbody, #jhbvwgmvxs tfoot, #jhbvwgmvxs tr, #jhbvwgmvxs td, #jhbvwgmvxs th {
+#rbzstvuguq thead, #rbzstvuguq tbody, #rbzstvuguq tfoot, #rbzstvuguq tr, #rbzstvuguq td, #rbzstvuguq th {
   border-style: none;
 }
 
-#jhbvwgmvxs p {
+#rbzstvuguq p {
   margin: 0;
   padding: 0;
 }
 
-#jhbvwgmvxs .gt_table {
+#rbzstvuguq .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -873,12 +877,12 @@ Resultados de Salud
   border-left-color: #D3D3D3;
 }
 
-#jhbvwgmvxs .gt_caption {
+#rbzstvuguq .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#jhbvwgmvxs .gt_title {
+#rbzstvuguq .gt_title {
   color: #FFFFFF;
   font-size: 125%;
   font-weight: initial;
@@ -890,7 +894,7 @@ Resultados de Salud
   border-bottom-width: 0;
 }
 
-#jhbvwgmvxs .gt_subtitle {
+#rbzstvuguq .gt_subtitle {
   color: #FFFFFF;
   font-size: 85%;
   font-weight: initial;
@@ -902,7 +906,7 @@ Resultados de Salud
   border-top-width: 0;
 }
 
-#jhbvwgmvxs .gt_heading {
+#rbzstvuguq .gt_heading {
   background-color: #69000C;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -914,13 +918,13 @@ Resultados de Salud
   border-right-color: #D3D3D3;
 }
 
-#jhbvwgmvxs .gt_bottom_border {
+#rbzstvuguq .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#jhbvwgmvxs .gt_col_headings {
+#rbzstvuguq .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -935,7 +939,7 @@ Resultados de Salud
   border-right-color: #D3D3D3;
 }
 
-#jhbvwgmvxs .gt_col_heading {
+#rbzstvuguq .gt_col_heading {
   color: #FFFFFF;
   background-color: #69000C;
   font-size: 100%;
@@ -955,7 +959,7 @@ Resultados de Salud
   overflow-x: hidden;
 }
 
-#jhbvwgmvxs .gt_column_spanner_outer {
+#rbzstvuguq .gt_column_spanner_outer {
   color: #FFFFFF;
   background-color: #69000C;
   font-size: 100%;
@@ -967,15 +971,15 @@ Resultados de Salud
   padding-right: 4px;
 }
 
-#jhbvwgmvxs .gt_column_spanner_outer:first-child {
+#rbzstvuguq .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#jhbvwgmvxs .gt_column_spanner_outer:last-child {
+#rbzstvuguq .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#jhbvwgmvxs .gt_column_spanner {
+#rbzstvuguq .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -987,11 +991,11 @@ Resultados de Salud
   width: 100%;
 }
 
-#jhbvwgmvxs .gt_spanner_row {
+#rbzstvuguq .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#jhbvwgmvxs .gt_group_heading {
+#rbzstvuguq .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1017,7 +1021,7 @@ Resultados de Salud
   text-align: left;
 }
 
-#jhbvwgmvxs .gt_empty_group_heading {
+#rbzstvuguq .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1032,15 +1036,15 @@ Resultados de Salud
   vertical-align: middle;
 }
 
-#jhbvwgmvxs .gt_from_md > :first-child {
+#rbzstvuguq .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#jhbvwgmvxs .gt_from_md > :last-child {
+#rbzstvuguq .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#jhbvwgmvxs .gt_row {
+#rbzstvuguq .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1059,7 +1063,7 @@ Resultados de Salud
   overflow-x: hidden;
 }
 
-#jhbvwgmvxs .gt_stub {
+#rbzstvuguq .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1072,7 +1076,7 @@ Resultados de Salud
   padding-right: 5px;
 }
 
-#jhbvwgmvxs .gt_stub_row_group {
+#rbzstvuguq .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1086,15 +1090,15 @@ Resultados de Salud
   vertical-align: top;
 }
 
-#jhbvwgmvxs .gt_row_group_first td {
+#rbzstvuguq .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#jhbvwgmvxs .gt_row_group_first th {
+#rbzstvuguq .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#jhbvwgmvxs .gt_summary_row {
+#rbzstvuguq .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1104,16 +1108,16 @@ Resultados de Salud
   padding-right: 5px;
 }
 
-#jhbvwgmvxs .gt_first_summary_row {
+#rbzstvuguq .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#jhbvwgmvxs .gt_first_summary_row.thick {
+#rbzstvuguq .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#jhbvwgmvxs .gt_last_summary_row {
+#rbzstvuguq .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1123,7 +1127,7 @@ Resultados de Salud
   border-bottom-color: #D3D3D3;
 }
 
-#jhbvwgmvxs .gt_grand_summary_row {
+#rbzstvuguq .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1133,7 +1137,7 @@ Resultados de Salud
   padding-right: 5px;
 }
 
-#jhbvwgmvxs .gt_first_grand_summary_row {
+#rbzstvuguq .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1143,7 +1147,7 @@ Resultados de Salud
   border-top-color: #D3D3D3;
 }
 
-#jhbvwgmvxs .gt_last_grand_summary_row_top {
+#rbzstvuguq .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1153,11 +1157,11 @@ Resultados de Salud
   border-bottom-color: #D3D3D3;
 }
 
-#jhbvwgmvxs .gt_striped {
+#rbzstvuguq .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#jhbvwgmvxs .gt_table_body {
+#rbzstvuguq .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1166,7 +1170,7 @@ Resultados de Salud
   border-bottom-color: #D3D3D3;
 }
 
-#jhbvwgmvxs .gt_footnotes {
+#rbzstvuguq .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1180,7 +1184,7 @@ Resultados de Salud
   border-right-color: #D3D3D3;
 }
 
-#jhbvwgmvxs .gt_footnote {
+#rbzstvuguq .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1189,7 +1193,7 @@ Resultados de Salud
   padding-right: 5px;
 }
 
-#jhbvwgmvxs .gt_sourcenotes {
+#rbzstvuguq .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1203,7 +1207,7 @@ Resultados de Salud
   border-right-color: #D3D3D3;
 }
 
-#jhbvwgmvxs .gt_sourcenote {
+#rbzstvuguq .gt_sourcenote {
   font-size: 12px;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1211,72 +1215,72 @@ Resultados de Salud
   padding-right: 5px;
 }
 
-#jhbvwgmvxs .gt_left {
+#rbzstvuguq .gt_left {
   text-align: left;
 }
 
-#jhbvwgmvxs .gt_center {
+#rbzstvuguq .gt_center {
   text-align: center;
 }
 
-#jhbvwgmvxs .gt_right {
+#rbzstvuguq .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#jhbvwgmvxs .gt_font_normal {
+#rbzstvuguq .gt_font_normal {
   font-weight: normal;
 }
 
-#jhbvwgmvxs .gt_font_bold {
+#rbzstvuguq .gt_font_bold {
   font-weight: bold;
 }
 
-#jhbvwgmvxs .gt_font_italic {
+#rbzstvuguq .gt_font_italic {
   font-style: italic;
 }
 
-#jhbvwgmvxs .gt_super {
+#rbzstvuguq .gt_super {
   font-size: 65%;
 }
 
-#jhbvwgmvxs .gt_footnote_marks {
+#rbzstvuguq .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#jhbvwgmvxs .gt_asterisk {
+#rbzstvuguq .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#jhbvwgmvxs .gt_indent_1 {
+#rbzstvuguq .gt_indent_1 {
   text-indent: 5px;
 }
 
-#jhbvwgmvxs .gt_indent_2 {
+#rbzstvuguq .gt_indent_2 {
   text-indent: 10px;
 }
 
-#jhbvwgmvxs .gt_indent_3 {
+#rbzstvuguq .gt_indent_3 {
   text-indent: 15px;
 }
 
-#jhbvwgmvxs .gt_indent_4 {
+#rbzstvuguq .gt_indent_4 {
   text-indent: 20px;
 }
 
-#jhbvwgmvxs .gt_indent_5 {
+#rbzstvuguq .gt_indent_5 {
   text-indent: 25px;
 }
 
-#jhbvwgmvxs .katex-display {
+#rbzstvuguq .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#jhbvwgmvxs div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#rbzstvuguq div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1730,23 +1734,23 @@ E[y_{1i}\mid D_i =1] - E[y_{0i}\mid D_i =1] = E[y_{1i}-y_{0i}].
 <p>Puesto que la decisión de tomar el tratamiento (<span class="math inline">\(T_i\)</span>) ya no es aleatoria (depende de la voluntad o características del individuo), comparar a quienes se trataron contra quienes no reintroduce el <strong>sesgo de selección</strong>. Por esta razón, en estos contextos se estima el <strong>ITT (Intention-to-Treat)</strong>, que mide el efecto de haber sido <em>asignado</em> al tratamiento, independientemente de la adopción final.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="dwqjclpffs" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#dwqjclpffs table {
+<div id="jwqnqsbfzy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#jwqnqsbfzy table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#dwqjclpffs thead, #dwqjclpffs tbody, #dwqjclpffs tfoot, #dwqjclpffs tr, #dwqjclpffs td, #dwqjclpffs th {
+#jwqnqsbfzy thead, #jwqnqsbfzy tbody, #jwqnqsbfzy tfoot, #jwqnqsbfzy tr, #jwqnqsbfzy td, #jwqnqsbfzy th {
   border-style: none;
 }
 
-#dwqjclpffs p {
+#jwqnqsbfzy p {
   margin: 0;
   padding: 0;
 }
 
-#dwqjclpffs .gt_table {
+#jwqnqsbfzy .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1772,12 +1776,12 @@ E[y_{1i}\mid D_i =1] - E[y_{0i}\mid D_i =1] = E[y_{1i}-y_{0i}].
   border-left-color: #D3D3D3;
 }
 
-#dwqjclpffs .gt_caption {
+#jwqnqsbfzy .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#dwqjclpffs .gt_title {
+#jwqnqsbfzy .gt_title {
   color: #FFFFFF;
   font-size: 125%;
   font-weight: initial;
@@ -1789,7 +1793,7 @@ E[y_{1i}\mid D_i =1] - E[y_{0i}\mid D_i =1] = E[y_{1i}-y_{0i}].
   border-bottom-width: 0;
 }
 
-#dwqjclpffs .gt_subtitle {
+#jwqnqsbfzy .gt_subtitle {
   color: #FFFFFF;
   font-size: 85%;
   font-weight: initial;
@@ -1801,7 +1805,7 @@ E[y_{1i}\mid D_i =1] - E[y_{0i}\mid D_i =1] = E[y_{1i}-y_{0i}].
   border-top-width: 0;
 }
 
-#dwqjclpffs .gt_heading {
+#jwqnqsbfzy .gt_heading {
   background-color: #69000C;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1813,13 +1817,13 @@ E[y_{1i}\mid D_i =1] - E[y_{0i}\mid D_i =1] = E[y_{1i}-y_{0i}].
   border-right-color: #D3D3D3;
 }
 
-#dwqjclpffs .gt_bottom_border {
+#jwqnqsbfzy .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#dwqjclpffs .gt_col_headings {
+#jwqnqsbfzy .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1834,7 +1838,7 @@ E[y_{1i}\mid D_i =1] - E[y_{0i}\mid D_i =1] = E[y_{1i}-y_{0i}].
   border-right-color: #D3D3D3;
 }
 
-#dwqjclpffs .gt_col_heading {
+#jwqnqsbfzy .gt_col_heading {
   color: #FFFFFF;
   background-color: #69000C;
   font-size: 100%;
@@ -1854,7 +1858,7 @@ E[y_{1i}\mid D_i =1] - E[y_{0i}\mid D_i =1] = E[y_{1i}-y_{0i}].
   overflow-x: hidden;
 }
 
-#dwqjclpffs .gt_column_spanner_outer {
+#jwqnqsbfzy .gt_column_spanner_outer {
   color: #FFFFFF;
   background-color: #69000C;
   font-size: 100%;
@@ -1866,15 +1870,15 @@ E[y_{1i}\mid D_i =1] - E[y_{0i}\mid D_i =1] = E[y_{1i}-y_{0i}].
   padding-right: 4px;
 }
 
-#dwqjclpffs .gt_column_spanner_outer:first-child {
+#jwqnqsbfzy .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#dwqjclpffs .gt_column_spanner_outer:last-child {
+#jwqnqsbfzy .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#dwqjclpffs .gt_column_spanner {
+#jwqnqsbfzy .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1886,11 +1890,11 @@ E[y_{1i}\mid D_i =1] - E[y_{0i}\mid D_i =1] = E[y_{1i}-y_{0i}].
   width: 100%;
 }
 
-#dwqjclpffs .gt_spanner_row {
+#jwqnqsbfzy .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#dwqjclpffs .gt_group_heading {
+#jwqnqsbfzy .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1916,7 +1920,7 @@ E[y_{1i}\mid D_i =1] - E[y_{0i}\mid D_i =1] = E[y_{1i}-y_{0i}].
   text-align: left;
 }
 
-#dwqjclpffs .gt_empty_group_heading {
+#jwqnqsbfzy .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1931,15 +1935,15 @@ E[y_{1i}\mid D_i =1] - E[y_{0i}\mid D_i =1] = E[y_{1i}-y_{0i}].
   vertical-align: middle;
 }
 
-#dwqjclpffs .gt_from_md > :first-child {
+#jwqnqsbfzy .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#dwqjclpffs .gt_from_md > :last-child {
+#jwqnqsbfzy .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#dwqjclpffs .gt_row {
+#jwqnqsbfzy .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1958,7 +1962,7 @@ E[y_{1i}\mid D_i =1] - E[y_{0i}\mid D_i =1] = E[y_{1i}-y_{0i}].
   overflow-x: hidden;
 }
 
-#dwqjclpffs .gt_stub {
+#jwqnqsbfzy .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1971,7 +1975,7 @@ E[y_{1i}\mid D_i =1] - E[y_{0i}\mid D_i =1] = E[y_{1i}-y_{0i}].
   padding-right: 5px;
 }
 
-#dwqjclpffs .gt_stub_row_group {
+#jwqnqsbfzy .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1985,15 +1989,15 @@ E[y_{1i}\mid D_i =1] - E[y_{0i}\mid D_i =1] = E[y_{1i}-y_{0i}].
   vertical-align: top;
 }
 
-#dwqjclpffs .gt_row_group_first td {
+#jwqnqsbfzy .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#dwqjclpffs .gt_row_group_first th {
+#jwqnqsbfzy .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#dwqjclpffs .gt_summary_row {
+#jwqnqsbfzy .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2003,16 +2007,16 @@ E[y_{1i}\mid D_i =1] - E[y_{0i}\mid D_i =1] = E[y_{1i}-y_{0i}].
   padding-right: 5px;
 }
 
-#dwqjclpffs .gt_first_summary_row {
+#jwqnqsbfzy .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#dwqjclpffs .gt_first_summary_row.thick {
+#jwqnqsbfzy .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#dwqjclpffs .gt_last_summary_row {
+#jwqnqsbfzy .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2022,7 +2026,7 @@ E[y_{1i}\mid D_i =1] - E[y_{0i}\mid D_i =1] = E[y_{1i}-y_{0i}].
   border-bottom-color: #D3D3D3;
 }
 
-#dwqjclpffs .gt_grand_summary_row {
+#jwqnqsbfzy .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2032,7 +2036,7 @@ E[y_{1i}\mid D_i =1] - E[y_{0i}\mid D_i =1] = E[y_{1i}-y_{0i}].
   padding-right: 5px;
 }
 
-#dwqjclpffs .gt_first_grand_summary_row {
+#jwqnqsbfzy .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2042,7 +2046,7 @@ E[y_{1i}\mid D_i =1] - E[y_{0i}\mid D_i =1] = E[y_{1i}-y_{0i}].
   border-top-color: #D3D3D3;
 }
 
-#dwqjclpffs .gt_last_grand_summary_row_top {
+#jwqnqsbfzy .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2052,11 +2056,11 @@ E[y_{1i}\mid D_i =1] - E[y_{0i}\mid D_i =1] = E[y_{1i}-y_{0i}].
   border-bottom-color: #D3D3D3;
 }
 
-#dwqjclpffs .gt_striped {
+#jwqnqsbfzy .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#dwqjclpffs .gt_table_body {
+#jwqnqsbfzy .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2065,7 +2069,7 @@ E[y_{1i}\mid D_i =1] - E[y_{0i}\mid D_i =1] = E[y_{1i}-y_{0i}].
   border-bottom-color: #D3D3D3;
 }
 
-#dwqjclpffs .gt_footnotes {
+#jwqnqsbfzy .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2079,7 +2083,7 @@ E[y_{1i}\mid D_i =1] - E[y_{0i}\mid D_i =1] = E[y_{1i}-y_{0i}].
   border-right-color: #D3D3D3;
 }
 
-#dwqjclpffs .gt_footnote {
+#jwqnqsbfzy .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2088,7 +2092,7 @@ E[y_{1i}\mid D_i =1] - E[y_{0i}\mid D_i =1] = E[y_{1i}-y_{0i}].
   padding-right: 5px;
 }
 
-#dwqjclpffs .gt_sourcenotes {
+#jwqnqsbfzy .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2102,7 +2106,7 @@ E[y_{1i}\mid D_i =1] - E[y_{0i}\mid D_i =1] = E[y_{1i}-y_{0i}].
   border-right-color: #D3D3D3;
 }
 
-#dwqjclpffs .gt_sourcenote {
+#jwqnqsbfzy .gt_sourcenote {
   font-size: 12px;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2110,72 +2114,72 @@ E[y_{1i}\mid D_i =1] - E[y_{0i}\mid D_i =1] = E[y_{1i}-y_{0i}].
   padding-right: 5px;
 }
 
-#dwqjclpffs .gt_left {
+#jwqnqsbfzy .gt_left {
   text-align: left;
 }
 
-#dwqjclpffs .gt_center {
+#jwqnqsbfzy .gt_center {
   text-align: center;
 }
 
-#dwqjclpffs .gt_right {
+#jwqnqsbfzy .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#dwqjclpffs .gt_font_normal {
+#jwqnqsbfzy .gt_font_normal {
   font-weight: normal;
 }
 
-#dwqjclpffs .gt_font_bold {
+#jwqnqsbfzy .gt_font_bold {
   font-weight: bold;
 }
 
-#dwqjclpffs .gt_font_italic {
+#jwqnqsbfzy .gt_font_italic {
   font-style: italic;
 }
 
-#dwqjclpffs .gt_super {
+#jwqnqsbfzy .gt_super {
   font-size: 65%;
 }
 
-#dwqjclpffs .gt_footnote_marks {
+#jwqnqsbfzy .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#dwqjclpffs .gt_asterisk {
+#jwqnqsbfzy .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#dwqjclpffs .gt_indent_1 {
+#jwqnqsbfzy .gt_indent_1 {
   text-indent: 5px;
 }
 
-#dwqjclpffs .gt_indent_2 {
+#jwqnqsbfzy .gt_indent_2 {
   text-indent: 10px;
 }
 
-#dwqjclpffs .gt_indent_3 {
+#jwqnqsbfzy .gt_indent_3 {
   text-indent: 15px;
 }
 
-#dwqjclpffs .gt_indent_4 {
+#jwqnqsbfzy .gt_indent_4 {
   text-indent: 20px;
 }
 
-#dwqjclpffs .gt_indent_5 {
+#jwqnqsbfzy .gt_indent_5 {
   text-indent: 25px;
 }
 
-#dwqjclpffs .katex-display {
+#jwqnqsbfzy .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#dwqjclpffs div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#jwqnqsbfzy div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -2298,7 +2302,537 @@ y_i = \alpha + \tau D_i + \beta X_i + u_i
 </section>
 <section id="asignación-aleatoria-condicional" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="asignación-aleatoria-condicional"><span class="header-section-number">3.2</span> Asignación aleatoria condicional</h2>
-<p>En un experimento aleatorizado</p>
+<p>En un experimento aleatorizado, la asignación al tratamiento es <em>independiente</em> de los resultados potenciales y es una función conocidas de los covariables. Hay tres formas principales:</p>
+<ul>
+<li>Asignación completamente aleatoria</li>
+<li>Aleatorización estratificada (aleatorización dentro de un número finito de estratos)</li>
+<li>Aleatorización por conglomerados (aleatorización a nivel de <em>clusters</em>)</li>
+</ul>
+<p>El siguiente esquema resume la diferencia entre la aleatorización estratificada a la por conglomerados:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/stratified-vs-cluster-sampling.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption>Aleatorización estratificada vs por conglometerados (<em>clustering</em>)</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>En la práctica, la aleatorización rara vez es “simple” o completamente al azar sobre toda la población. A menudo, el investigador posee información previa sobre los sujetos o enfrenta restricciones logísticas que lo obligan a utilizar un mecanismo de <strong>asignación aleatoria condicional</strong>. En este diseño, la probabilidad de recibir el tratamiento es una función conocida de ciertas covariables observadas.</p>
+<p>Como se observa en la <span class="citation" data-cites="stratified-vs-clusters">@stratified-vs-clusters</span>, la arquitectura del muestreo y la asignación cambia drásticamente según cómo agrupemos a las unidades.</p>
+<section id="aleatorización-estratificada-stratified-randomization" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="aleatorización-estratificada-stratified-randomization"><span class="header-section-number">3.2.1</span> Aleatorización Estratificada (Stratified Randomization)</h3>
+<p>Este método consiste en dividir a la población en <span class="math inline">\(G\)</span> estratos definidos por variables exógenas (como género, edad o nivel socioeconómico) y realizar una aleatorización independiente dentro de cada estrato.</p>
+<ul>
+<li><strong>Lógica:</strong> Buscamos asegurar que grupos pequeños pero importantes estén representados proporcionalmente tanto en el grupo de tratamiento como en el de control.</li>
+<li><strong>Ventaja Técnica:</strong> Mejora la eficiencia estadística al evitar “vectores de asignación no informativos” (por ejemplo, casos accidentales donde todos los hombres terminen en el grupo de control y todas las mujeres en el de tratamiento).</li>
+<li><strong>Ejemplo en STAR:</strong> La aleatorización se realizó <strong>dentro de cada escuela</strong>. Esto garantiza que las características específicas de una escuela (infraestructura, calidad docente promedio) no sesguen la comparación entre clases pequeñas y grandes.</li>
+</ul>
+</section>
+<section id="aleatorización-por-conglomerados-cluster-randomization" class="level3" data-number="3.2.2">
+<h3 data-number="3.2.2" class="anchored" data-anchor-id="aleatorización-por-conglomerados-cluster-randomization"><span class="header-section-number">3.2.2</span> Aleatorización por Conglomerados (Cluster Randomization)</h3>
+<p>A diferencia de la anterior, aquí la unidad de aleatorización no es el individuo, sino un grupo pre-existente o “cluster”.</p>
+<ul>
+<li><strong>Lógica:</strong> Todos los individuos pertenecientes a un mismo cluster (ej: una sala de clases, una aldea o una manzana) reciben el mismo estatus de tratamiento.</li>
+<li><strong>Motivación:</strong> Se suele utilizar por razones logísticas o para minimizar <strong>spillovers</strong> (interferencias) entre vecinos que harían inviable tratar a unos y a otros no dentro de un mismo espacio.</li>
+<li><strong>Ejemplo en STAR:</strong> Si bien la asignación fue dentro de escuelas, cada sala de clase constituye un <strong>cluster</strong>. Esto tiene implicancias críticas para la inferencia: los errores estándar deben ajustarse (closterizarse), ya que los resultados de los alumnos dentro de una misma sala están correlacionados entre sí.</li>
+</ul>
+<div class="r-stack border p-3 rounded" style="background-color: #f8f9fa; border-color: #69000C !important; border-width: 2px !important;">
+<p><strong>Diferencia Fundamental: Representatividad vs.&nbsp;Unidad de Implementación</strong></p>
+<p>Mientras que la <strong>estratificación</strong> busca asegurar que la muestra sea un “espejo” de la diversidad poblacional (tomando sujetos de todos los colores en la imagen), el <strong>clustering</strong> selecciona grupos completos (bloques de color), facilitando la implementación pero sacrificando, en ocasiones, poder estadístico por la correlación intracluster.</p>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="rqsukofhrz" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#rqsukofhrz table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#rqsukofhrz thead, #rqsukofhrz tbody, #rqsukofhrz tfoot, #rqsukofhrz tr, #rqsukofhrz td, #rqsukofhrz th {
+  border-style: none;
+}
+
+#rqsukofhrz p {
+  margin: 0;
+  padding: 0;
+}
+
+#rqsukofhrz .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #69000C;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #69000C;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#rqsukofhrz .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#rqsukofhrz .gt_title {
+  color: #FFFFFF;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#rqsukofhrz .gt_subtitle {
+  color: #FFFFFF;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#rqsukofhrz .gt_heading {
+  background-color: #69000C;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#rqsukofhrz .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#rqsukofhrz .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#rqsukofhrz .gt_col_heading {
+  color: #FFFFFF;
+  background-color: #69000C;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#rqsukofhrz .gt_column_spanner_outer {
+  color: #FFFFFF;
+  background-color: #69000C;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#rqsukofhrz .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#rqsukofhrz .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#rqsukofhrz .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#rqsukofhrz .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#rqsukofhrz .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#rqsukofhrz .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#rqsukofhrz .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#rqsukofhrz .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#rqsukofhrz .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#rqsukofhrz .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rqsukofhrz .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#rqsukofhrz .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#rqsukofhrz .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#rqsukofhrz .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rqsukofhrz .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#rqsukofhrz .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#rqsukofhrz .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#rqsukofhrz .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rqsukofhrz .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#rqsukofhrz .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#rqsukofhrz .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#rqsukofhrz .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#rqsukofhrz .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#rqsukofhrz .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rqsukofhrz .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#rqsukofhrz .gt_sourcenote {
+  font-size: 12px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rqsukofhrz .gt_left {
+  text-align: left;
+}
+
+#rqsukofhrz .gt_center {
+  text-align: center;
+}
+
+#rqsukofhrz .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#rqsukofhrz .gt_font_normal {
+  font-weight: normal;
+}
+
+#rqsukofhrz .gt_font_bold {
+  font-weight: bold;
+}
+
+#rqsukofhrz .gt_font_italic {
+  font-style: italic;
+}
+
+#rqsukofhrz .gt_super {
+  font-size: 65%;
+}
+
+#rqsukofhrz .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#rqsukofhrz .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#rqsukofhrz .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#rqsukofhrz .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#rqsukofhrz .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#rqsukofhrz .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#rqsukofhrz .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#rqsukofhrz .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#rqsukofhrz div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<th colspan="3" class="gt_heading gt_title gt_font_normal gt_bottom_border"><strong>Comparación de Diseños Condicionales</strong></th>
+</tr>
+<tr class="gt_col_headings even">
+<th id="Dimension" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Dimension</th>
+<th id="Estratificada" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Estratificada</th>
+<th id="Conglomerados" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Conglomerados</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="Dimension">Unidad de asignación</td>
+<td class="gt_row gt_left" headers="Estratificada">Individuo (dentro del grupo)</td>
+<td class="gt_row gt_left" headers="Conglomerados">Grupo o Cluster completo</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Dimension">Objetivo principal</td>
+<td class="gt_row gt_left" headers="Estratificada">Equilibrio y representatividad</td>
+<td class="gt_row gt_left" headers="Conglomerados">Viabilidad logística / Spillovers</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Dimension">Efecto en precisión</td>
+<td class="gt_row gt_left" headers="Estratificada">Aumenta la precisión (reduce SE)</td>
+<td class="gt_row gt_left" headers="Conglomerados">Suele disminuir la precisión</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Dimension">Inferencia</td>
+<td class="gt_row gt_left" headers="Estratificada">Modelar con Efectos Fijos</td>
+<td class="gt_row gt_left" headers="Conglomerados">Ajustar errores por cluster</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
 </section>
 <section id="sutva-stable-unit-treatment-value-assumption" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="sutva-stable-unit-treatment-value-assumption"><span class="header-section-number">3.3</span> SUTVA (Stable Unit Treatment Value Assumption)</h2>
@@ -3525,34 +4059,90 @@ y_i = \alpha + \tau D_i + \beta X_i + u_i
 <span id="cb1-738"><a href="#cb1-738" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-739"><a href="#cb1-739" aria-hidden="true" tabindex="-1"></a><span class="fu">## Asignación aleatoria condicional</span></span>
 <span id="cb1-740"><a href="#cb1-740" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-741"><a href="#cb1-741" aria-hidden="true" tabindex="-1"></a>En un experimento aleatorizado</span>
+<span id="cb1-741"><a href="#cb1-741" aria-hidden="true" tabindex="-1"></a>En un experimento aleatorizado, la asignación al tratamiento es *independiente* de los resultados potenciales y es una función conocidas de los covariables. Hay tres formas principales: </span>
 <span id="cb1-742"><a href="#cb1-742" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-743"><a href="#cb1-743" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-744"><a href="#cb1-744" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-745"><a href="#cb1-745" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-743"><a href="#cb1-743" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Asignación completamente aleatoria</span>
+<span id="cb1-744"><a href="#cb1-744" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Aleatorización estratificada (aleatorización dentro de un número finito de estratos)</span>
+<span id="cb1-745"><a href="#cb1-745" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Aleatorización por conglomerados (aleatorización a nivel de *clusters*)</span>
 <span id="cb1-746"><a href="#cb1-746" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-747"><a href="#cb1-747" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-748"><a href="#cb1-748" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-748"><a href="#cb1-748" aria-hidden="true" tabindex="-1"></a>El siguiente esquema resume la diferencia entre la aleatorización estratificada a la por conglomerados: </span>
 <span id="cb1-749"><a href="#cb1-749" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-750"><a href="#cb1-750" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-751"><a href="#cb1-751" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-752"><a href="#cb1-752" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-753"><a href="#cb1-753" aria-hidden="true" tabindex="-1"></a><span class="fu">## SUTVA (Stable Unit Treatment Value Assumption)</span></span>
+<span id="cb1-750"><a href="#cb1-750" aria-hidden="true" tabindex="-1"></a><span class="in">```{r stratified-vs-clusters}</span></span>
+<span id="cb1-751"><a href="#cb1-751" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb1-752"><a href="#cb1-752" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Aleatorización estratificada vs por conglometerados (*clustering*)"</span></span>
+<span id="cb1-753"><a href="#cb1-753" aria-hidden="true" tabindex="-1"></a><span class="co">#| out-width: "80%"</span></span>
 <span id="cb1-754"><a href="#cb1-754" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-755"><a href="#cb1-755" aria-hidden="true" tabindex="-1"></a>Asumimos que no hay interferencia entre unidades: el tratamiento de $i$ no afecta a $j$.</span>
-<span id="cb1-756"><a href="#cb1-756" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-757"><a href="#cb1-757" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>*Violaciones*: Efectos pares (spillovers), efectos de equilibrio general.</span>
-<span id="cb1-758"><a href="#cb1-758" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-759"><a href="#cb1-759" aria-hidden="true" tabindex="-1"></a><span class="fu">## Pruebas de Hipótesis</span></span>
-<span id="cb1-760"><a href="#cb1-760" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-761"><a href="#cb1-761" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>**Muestras grandes**: Test-t asintótico estándar.</span>
-<span id="cb1-762"><a href="#cb1-762" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>**Muestras pequeñas**: Test Exacto de Fisher (permutaciones).</span>
+<span id="cb1-755"><a href="#cb1-755" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"images/stratified-vs-cluster-sampling.png"</span>, <span class="at">error =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-756"><a href="#cb1-756" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-757"><a href="#cb1-757" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-758"><a href="#cb1-758" aria-hidden="true" tabindex="-1"></a>En la práctica, la aleatorización rara vez es "simple" o completamente al azar sobre toda la población. A menudo, el investigador posee información previa sobre los sujetos o enfrenta restricciones logísticas que lo obligan a utilizar un mecanismo de **asignación aleatoria condicional**. En este diseño, la probabilidad de recibir el tratamiento es una función conocida de ciertas covariables observadas.</span>
+<span id="cb1-759"><a href="#cb1-759" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-760"><a href="#cb1-760" aria-hidden="true" tabindex="-1"></a>Como se observa en la @stratified-vs-clusters, la arquitectura del muestreo y la asignación cambia drásticamente según cómo agrupemos a las unidades.</span>
+<span id="cb1-761"><a href="#cb1-761" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-762"><a href="#cb1-762" aria-hidden="true" tabindex="-1"></a><span class="fu">### Aleatorización Estratificada (Stratified Randomization)</span></span>
 <span id="cb1-763"><a href="#cb1-763" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-764"><a href="#cb1-764" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-765"><a href="#cb1-765" aria-hidden="true" tabindex="-1"></a><span class="fu"># Referencias</span></span>
-<span id="cb1-766"><a href="#cb1-766" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-767"><a href="#cb1-767" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Angrist &amp; Pischke (2008). *Mostly Harmless Econometrics*, Cap. 2-3.</span>
-<span id="cb1-768"><a href="#cb1-768" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Material del curso "Econometría Aplicada I", FEN U. Chile (2025).</span>
+<span id="cb1-764"><a href="#cb1-764" aria-hidden="true" tabindex="-1"></a>Este método consiste en dividir a la población en $G$ estratos definidos por variables exógenas (como género, edad o nivel socioeconómico) y realizar una aleatorización independiente dentro de cada estrato.</span>
+<span id="cb1-765"><a href="#cb1-765" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-766"><a href="#cb1-766" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Lógica:** Buscamos asegurar que grupos pequeños pero importantes estén representados proporcionalmente tanto en el grupo de tratamiento como en el de control.</span>
+<span id="cb1-767"><a href="#cb1-767" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Ventaja Técnica:** Mejora la eficiencia estadística al evitar "vectores de asignación no informativos" (por ejemplo, casos accidentales donde todos los hombres terminen en el grupo de control y todas las mujeres en el de tratamiento).</span>
+<span id="cb1-768"><a href="#cb1-768" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Ejemplo en STAR:** La aleatorización se realizó **dentro de cada escuela**. Esto garantiza que las características específicas de una escuela (infraestructura, calidad docente promedio) no sesguen la comparación entre clases pequeñas y grandes.</span>
+<span id="cb1-769"><a href="#cb1-769" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-770"><a href="#cb1-770" aria-hidden="true" tabindex="-1"></a><span class="fu">### Aleatorización por Conglomerados (Cluster Randomization)</span></span>
+<span id="cb1-771"><a href="#cb1-771" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-772"><a href="#cb1-772" aria-hidden="true" tabindex="-1"></a>A diferencia de la anterior, aquí la unidad de aleatorización no es el individuo, sino un grupo pre-existente o "cluster".</span>
+<span id="cb1-773"><a href="#cb1-773" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-774"><a href="#cb1-774" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Lógica:** Todos los individuos pertenecientes a un mismo cluster (ej: una sala de clases, una aldea o una manzana) reciben el mismo estatus de tratamiento.</span>
+<span id="cb1-775"><a href="#cb1-775" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Motivación:** Se suele utilizar por razones logísticas o para minimizar **spillovers** (interferencias) entre vecinos que harían inviable tratar a unos y a otros no dentro de un mismo espacio.</span>
+<span id="cb1-776"><a href="#cb1-776" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Ejemplo en STAR:** Si bien la asignación fue dentro de escuelas, cada sala de clase constituye un **cluster**. Esto tiene implicancias críticas para la inferencia: los errores estándar deben ajustarse (closterizarse), ya que los resultados de los alumnos dentro de una misma sala están correlacionados entre sí.</span>
+<span id="cb1-777"><a href="#cb1-777" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-778"><a href="#cb1-778" aria-hidden="true" tabindex="-1"></a>::: {.r-stack .border .p-3 .rounded style="background-color: #f8f9fa; border-color: #69000C !important; border-width: 2px !important;"}</span>
+<span id="cb1-779"><a href="#cb1-779" aria-hidden="true" tabindex="-1"></a>**Diferencia Fundamental: Representatividad vs. Unidad de Implementación**</span>
+<span id="cb1-780"><a href="#cb1-780" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-781"><a href="#cb1-781" aria-hidden="true" tabindex="-1"></a>Mientras que la **estratificación** busca asegurar que la muestra sea un "espejo" de la diversidad poblacional (tomando sujetos de todos los colores en la imagen), el **clustering** selecciona grupos completos (bloques de color), facilitando la implementación pero sacrificando, en ocasiones, poder estadístico por la correlación intracluster.</span>
+<span id="cb1-782"><a href="#cb1-782" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-783"><a href="#cb1-783" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-784"><a href="#cb1-784" aria-hidden="true" tabindex="-1"></a><span class="in">```{r tabla-comparativa-muestreo}</span></span>
+<span id="cb1-785"><a href="#cb1-785" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb1-786"><a href="#cb1-786" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb1-787"><a href="#cb1-787" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-788"><a href="#cb1-788" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(</span>
+<span id="cb1-789"><a href="#cb1-789" aria-hidden="true" tabindex="-1"></a>  <span class="at">Dimension =</span> <span class="fu">c</span>(<span class="st">"Unidad de asignación"</span>, <span class="st">"Objetivo principal"</span>, <span class="st">"Efecto en precisión"</span>, <span class="st">"Inferencia"</span>),</span>
+<span id="cb1-790"><a href="#cb1-790" aria-hidden="true" tabindex="-1"></a>  <span class="at">Estratificada =</span> <span class="fu">c</span>(<span class="st">"Individuo (dentro del grupo)"</span>, <span class="st">"Equilibrio y representatividad"</span>, <span class="st">"Aumenta la precisión (reduce SE)"</span>, <span class="st">"Modelar con Efectos Fijos"</span>),</span>
+<span id="cb1-791"><a href="#cb1-791" aria-hidden="true" tabindex="-1"></a>  <span class="at">Conglomerados =</span> <span class="fu">c</span>(<span class="st">"Grupo o Cluster completo"</span>, <span class="st">"Viabilidad logística / Spillovers"</span>, <span class="st">"Suele disminuir la precisión"</span>, <span class="st">"Ajustar errores por cluster"</span>)</span>
+<span id="cb1-792"><a href="#cb1-792" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> </span>
+<span id="cb1-793"><a href="#cb1-793" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb1-794"><a href="#cb1-794" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="fu">md</span>(<span class="st">"**Comparación de Diseños Condicionales**"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb1-795"><a href="#cb1-795" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_options</span>(</span>
+<span id="cb1-796"><a href="#cb1-796" aria-hidden="true" tabindex="-1"></a>    <span class="at">heading.background.color =</span> <span class="st">"#69000C"</span>,</span>
+<span id="cb1-797"><a href="#cb1-797" aria-hidden="true" tabindex="-1"></a>    <span class="at">column_labels.background.color =</span> <span class="st">"#69000C"</span>,</span>
+<span id="cb1-798"><a href="#cb1-798" aria-hidden="true" tabindex="-1"></a>    <span class="at">table.border.top.color =</span> <span class="st">"#69000C"</span>,</span>
+<span id="cb1-799"><a href="#cb1-799" aria-hidden="true" tabindex="-1"></a>    <span class="at">table.border.bottom.color =</span> <span class="st">"#69000C"</span>,</span>
+<span id="cb1-800"><a href="#cb1-800" aria-hidden="true" tabindex="-1"></a>    <span class="at">source_notes.font.size =</span> <span class="fu">px</span>(<span class="dv">12</span>)</span>
+<span id="cb1-801"><a href="#cb1-801" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-802"><a href="#cb1-802" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-803"><a href="#cb1-803" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-804"><a href="#cb1-804" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-805"><a href="#cb1-805" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-806"><a href="#cb1-806" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-807"><a href="#cb1-807" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-808"><a href="#cb1-808" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-809"><a href="#cb1-809" aria-hidden="true" tabindex="-1"></a><span class="fu">## SUTVA (Stable Unit Treatment Value Assumption)</span></span>
+<span id="cb1-810"><a href="#cb1-810" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-811"><a href="#cb1-811" aria-hidden="true" tabindex="-1"></a>Asumimos que no hay interferencia entre unidades: el tratamiento de $i$ no afecta a $j$.</span>
+<span id="cb1-812"><a href="#cb1-812" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-813"><a href="#cb1-813" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>*Violaciones*: Efectos pares (spillovers), efectos de equilibrio general.</span>
+<span id="cb1-814"><a href="#cb1-814" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-815"><a href="#cb1-815" aria-hidden="true" tabindex="-1"></a><span class="fu">## Pruebas de Hipótesis</span></span>
+<span id="cb1-816"><a href="#cb1-816" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-817"><a href="#cb1-817" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>**Muestras grandes**: Test-t asintótico estándar.</span>
+<span id="cb1-818"><a href="#cb1-818" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>**Muestras pequeñas**: Test Exacto de Fisher (permutaciones).</span>
+<span id="cb1-819"><a href="#cb1-819" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-820"><a href="#cb1-820" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-821"><a href="#cb1-821" aria-hidden="true" tabindex="-1"></a><span class="fu"># Referencias</span></span>
+<span id="cb1-822"><a href="#cb1-822" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-823"><a href="#cb1-823" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Angrist &amp; Pischke (2008). *Mostly Harmless Econometrics*, Cap. 2-3.</span>
+<span id="cb1-824"><a href="#cb1-824" aria-hidden="true" tabindex="-1"></a><span class="ss">  * </span>Material del curso "Econometría Aplicada I", FEN U. Chile (2025).</span>
 </code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

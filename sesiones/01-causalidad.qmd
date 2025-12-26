@@ -736,12 +736,68 @@ y aplicar un Test F: $H_0 : \beta_1 =  \beta_2 = \ldots = \beta_m =0$. Ello nos 
 
 ## Asignación aleatoria condicional
 
-En un experimento aleatorizado
+En un experimento aleatorizado, la asignación al tratamiento es *independiente* de los resultados potenciales y es una función conocidas de los covariables. Hay tres formas principales: 
+
+  - Asignación completamente aleatoria
+  - Aleatorización estratificada (aleatorización dentro de un número finito de estratos)
+  - Aleatorización por conglomerados (aleatorización a nivel de *clusters*)
 
 
+El siguiente esquema resume la diferencia entre la aleatorización estratificada a la por conglomerados: 
 
+```{r stratified-vs-clusters}
+#| echo: false
+#| fig-cap: "Aleatorización estratificada vs por conglometerados (*clustering*)"
+#| out-width: "80%"
 
+knitr::include_graphics("images/stratified-vs-cluster-sampling.png", error = FALSE)
+```
 
+En la práctica, la aleatorización rara vez es "simple" o completamente al azar sobre toda la población. A menudo, el investigador posee información previa sobre los sujetos o enfrenta restricciones logísticas que lo obligan a utilizar un mecanismo de **asignación aleatoria condicional**. En este diseño, la probabilidad de recibir el tratamiento es una función conocida de ciertas covariables observadas.
+
+Como se observa en la @stratified-vs-clusters, la arquitectura del muestreo y la asignación cambia drásticamente según cómo agrupemos a las unidades.
+
+### Aleatorización Estratificada (Stratified Randomization)
+
+Este método consiste en dividir a la población en $G$ estratos definidos por variables exógenas (como género, edad o nivel socioeconómico) y realizar una aleatorización independiente dentro de cada estrato.
+
+* **Lógica:** Buscamos asegurar que grupos pequeños pero importantes estén representados proporcionalmente tanto en el grupo de tratamiento como en el de control.
+* **Ventaja Técnica:** Mejora la eficiencia estadística al evitar "vectores de asignación no informativos" (por ejemplo, casos accidentales donde todos los hombres terminen en el grupo de control y todas las mujeres en el de tratamiento).
+* **Ejemplo en STAR:** La aleatorización se realizó **dentro de cada escuela**. Esto garantiza que las características específicas de una escuela (infraestructura, calidad docente promedio) no sesguen la comparación entre clases pequeñas y grandes.
+
+### Aleatorización por Conglomerados (Cluster Randomization)
+
+A diferencia de la anterior, aquí la unidad de aleatorización no es el individuo, sino un grupo pre-existente o "cluster".
+
+* **Lógica:** Todos los individuos pertenecientes a un mismo cluster (ej: una sala de clases, una aldea o una manzana) reciben el mismo estatus de tratamiento.
+* **Motivación:** Se suele utilizar por razones logísticas o para minimizar **spillovers** (interferencias) entre vecinos que harían inviable tratar a unos y a otros no dentro de un mismo espacio.
+* **Ejemplo en STAR:** Si bien la asignación fue dentro de escuelas, cada sala de clase constituye un **cluster**. Esto tiene implicancias críticas para la inferencia: los errores estándar deben ajustarse (closterizarse), ya que los resultados de los alumnos dentro de una misma sala están correlacionados entre sí.
+
+::: {.r-stack .border .p-3 .rounded style="background-color: #f8f9fa; border-color: #69000C !important; border-width: 2px !important;"}
+**Diferencia Fundamental: Representatividad vs. Unidad de Implementación**
+
+Mientras que la **estratificación** busca asegurar que la muestra sea un "espejo" de la diversidad poblacional (tomando sujetos de todos los colores en la imagen), el **clustering** selecciona grupos completos (bloques de color), facilitando la implementación pero sacrificando, en ocasiones, poder estadístico por la correlación intracluster.
+:::
+
+```{r tabla-comparativa-muestreo}
+#| echo: false
+#| warning: false
+
+data.frame(
+  Dimension = c("Unidad de asignación", "Objetivo principal", "Efecto en precisión", "Inferencia"),
+  Estratificada = c("Individuo (dentro del grupo)", "Equilibrio y representatividad", "Aumenta la precisión (reduce SE)", "Modelar con Efectos Fijos"),
+  Conglomerados = c("Grupo o Cluster completo", "Viabilidad logística / Spillovers", "Suele disminuir la precisión", "Ajustar errores por cluster")
+) |> 
+  gt() |> 
+  tab_header(title = md("**Comparación de Diseños Condicionales**")) |> 
+  tab_options(
+    heading.background.color = "#69000C",
+    column_labels.background.color = "#69000C",
+    table.border.top.color = "#69000C",
+    table.border.bottom.color = "#69000C",
+    source_notes.font.size = px(12)
+  )
+```
 
 
 
