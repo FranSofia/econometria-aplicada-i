@@ -19,10 +19,10 @@ website:
             file: sesiones/02-iv.qmd
           - text: "3. Regresión Discontinua"
             file: sesiones/03-rdd.qmd
-          - text: "4. Datos de Panel"
-            file: sesiones/04-panel.qmd
-          - text: "5. Diff-in-Diff y Event Studies"
-            file: sesiones/05-did.qmd
+          - text: "4. Datos de Panel, DiD y Event Study"
+            file: sesiones/04-datapanel-did-eventstudy.qmd
+          - text: "5. Matching"
+            file: sesiones/05-matching.qmd
     right:
       - icon: github
         href: https://github.com/FranSofia/econometria-aplicada-i

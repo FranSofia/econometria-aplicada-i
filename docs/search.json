@@ -32,7 +32,7 @@
     "href": "syllabus.html#contenidos",
     "title": "Programa del Curso",
     "section": "Contenidos",
-    "text": "Contenidos\n\nMétodos Causales: Endogeneidad, Evaluación Experimental, Selección en Observables.\nVariables Instrumentales (IV): Identificación y estimación.\nRegresión Discontinua (RDD): Diseños nítidos y borrosos.\nDatos de Panel: Efectos Fijos.\nDiferencias en Diferencias (DiD): y Estudios de Eventos."
+    "text": "Contenidos\n\nMétodos Causales: Endogeneidad, Evaluación Experimental, Selección en Observables.\nVariables Instrumentales (IV): Identificación y estimación.\nRegresión Discontinua (RDD): Diseños nítidos y borrosos.\nDatos de Panel: Efectos Fijos. Diferencias en Diferencias (DiD): y Estudios de Eventos.\nMatching"
   },
   {
     "objectID": "syllabus.html#bibliografía-principal",

@@ -27,8 +27,8 @@ El curso busca introducir la aplicación de herramientas de microeconometría, c
 1.  **Métodos Causales:** Endogeneidad, Evaluación Experimental, Selección en Observables.
 2.  **Variables Instrumentales (IV):** Identificación y estimación.
 3.  **Regresión Discontinua (RDD):** Diseños nítidos y borrosos.
-4.  **Datos de Panel:** Efectos Fijos.
-5.  **Diferencias en Diferencias (DiD):** y Estudios de Eventos.
+4.  **Datos de Panel:** Efectos Fijos.  **Diferencias en Diferencias (DiD):** y Estudios de Eventos.
+5.  **Matching**
 
 ## Bibliografía Principal
 
