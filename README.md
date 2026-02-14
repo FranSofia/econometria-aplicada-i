@@ -20,18 +20,18 @@ Este repositorio y sitio web está enfocado a documentar los apuntes y trabajos 
 
 ```         
 econometria-aplicada-i/
-├── _quarto.yml           # Configuración 
-├── index.qmd             # Portada
-├── syllabus.qmd          # Programa 
-├── styles.scss           # Estilo "Metropolis" 
-├── .gitignore            # CRUCIAL para no bloquear el repo con datos pesados
-└── sesiones/             # Carpeta principal de trabajo
-    ├── data/             # Aquí van los .dta o .rds (Local)
-    ├── 01-causalidad.qmd # Sesión 1
-    ├── 02-iv.qmd         # Sesión 2
-    ├── 03-rdd.qmd        # Sesión 3
-    ├── 04-panel.qmd      # Sesión 4
-    └── 05-did.qmd        # Sesión 5
+├── _quarto.yml                              # Configuración 
+├── index.qmd                                # Portada
+├── syllabus.qmd                             # Programa 
+├── styles.scss                              # Estilo "Metropolis" 
+├── .gitignore                               # Para no bloquear el repo con datos pesados
+└── sesiones/                                # Carpeta principal de trabajo
+    ├── data/                                # Aquí van los .dta o .rds (Local)
+    ├── 01-causalidad.qmd                    # Sesión 1
+    ├── 02-iv.qmd                            # Sesión 2
+    ├── 03-rdd.qmd                           # Sesión 3
+    ├── 04-datapanel-did-eventstudy.qmd      # Sesión 4
+    └── 05-matching.qmd                      # Sesión 5
 ```
 
 ## Tecnologías
