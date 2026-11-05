@@ -18,3 +18,11 @@
 # Archivos del sistema
 .DS_Store
 Thumbs.db
+# Material privado del curso: nunca al repo público
+/material/
+/notas/
+/slides/
+/lecturas/
+CLAUDE.md
+TODO.md
+*.pdf
