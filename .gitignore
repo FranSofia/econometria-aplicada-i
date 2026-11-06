@@ -12,7 +12,7 @@
 *.rds
 *.RData
 
-# Pero permitir archivos pequeños 
+# Pero permitir archivos pequeños
 # !sesiones/data/ejemplo_pequeno.csv
 
 # Archivos del sistema
@@ -26,3 +26,5 @@ Thumbs.db
 CLAUDE.md
 TODO.md
 *.pdf
+
+**/*.quarto_ipynb
