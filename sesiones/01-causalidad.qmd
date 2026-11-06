@@ -1,8 +1,10 @@
 ---
-title: "Sesión 1: Métodos de Evaluación Causal y RCT"
-subtitle: "Resultados Potenciales, Sesgo de Selección y Experimentos"
-date: "2025-12-06"
+title: "Sesión 1: Causalidad, validez y experimentos aleatorizados"
+subtitle: "Resultados potenciales, sesgo de selección y análisis de RCT"
+date: "2025-11-28"
 author: "Fran Sofía Núñez"
+lang: es
+bibliography: ../references.bib
 format:
   html:
     toc: true
@@ -14,967 +16,723 @@ editor: visual
 
 ```{r setup}
 #| include: false
-#| warning: false
-#| message: false
 
-# Carga de librerías para manipulación y tablas
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(tidyverse, kableExtra, knitr, gt) 
+pacman::p_load(tidyverse, gt, haven, fixest, modelsummary)
+
+set.seed(20251128)
+theme_set(theme_minimal(base_size = 12))
+
+# Color institucional del sitio
+col_uch <- "#69000C"
+
+# Estilo común para todas las tablas gt del apunte
+tabla_curso <- function(tbl) {
+  tbl |>
+    tab_options(
+      heading.background.color       = col_uch,
+      column_labels.background.color = col_uch,
+      table.border.top.color         = col_uch,
+      table.border.bottom.color      = col_uch,
+      source_notes.font.size         = px(12)
+    )
+}
+
+# Datos de la aplicación (sección de aplicación en R). No se versionan en git:
+# ver instrucciones de descarga en esa sección.
+ruta_chong <- "data/Colombia_Sex_Ed.dta"
+hay_datos  <- file.exists(ruta_chong)
 ```
 
-# Introducción [EN CONSTRUCCIÓN] {-}
+# Introducción {-}
 
-Esta sesión introduce el problema fundamental de la inferencia causal y establece el marco teórico de los **Resultados Potenciales (Rubin Causal Model)**. Se parte discutiendo por qué la correlación no implica causalidad, sobre el sesgo de selección y cómo los experimentos aleatorios (RCT) resuelven el problema del sesgo de selección.
+Esta sesión abre el curso con la pregunta que lo recorre entero: cuándo una relación entre dos variables nos dice algo sobre lo que ocurriría si interviniéramos una de ellas. Para responderla se introduce el marco de resultados potenciales, se formaliza el sesgo de selección y se muestra por qué la asignación aleatoria lo elimina. El resto de la sesión se dedica a lo que ocurre cuando ese ideal se lleva a la práctica: cómo se analiza un experimento con regresión, qué amenazas aparecen en terreno y cómo se hace inferencia y se calcula la potencia de un diseño. La sesión cierra con una aplicación en R sobre un experimento real de educación sexual en Colombia [@chong2020].
 
-# Bloque 1: Causalidad y Validez del análisis empírico
+Las lecturas obligatorias son los capítulos 1 a 3 de *Mostly Harmless Econometrics* [@angrist2009] y las secciones 1 a 6 del manual de @duflo2007. La clase se apoya, además, en @imbens2009, @athey2017 y @krueger1999.
 
-Hay muchas decisiones en economía, política, negocios, etc., que implican la comprensión correcta de la relación entre las variables implicadas. Por ejemplo, muchas veces vamos a querer testear hipótesis: ¿Existe la discriminación racial en la asignación de créditos hipotecarios? ¿En la decisión de usar la herramienta de la prisión preventiva? ¿Son iguales los salarios entre hombres y mujeres con el mismo nivel de educación y experiencia laboral? Por otro lado, también muchas veces vamos a querer cuantificar efectos (relación causal): ¿cuánto aumenta el desempeño académico de los estudiantes al reducir el tamaño de la clase? ¿Cuál es el efecto del aumento del salario mínimo en el desempleo?
+Angrist y Pischke organizan cualquier proyecto empírico en torno a cuatro preguntas, que conviene tener presentes desde el inicio porque reaparecen en cada sesión del curso:
 
-Todas estas respuestas requieren una respuesta numérica y una medida de precisión que acompañe dicha respuesta, para saber el grado de error conocido. No obstante, también requiere la comprensión correcta del *tipo* de relación que une a las variables, i.e., distinguir la naturaleza de la relación entre $X$ e $Y$. 
+1. **¿Cuál es la relación causal de interés?** Una relación causal permite predecir las consecuencias de una intervención, que es lo que se necesita para evaluar una política.
+2. **¿Cuál es el experimento ideal que permitiría capturar ese efecto?** No es necesario que sea factible; muchas veces no lo es por razones éticas o de costo. Su función es disciplinar el razonamiento: obliga a precisar qué se manipula, sobre quién y qué se mantiene constante.
+3. **¿Cuál es la estrategia de identificación?** Es la forma en que se usan datos observacionales para aproximarse a ese experimento.
+4. **¿Cuál es el modo de inferencia estadística?** Esto incluye la población estudiada, la muestra y los supuestos con que se construyen los errores estándar.
 
-En líneas generales, o al menos para este curso, nos va interesar la relaciones *causales* entre variables. Es decir, una relación que establezca la naturaleza del vínculo de nuestras variables tal que: 
-$$
-X \implies Y
-$$
-Para ello, es muy importante distinguir entre *relaciones causales* y *correlaciones*. Sobre todo, porque, **observacionalmente** las relaciones de correllación *pueden verse* iguales a las de causalidad. No obstante, **correlación no implica causalidad**
+La segunda pregunta tiene un corolario útil. Si no es posible describir siquiera un experimento ideal, la pregunta probablemente no tiene respuesta empírica. Angrist y Pischke las llaman *fundamentally unidentified questions*. Su ejemplo es el efecto de la edad de ingreso a la escuela sobre los puntajes en primaria: como la edad de ingreso es igual a la edad actual menos los años de escolaridad, no hay forma de mover una sin mover las otras. La idea de contrastar los experimentos que quisiéramos hacer con los que "la naturaleza" produce por su cuenta es antigua en econometría y se remonta, al menos, a @haavelmo1944.
 
-## Causalidad vs. Correlación
+# Causalidad y correlación
 
-Como ya vimos, muchas relaciones entre variables pueden confundirse, sobre todo las correlaciones con las relaciones causales. Una forma típica es lo que se conoce como **correlación espúrea**. El caracter espurio de una correlación está dado por la alta asociación (o generalmente por la alta) entre variables y que, en virtud de ella, se interprete una relación de necesidad, o peor, de causalidad. 
+Muchas decisiones en economía, en el sector público y en las empresas dependen de entender cómo se relacionan ciertas variables. A veces se busca contrastar una hipótesis, por ejemplo, si existe discriminación en la asignación de créditos hipotecarios o si hombres y mujeres con la misma educación y experiencia reciben salarios distintos. Otras veces se busca cuantificar un efecto: cuánto mejora el rendimiento escolar al reducir el tamaño de los cursos, o qué le ocurre al desempleo cuando sube el salario mínimo. En ambos casos se necesita un número y una medida de su precisión. Pero antes de eso se necesita saber qué tipo de relación se está midiendo, porque en los datos observacionales una correlación y una relación causal pueden verse exactamente iguales.
 
-Un ejemplo clásico de correlación espuria:
-
-::: {.callout-note appearance="simple"}
-**Ejemplo: Nicolas Cage y Ahogamientos**
-Existe una correlación del 66% entre las películas de Nicolas Cage y la gente que se ahoga en piscinas. No obstante, sabemos que Nicolás Cage y sus películas no causan que más personas se ahoguen. Esto ilustra que $Corr(X,Y) \neq 0$ no implica causalidad, por más fuerte que sea el grado de asociación.
-:::
+El caso extremo son las correlaciones espurias: series que se mueven juntas sin que exista ningún vínculo entre ellas. El sitio de @vigen reúne decenas de ejemplos, como la correlación entre el número de películas en que aparece Nicolas Cage cada año y las muertes por ahogamiento en piscinas en Estados Unidos.
 
 ```{r img-spurious}
 #| echo: false
-#| fig-cap: "Correlación espuria"
+#| fig-cap: "Una correlación espuria. Fuente: Vigen (s. f.)."
 #| out-width: "80%"
 
 knitr::include_graphics("images/spurious.png", error = FALSE)
 ```
 
-Confundir una correlación (y peor aún: una espúrea) con una relación causal, puede llevar a errores graves. Por ejemplo, en *Mostly Harmless Econometrics* ([Angrist y Pischke, 2008](https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf)) se muestra cómo hay una relación entre ir (o no) al hospital y el grado de "salud subjetiva"^[Esto se mide con la pregunta que realiza la Encuesta Nacinoal de Salud (NHIS): "Would you say your health in general is excellent, very good, good, fair, poor?" donde 1 es "excellent health" y 5 es "poor health"] reportado. Los datos son los siguientes: 
+Ese ejemplo es fácil de descartar. Los casos que importan son aquellos en que la correlación sí refleja algo real, pero no lo que se quiere medir. Para pensar en ellos ayuda distinguir tres estructuras posibles entre una variable $X$ y un resultado $Y$:
 
-```{r tablas-seleccion-usa}
-#| echo: false
-#| warning: false
-
-# --- TABLA 1: DATOS USA ---
-data.frame(
-  Grupo = c("Hospital", "No Hospital"),
-  N = c("7,774", "90,049"),
-  Media_Salud = c(2.79, 2.07),
-  Error_Std = c(0.014, 0.003)
-) |> 
-  gt() |> 
-  tab_header(
-    title = md("**Tabla 1:** Comparación de medias en EE.UU. (NHIS)")
-  ) |> 
-  # Renombramos columnas para que se vean bonitas
-  cols_label(
-    Grupo = "Grupo",
-    N = "N",
-    Media_Salud = "Salud Promedio (1=Excelente, 5=Muy Mal)",
-    Error_Std = "Error Est."
-  ) |> 
-  # Creamos el encabezado agrupado (el header rojo de antes)
-  tab_spanner(
-    label = "Resultados de Salud",
-    columns = c(Media_Salud, Error_Std)
-  ) |> 
-  # Añadimos la nota al pie (se ajustará automáticamente al ancho total)
-  tab_source_note(
-    source_note = "Fuente: Angrist & Pischke (2008). Diferencia de medias: 0.71 (t=58.9)."
-  ) |> 
-  # Estilo visual (Ancho 100%, alineación izq, filas rayadas)
-  tab_options(
-    heading.background.color = "#69000C",
-    column_labels.background.color = "#69000C",
-    table.border.top.color = "#69000C",
-    table.border.bottom.color = "#69000C",
-    source_notes.font.size = px(12)
-  )
-```
-
-Como se puede observar, la salud promedio de las personas que no asisten al hospital reportan que, en promedio, tienen un estado de salud mejor a los que asisten ($2{,}79 > 2{,}07$), pues el promedio de los que no asisten al hospital es más cercano al 1 ("Excelente salud") que los que sí asisten. Pero, ¿esto significa que *asistir al hospital* **_empeora_** *la salud*? Suena ridículo dicho así (o quizás no), pero lo cierto es que este tipo de relaciones se suelen establecer. Es más, ¿por qué suena ridiculo? ¿Qué es lo raro en que las personas que van al hospital tienen en promedio problemas de salud mas graves? En realidad, esto es así, pero eso no significa que *ir* a un hospital empeora la salud, es decir, no hay una relación causal. Pero, ¿por qué no la hay? 
-
-El motivo de que no la haya se puede sintetizar en el siguiente concepto: **sesgo de selección**. En primer lugar, si miramos las características de cada grupo (quienes asisten o no al hospital), que son pre-existentes a ir o no al hospital y a declarar un buen o mal estado de salud, probablemente van a ser muy diferentes. Por ejemplo, aún no hemos visto si tienen diferencias de edad, el contexto socioeconómico, indicadores de salud *previos* a la atención, etc. Sin observar todo eso, es dificil afirmar que *ir* al hospital empeora la salud. En segundo lugar, algo que probablemente se considere de sentido común, es que probablemente las personas asisten al hospital lo hacen justamente porque tienen problemas de salud. En cambio, probablemente no tienen problemas de salud, y por eso no van a un hospital. Es decir, **las personas que se atienden en un hospital son distintas a aquellas que eligen no hacerlo, pues _se autoseleccionan_ en nuestro _tratamiento_**. A todo esto, le llamamos un problema de **sesgo de selección**. Por cierto, la evidencia de  [Angrist y Pischke (2008)](https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf) también se puede observar para Chile si vemos los datos de la Casen 2015^[Ojo, aquí la escala es otra y está invertida. Primero no es de 1 a 5, sino de 1 a 7. Y aquí 1 es el peor puntaje y 7 el mejor. A diferencia que en la NHIS que 1 era el mejor puntaje y 5 el peor]:  
-
-
-```{r tablas-seleccion-chile}
-#| echo: false
-#| warning: false
-
-# --- TABLA 2: DATOS CHILE ---
-data.frame(
-  Grupo = c("Hospital", "No Hospital"),
-  N = c("4,849", "40,816"),
-  Media_Salud = c(4.23, 4.93),
-  Error_Std = c(0.022, 0.007)
-) |> 
-  gt() |> 
-  tab_header(
-    title = md("**Tabla 2:** Evidencia similar para Chile (CASEN 2015)")
-  ) |> 
-  cols_label(
-    Grupo = "Grupo",
-    N = "N",
-    Media_Salud = "Salud Promedio (1=Muy Mal, 7=Muy Bien)",
-    Error_Std = "Error Est."
-  ) |> 
-  tab_spanner(
-    label = "Resultados de Salud",
-    columns = c(Media_Salud, Error_Std)
-  ) |> 
-  tab_source_note(
-    source_note = "Fuente: Elaboración propia con CASEN 2015. Diferencia de medias: 0.70 (t=33.1)."
-  ) |> 
-  tab_options(
-    heading.background.color = "#69000C",
-    column_labels.background.color = "#69000C",
-    table.border.top.color = "#69000C",
-    table.border.bottom.color = "#69000C",
-    source_notes.font.size = px(12)
-  )
-```
-
-
-### El problema de Selección (Formalización)
-
-Hasta ahora hemos hablado intuitivamente sobre por qué comparar promedios directos nos lleva a errores. Para ser rigurosos, debemos formalizar esto utilizando el lenguaje de los **Resultados Potenciales** (*Potential Outcomes*), el bloque fundamental de la econometría moderna. Con ello, nos adelantaremos unos pasos, pero después lo retomamos de nuevo. 
-
-Siguiendo a [Angrist y Pischke (2008)](https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf), imaginemos que el tratamiento (ir al hospital) es una variable binaria $D_i = \{0, 1\}$. El interés radica en saber si el resultado de salud $Y_i$ es afectado por este tratamiento.
-
-Entonces, para cada individuo $i$, existen dos "vidas paralelas" o resultados potenciales:
-
-* $Y_{1i}$: El estado de salud si la persona **va** al hospital ($D_i=1$).
-* $Y_{0i}$: El estado de salud si la persona **no va** al hospital ($D_i=0$).
-
-El efecto causal para un individuo sería la diferencia entre estos dos estados: $\tau_i = Y_{1i} - Y_{0i}$. El problema fundamental de la inferencia causal es que **nunca podemos observar ambos resultados simultáneamente** para la misma persona. Solo observamos lo que realmente ocurrió:
-
-$$
-Y_i = \begin{cases}
-Y_{1i} & \text{si } D_i = 1 \\
-Y_{0i} & \text{si } D_i = 0
-\end{cases}
-$$
-
-Lo cual se puede reescribir como:
-$$Y_i = Y_{0i} + (Y_{1i} - Y_{0i})D_i$$
-
-#### Descomposición de la Diferencia Observada
-
-Cuando ingenuamente comparamos el promedio de salud de los hospitalizados con los no hospitalizados, estamos calculando la **Diferencia de Medias Observada**. Matemáticamente, esto se descompone en dos partes muy distintas:
-
-$$
-\underbrace{E[Y_i | D_i=1] - E[Y_i | D_i=0]}_{\text{Diferencia Observada}} = \underbrace{E[Y_{1i} - Y_{0i} | D_i=1]}_{\text{ATT}} + \underbrace{E[Y_{0i} | D_i=1] - E[Y_{0i} | D_i=0]}_{\text{Sesgo de Selección}}
-$$
-
-1.  **El Efecto Promedio en los Tratados (ATT):** $E[Y_{1i} - Y_{0i} | D_i=1]$. Esto es lo que *queremos* medir: ¿cuánto mejoró (o empeoró) la salud de quienes fueron al hospital *gracias* a ir al hospital?
-2.  **El Sesgo de Selección:** $E[Y_{0i} | D_i=1] - E[Y_{0i} | D_i=0]$. Esta es la parte "sucia". Es la diferencia en la salud base ($Y_{0i}$) entre quienes fueron al hospital y quienes no.
-
-Volviendo a nuestro ejemplo: como las personas que van al hospital suelen estar más enfermas de base, su $Y_{0i}$ (salud sin tratamiento) es mucho peor que el de las personas que se quedan en casa. Esto hace que el término de **Sesgo de Selección sea negativo** y muy grande, opacando cualquier efecto positivo (ATT) que el hospital pudiera tener.
-
-En resumen, la "Comparación Naive" mezcla el efecto causal con la autoselección de los individuos. El objetivo de la econometría (y de los RCT que veremos a continuación) es eliminar este segundo término para aislar el efecto causal verdadero.
-
-### Sintesis pre validez del análisis empírico
-
-Entonces, volviendo al problema de la causalidad (y la correlación). Sabiendo que el problema del sesgo de selección (*selection bias*) subyace a la dificultad de identificar el carácter causal de una relación entre variables, veremos que la relación entre variables y la naturaleza entre estas es fundamental para identificar efectos causales. Por ejemplo, para el diseño de políticas públicas, va ser distinto lo que ocurre con $Y$ si una política altera el valor de $X$ si: 
-
-  - $X \implies Y$
-  - $Z \implies Y \quad \wedge \quad Z \implies X$
-  - $Y \implies X$
-
-Esquemáticamente, la distintas relaciones entre $X,Y$, se pueden resumir así: 
+- $X \rightarrow Y$: $X$ causa $Y$. Una política que mueve $X$ mueve $Y$.
+- $Z \rightarrow X$ y $Z \rightarrow Y$: un tercer factor $Z$ causa ambas. $X$ e $Y$ están correlacionadas, pero intervenir $X$ no cambia $Y$.
+- $Y \rightarrow X$: la causalidad va en sentido inverso.
 
 ```{r img-causalidad}
 #| echo: false
-#| fig-cap: "Relaciones de causalidad"
+#| fig-cap: "Tres estructuras que generan la misma correlación entre X e Y."
 #| out-width: "80%"
 
 knitr::include_graphics("images/causality_xy.png", error = FALSE)
 ```
 
-En este contexto, la correlación entre $X$ e $Y$ no es muy informativa sobre el efecto causal de cambiar $X$ en $Y$. Para solucionar esto, vamos a arrancar el curso con el **ideal experimental**
+En los dos últimos casos la correlación entre $X$ e $Y$ dice poco o nada sobre el efecto de cambiar $X$. El ejemplo con que Angrist y Pischke abren el capítulo 2 muestra lo engañoso que puede ser esto. Usando la *National Health Interview Survey* de 2005, comparan el estado de salud autorreportado de quienes estuvieron hospitalizados el último año con el de quienes no lo estuvieron.
 
-En esta sesión, veremos que los datos *experimentales* son muy útiles para establecer causaldiad. A su vez, a lo largo de todo el curso, veremos como pensar en el **experimento ideal** nos puede orientar y ayudar a encontrar relaciones causales en datos que no son necesariamente experimentales (observacionales la mayoría de veces). Con ello, vamos a poder responder una serie de preguntas económicas que organizan una investigación. Podemos resumir estas en 4 preguntas que nos permitirán abordar efectos causales en la investigación científica de la economía: 
+```{r tabla-hospital-usa}
+#| echo: false
 
-  1. ¿Cuál es la relación **causal** de interés?
-    - Relación causal permite predecir consecuencias 
-  
-  2. ¿Cuál es el **experimento ideal** para capturar el efecto causal?
-    - No siempre vamos a tener que realizar un experimento, pero si tenerlo como ideal. Un diseño experimental suele ser costoso, difícil y muchas veces anti ético.  
-    
-  3. ¿Cuál es la estrategia de **identificación**?
-    - Uso de datos observacionales para *aproximarse* a un experimento
-    
-  4. ¿Cuál es el modo de **inferencia** estadística?
-    - Población bajo estudio y construcción de errores estándar
-  
-## Validez del análisis empírico
+tibble(
+  Grupo = c("Hospitalizados", "No hospitalizados"),
+  N = c("7.774", "90.049"),
+  Media = c(2.79, 2.07),
+  EE = c(0.014, 0.003)
+) |>
+  gt() |>
+  tab_header(title = md("**Estado de salud según hospitalización, EE. UU. (NHIS 2005)**")) |>
+  cols_label(Media = "Salud media (1 = excelente, 5 = mala)", EE = "Error est.") |>
+  tab_source_note("Fuente: Angrist y Pischke (2009, cap. 2). Diferencia: 0,71 (t = 58,9).") |>
+  tabla_curso()
+```
 
-Partamos con las siguientes preguntas: 
+Tomada al pie de la letra, la tabla sugiere que ir al hospital empeora la salud. La explicación más plausible es otra: quienes van al hospital estaban más enfermos desde antes. La comparación mezcla el efecto del hospital con las diferencias previas entre ambos grupos. Ese segundo componente es el **sesgo de selección**, y no es una peculiaridad de los datos estadounidenses. Con la CASEN 2015 se obtiene un patrón casi idéntico para Chile:
 
-  - ¿Qué hace que un análisis empírico sea fiable? 
-  - ¿Cuándo proporciona la regresión múltiple un estimador útil del efecto causal? 
+```{r tabla-hospital-chile}
+#| echo: false
 
-Estas preguntas las vamos a responder en dos claves en la sesión: estudiando trabajos empíricos, papers o análisis estadísticos y estableciendo un marco para evaluar estudios estadísticos en general basado en dos conceptos: **validez interna** y **validez externa**. 
+tibble(
+  Grupo = c("Hospitalizados", "No hospitalizados"),
+  N = c("4.849", "40.816"),
+  Media = c(4.23, 4.93),
+  EE = c(0.022, 0.007)
+) |>
+  gt() |>
+  tab_header(title = md("**Estado de salud según hospitalización, Chile (CASEN 2015)**")) |>
+  cols_label(Media = "Salud media (1 = muy mala, 7 = muy buena)", EE = "Error est.") |>
+  tab_source_note("Fuente: elaboración propia con CASEN 2015. Diferencia: 0,70 (t = 33,1).") |>
+  tabla_curso()
+```
 
-### Validez Interna y Externa
+Las escalas van en direcciones opuestas, pero la conclusión es la misma: los hospitalizados reportan peor salud. Ninguna de las dos tablas permite concluir nada sobre el efecto de la atención hospitalaria.
 
-Para evaluar cualquier estudio empírico, analizamos dos dimensiones:
+# Resultados potenciales y sesgo de selección
 
-1.  **Validez Interna**: Un estudio es válido internamente si sus ingerencias estadísticas acerca de los efectos causales son válidad para la población y el escenario estudiados.
-2.  **Validez Externa**: Un estudio es válido externamente si sus ingerencias pueden generalizarse a otraas poblaciones y escenarios.
+Para precisar el problema se usa el modelo de resultados potenciales, desarrollado por @rubin1974 y bautizado por @holland1986 como modelo causal de Rubin. Sea $D_i \in \{0,1\}$ un indicador de tratamiento (haber estado hospitalizado) e $Y_i$ el resultado de interés (salud). Para cada individuo existen dos resultados potenciales: $Y_{1i}$, la salud que tendría si fuera tratado, e $Y_{0i}$, la que tendría si no lo fuera. Ambos existen conceptualmente para todas las personas, pero solo se observa uno:
 
-Cuando hablamos de población estudiada *vs* la población de interés, podemos señalar la siguiente diferencia: 
+$$
+Y_i =
+\begin{cases}
+  Y_{1i} & \text{si } D_i = 1\\
+  Y_{0i} & \text{si } D_i = 0
+\end{cases}
+\qquad \Longleftrightarrow \qquad
+Y_i = Y_{0i} + (Y_{1i} - Y_{0i})\,D_i .
+$$
 
-  - **Población estudiada**: individuos que componen la **muestra**. 
-  - **Población de interés**: individuos a los que se le aplicará inferencia causal, la población a la que se busca generalizar los resultados de la muestra. 
-  
-    - Ejemplos: vacunas en ratones (muestra) *vs* vacunas en humanos (población); reducir tamaño de clases en educación primaria *vs* secundaria (población); incentivos a la participación labboral de hombres *vs* mujeres; comportamiento en monopoly *vs* vida real (escenario); crecimiento de hortalizas en invernadero *vs* campo abierto (escenario). 
+El efecto causal del tratamiento para el individuo $i$ es $\tau_i = Y_{1i} - Y_{0i}$, y aquí aparece lo que @holland1986 llama el **problema fundamental de la inferencia causal**: como nunca se observan ambos resultados para la misma persona, $\tau_i$ no es observable. Lo que sí puede estimarse son promedios. Los dos más usados son:
 
-#### Amenazas a la validez externa
+- el **efecto promedio del tratamiento** (ATE), $E[Y_{1i} - Y_{0i}]$, que promedia sobre toda la población;
+- el **efecto promedio en los tratados** (ATT), $E[Y_{1i} - Y_{0i} \mid D_i = 1]$, que promedia solo sobre quienes recibieron el tratamiento.
 
-Estas surgen a partir de las diferencias entre la población y el escenario estudiado y la población y el escenario de interés. Es decir, si la población estudiada y la de interés difieren en que la población estudiada elegida es *distinta* a la población interés, entonces el efecto causal estimado podría no ser el mismo. Esto ocurre por ejemplo con los ratones y los humanos. A su vez, si hay diferentes escenarios en la muestra y la población de interés, por ejemplo, en el entorno institucional, legal, físico, aún cuando la población estudiada coincida con la de interés, entonces el efecto causal podría no ser el mismo. 
+Cuando los efectos son heterogéneos, ambos pueden diferir. También puede interesar el efecto en un subgrupo con características $X_i = x$, $\text{ATE}(x) = E[Y_{1i} - Y_{0i} \mid X_i = x]$.
 
-Así, mientras más ceercanos la población y el escenario del *estudio* con la población y escenario de interés, más fuertes serán las razones para la validez externa. Ahora bien, cuando hay amenezas, también hay soluciones: diseñar un estudio externamente válido; comparar resultados de estudios anteriores en diferentes poblaciones y escenarios (meta-análisis); etc. 
+Considérese ahora lo que entrega la comparación ingenua entre tratados y no tratados. Sumando y restando $E[Y_{0i} \mid D_i = 1]$, el resultado contrafactual promedio de los tratados, se obtiene la descomposición central de la sesión:
 
+$$
+\underbrace{E[Y_i \mid D_i = 1] - E[Y_i \mid D_i = 0]}_{\text{diferencia observada}}
+= \underbrace{E[Y_{1i} - Y_{0i} \mid D_i = 1]}_{\text{ATT}}
++ \underbrace{E[Y_{0i} \mid D_i = 1] - E[Y_{0i} \mid D_i = 0]}_{\text{sesgo de selección}} .
+$$ {#eq-descomposicion}
 
-#### Amenazas a la validez interna
+La diferencia observada es igual al efecto en los tratados más un término que compara a los dos grupos *en ausencia de tratamiento*. En el ejemplo del hospital, quienes se hospitalizan habrían tenido peor salud aunque no se hubieran hospitalizado, de modo que $E[Y_{0i} \mid D_i = 1] < E[Y_{0i} \mid D_i = 0]$ si $Y$ mide buena salud. El sesgo es negativo y puede ser tan grande que oculte por completo un efecto positivo. Buena parte de la econometría aplicada consiste, en el fondo, en encontrar formas de neutralizar ese término.
 
-La validez interna de los análisis empírico (por ejemplo en regresiones múltiples) son internamente válidos si: 
+## Una simulación
 
-  - El modelo está bien especificado 
-  - Los estimadores son insesgados y consistentes 
-  - Los errores estándar proporcionan intervalos de confianza con un nivel de confianza deseado 
-  
-Pero hay amenazas si: 
+La descomposición es una identidad, y puede verificarse con datos simulados en que, a diferencia de la realidad, se conocen ambos resultados potenciales. En la simulación siguiente la salud de base varía entre personas, los más enfermos tienen más probabilidad de hospitalizarse y el hospital mejora la salud de todos en 0,3 desviaciones estándar.
 
-  1. Problemas de especficación del modelo
-  2. Omisión de variables relevantes 
-  3. Causalidad reversa (simultaneidad)
-  4. Datos faltantes y sesgo de selección
-  5. Error de medición 
-  
-### Endogeneidad
+```{r sim-seleccion}
+n <- 10000
 
-La endogeneidad (y su opuesto: la exogeneidad) de una(s) variable(s) es un tema fundamental para la econometría. Esta ocurre cuando $\mbox{cov}(X, u) \neq 0$. También muchas veces en modelos de regresión vamos a decir que hay exogeneidad cuando hay *correlación* entre una variable explicativa y el término de error, i.e., $\mbox{cor}(X, u) \neq 0$. Esta puede surgir por error de medición, omisión de variables relevantes, simulteaneidad, entre otras. Un ejemplo donde se podría presentar esto es el ejemplo clásico es la **Ecuación de Mincer** para el retorno a la educación:
-$$ \ln y_i = \beta_0 + \beta_1 S_i + \gamma' X_i + u_i $$
-donde $y_i$ son ingresos laborales (con logaritmo aplicado), $S_i$ es años de educación, $X_i$ es un vector de variables de control. El parámetro de interés es $\beta_1$ que se puede interpretar como la tasa de retorno a la educación. En la Ecuación de Mincer, podríamos tener problemas de estimación por endogeneidad por: 
+sim <- tibble(
+  salud_base = rnorm(n),                                   # heterogeneidad previa
+  y0 = salud_base,                                         # salud sin hospital
+  y1 = y0 + 0.3,                                           # el hospital mejora la salud
+  d_auto = rbinom(n, 1, plogis(-2 - 1.5 * salud_base)),    # se hospitalizan los más enfermos
+  d_azar = rbinom(n, 1, 0.5)                               # asignación aleatoria
+)
 
-  - Sesgo por variable omitida: "habilidad".
-    - Estudiantes con más habilidades les va mejor en la universidad y además tienen mayores ingresos
-    - Las habilidades sin multidimensionales, difíciles de medir, y no suele haber información disponible en la mayoría de las fuentes de datos comúnmente utilizadas. 
-    
-  - Sesgo de selección
-    - Ingresos son observables para aquellos que se encuentran trabajando 
-    - Las personas que eligen hacer más años de educación probablemente son las que tienen más para ganar (mayor retorno esperado)
-    
-  - Error de medición
-    - La escolaridad está medida con errores: *i*) es difícil es determinar los años de escolaridad (sobre todo por las trayectorias académicas divergentes); *ii*) gran varianza en la calidad de la educación (números de años es una medida imperfecta, si se toma la escolaridad ajustada por calidad). 
+descomponer <- function(d, y0, y1) {
+  y <- y0 + (y1 - y0) * d
+  c(
+    "Diferencia observada" = mean(y[d == 1]) - mean(y[d == 0]),
+    "ATT"                  = mean(y1[d == 1] - y0[d == 1]),
+    "Sesgo de selección"   = mean(y0[d == 1]) - mean(y0[d == 0])
+  )
+}
 
+tibble(
+  Componente      = names(descomponer(sim$d_auto, sim$y0, sim$y1)),
+  Autoselección   = descomponer(sim$d_auto, sim$y0, sim$y1),
+  `Asignación aleatoria` = descomponer(sim$d_azar, sim$y0, sim$y1)
+) |>
+  gt() |>
+  fmt_number(columns = -Componente, decimals = 3) |>
+  tab_header(title = md("**Descomposición de la diferencia de medias**")) |>
+  tabla_curso()
+```
 
-Otro ejemplo podría ser la medición de la relación oferta y demanda. Por ejemplo, en un modelo de regresión: los precios son endógenos. En regresiones de precios sobre cantidades, los resultados pueden deberse tanto a cambios en la demanda como en la oferta: 
+Con autoselección, la diferencia observada es negativa aunque el efecto verdadero es positivo: el sesgo de selección domina. Con asignación aleatoria, el sesgo es prácticamente cero y la diferencia de medias recupera el efecto de 0,3. La @sec-experimentos explica por qué.
+
+# Validez del análisis empírico
+
+## Validez interna y externa
+
+Para evaluar un estudio empírico, sea un paper, un informe o una regresión propia, se usan dos criterios. Un estudio tiene **validez interna** si sus inferencias sobre efectos causales son correctas para la población y el contexto estudiados. Tiene **validez externa** si esas inferencias pueden extenderse a otras poblaciones y contextos.
+
+La distinción descansa en la diferencia entre la población estudiada, los individuos que componen la muestra, y la población de interés, aquella a la que se quiere aplicar el resultado. Las amenazas a la validez externa surgen cuando ambas difieren. Puede tratarse de diferencias de población, como probar una vacuna en ratones para usarla en humanos o evaluar una reducción del tamaño de los cursos en primaria para aplicarla en secundaria. También puede tratarse de diferencias de escenario: el comportamiento en un juego de Monopoly no es el de la vida real, ni las hortalizas crecen igual en invernadero que a campo abierto. Mientras más se parezcan la población y el contexto estudiados a los de interés, más sólido es el argumento de validez externa. Cuando eso no basta, se puede diseñar el estudio pensando en la generalización o comparar resultados de estudios en poblaciones distintas mediante un meta-análisis.
+
+Un análisis de regresión tiene validez interna cuando el modelo está bien especificado, los estimadores son insesgados y consistentes y los errores estándar producen intervalos con la cobertura deseada. Las amenazas clásicas son cinco: errores de especificación, omisión de variables relevantes, causalidad inversa o simultaneidad, datos faltantes y selección muestral, y error de medición. Casi todas se pueden expresar con un mismo concepto.
+
+## Endogeneidad
+
+En un modelo de regresión hay **endogeneidad** cuando una variable explicativa está correlacionada con el término de error, $\text{Cov}(X_i, u_i) \neq 0$. Puede surgir por variables omitidas, por simultaneidad o por error de medición. El ejemplo canónico es la ecuación de Mincer,
+
+$$
+\ln y_i = \beta_0 + \beta_1 S_i + \gamma' X_i + u_i ,
+$$
+
+donde $y_i$ es el ingreso laboral, $S_i$ los años de escolaridad y $X_i$ un vector de controles. El parámetro de interés, $\beta_1$, se interpreta como el retorno a la educación. Estimarlo por MCO enfrenta tres problemas. El primero es la habilidad omitida: las personas más hábiles suelen estudiar más y ganar más, y la habilidad es multidimensional y rara vez se observa. El segundo es la selección: el ingreso solo se observa para quienes trabajan, y quienes estudian más probablemente son quienes esperan un retorno mayor. El tercero es el error de medición: los años de escolaridad son difíciles de reconstruir para trayectorias irregulares y son una medida imperfecta de una educación de calidad muy variable.
+
+El caso de la habilidad omitida tiene una expresión exacta. Si la regresión "larga" que incluye la habilidad $A_i$ es $\ln y_i = \alpha + \rho S_i + \gamma A_i + \varepsilon_i$ y se estima la "corta" sin ella, el coeficiente de la regresión corta es [@angrist2009, sec. 3.2.2]
+
+$$
+\frac{\text{Cov}(\ln y_i, S_i)}{\text{Var}(S_i)} = \rho + \gamma\,\delta_{AS},
+$$
+
+donde $\delta_{AS}$ es el coeficiente de una regresión de $A_i$ sobre $S_i$. El sesgo es el efecto de la variable omitida multiplicado por su relación con la variable incluida. Si la habilidad aumenta los ingresos ($\gamma > 0$) y está positivamente asociada a la escolaridad ($\delta_{AS} > 0$), MCO sobrestima el retorno. Angrist y Pischke subrayan que la fórmula es una relación mecánica entre dos regresiones. Hablar de "sesgo" solo tiene sentido si la regresión larga es la que tiene interpretación causal.
+
+Un segundo ejemplo clásico es la simultaneidad entre precios y cantidades. En una regresión de cantidades sobre precios, cada punto observado es un equilibrio entre oferta y demanda, y los movimientos de los datos pueden deberse a desplazamientos de cualquiera de las dos curvas.
 
 ```{r img-supply-demand}
 #| echo: false
-#| fig-cap: "Problema de identificación: Oferta y Demanda"
+#| fig-cap: "El problema de identificación en oferta y demanda."
 #| out-width: "90%"
 
 knitr::include_graphics("images/supply_demand.png", error = FALSE)
 ```
 
-## El Problema Fundamental de la Inferencia Causal
+# Experimentos aleatorizados {#sec-experimentos}
 
-Aquí tenemos que volver a lo que adelantamos en la formalización del *selection bias*. La mayoría de las veces que debemos conformarnos con datos obtenidos en contextos no experimentales (observacionales). Según [Holland (1986)](https://fitelson.org/woodward/holland.pdf), el problema fundamental de la inferencia causal es que: si $X$ es la causa e $Y$ el resultados, una vez que cambia $X$ y, por lo tanto, cambia $Y$, no es posible observar qué hubiese ocurrido con $Y$ en ausencia del cambio. Es decir, no es posible visualizar empíricamente este escenario por su carácter contrafactual.  
+## Por qué funciona la aleatorización
 
-Entonces, tomemos lo que dijimos antes: supongamos que cada individuo de la población objetivo puede ser *potencialmente tratado*. Diseñemos, pues, una variable *dummy*, $D$, que toma el valor 1 si se recibe tratamiento, 0 si no. Es decir, 
-$$
-y_i = 
-\begin{cases}
-  y_{1i}, & \quad \text{si } D_i =1\\
-  y_{0i}, & \quad \text{si } D_i =0\\
-\end{cases}
-$$
-lo cual, como ya vimos,  podemos escribir la variable resultado en función de los resultados potenciales: 
-$$
-y_i = y_{0i}+(y_{1i}-y_{0i})D_i
-$$
-donde $y_{1i}$ es el resultado de la persona $i$ si recibe tratamiento, $y_{0i}$ es su resultado si no lo recibe. Entonces, también como ya mencionamos, el **efecto causal del tratamiento** para el inidividuo $y_i$ será
-$$
-\tau_i = y_{1i}- y_{0i}
-$$
-Ahora bien, ahora surge un problema central, ya mencionado por [Holland (1986)](https://fitelson.org/woodward/holland.pdf): nunca observamos *ambos* resultados para *un mismo* individuo. Entonces, lo que debemos preguntarnos es ¿qué obtenemos si comparamos los resultados promedios de individuos tratados y no tratados? Lo que se obtiene es lo siguiente: 
+El experimento ideal consistiría en cambiar $X$ manteniendo todo lo demás constante. Para algunas preguntas esto puede aproximarse mediante un **experimento aleatorizado controlado** (RCT, por sus siglas en inglés). La idea viene de la medicina. Para probar un fármaco, se asigna al azar a los pacientes al fármaco nuevo, al fármaco en uso o a un placebo, y se comparan los resultados promedio. Idealmente, ni los pacientes ni quienes administran el tratamiento saben a qué grupo pertenece cada uno (doble ciego). El placebo cumple una función precisa: asegura que la única diferencia entre grupos sea el principio activo y no el hecho de sentirse tratado.
 
-**No tratados**: 
-  $$E[y_i\mid D_i =0]= \color{red}{E[y_{0i} \mid D_i = 0]} $$
-**Tratados**:
-  $$
-\begin{aligned}
-E[y_i \mid D_i = 1] &= E[y_{1i} \mid D_i = 1] \\
-&= \color{red}{E[y_{0i} \mid D_i = 1]} 
-   + \color{red}{E[y_{1i} - y_{0i} \mid D_i = 1]} \\
-&= \color{red}{E[y_{0i} \mid D_i = 1]} 
-   + \color{red}{E[\tau_i \mid D_i = 1]}
-\end{aligned}
-  $$
-Entonces, tomando la diferencia entre ambos grupos, $E[y_i \mid D_i = 1]- E[y_i\mid D_i =0]$, llegamos al resultado que habíamos anunciado antes: 
-$$
-\begin{aligned}
-  E[y_i \mid D_i = 1]- E[y_i\mid D_i =0] = \underbrace{E[y_{1i} - y_{0i} \mid D_i=1]}_{\text{ATT}} + \underbrace{E[y_{0i} \mid D_i=1] - E[y_{0i}\mid D_i=0]}_{\text{Sesgo de Seleccion}}
-\end{aligned}
-$$
-Con ello, podemos observar que el **sesgo** proviene del hecho de que aquellos que buscan tratamiento ($D_i=1$), tienen características diferentes. Por otro lado, nos encontramos con el **ATT**. El **_Average treatment effect on the treated_** (ATT) es el *efecto promedio* del tratamiento para los individuos tratados. Si los efectos son heterogéneos en la población, este es un afecto causal diferente al efecto promedio en la población (ATE). Luego lo veremos. Pero ahora, pasemos al segundo bloque para seguir profundizando. 
-
-
-# Bloque 2: Experimentos 
-
-## Experimentos y causalidad 
-
-Con datos observacionales, la identificación del efecto causal es complejo, aunque no imposible. Pero conviene partir cómo se captura esto con datos experimentales. Nuevamente, esto es para seguir con el concepto de **ideal experimental**: lo ideal será ahcer un un experimento donde solo modificamos $X$, dejando todo lo demás constante (*ceteris paribus*), para obser el efecto de la variación de $X$ *en* $Y$. Para algunos tipos de preguntas, pues, podemos hacer experimentos con **grupos de control aleatorio**: **RCT**, por sus cifras en inglés: *Randomized Control Trials*. 
-
-**Randomized Control Trials** (RCT's): la idea de los RCT's proviene de la medicina, por ejemplo, tomando los tipos de investigaciones para medir la efectividad de un nuevo fármaco o vacuna. En este tipo de experimentos, se elige un grupo de pacientes aquejados por la enfermedad que el nuevo fármaco pretende curar. Entonces, se podría realizar lo siguiente:
-
-  - Se asigna al azar a cada paciente a uno de tres grupos:
-    - el fármaco nuevo
-    - el fármaco en uso
-    - un placebo (sin contenido medicinal (y sin informar cuál es cuál))
-    
-  - Se compara la respuesta promedio de los tres grupos al tratamiento  
-  
-Entonces, tenemos que los pacientes no saben en qué grupo están, e idealmente los que administran los fármacos idealmente tampoco deberian saber a qué grupo pertenece cada paciente. Con ello, se podría formar un caso típico de RCT. Y, en el caso de que la respuesta de los tratados con el nuevo fármaco es significativamente mejor que la de los restantes grupos, se podría concluir que el nuevo fármaco es efectivamente mejor que el anterior. 
-
-En economía también se han realizado RCT's. Entre algunos de ellos: 
-
-  -  National Supported Work Demonstration, 1975-1979
-  -  Negative Income Tax Experiments, 1968-1979
-  -  RAND Health Insurance Experiment, 1971-1986
-  -  Moving to Opportunity, 1994-2010
-  -  Tennessee STAR Experiment, 1985-1998
-  -  Perry Preschool Program, 1960s
-  -  Progresa/Oportunidades en Mexico, 1997-1999 
-  - También hay muchos ejemplos en economía del desarrollo ([Esther Duflo: Experimentos sociales para luchar contra la pobreza](https://www.youtube.com/watch?v=0zvrGiPkVcs))
-  
-
-## Asignación aleatoria
-
-Entendiendo la idea de los RCT's, veamos un concepto fundamental de los diseños experimentales. Pero antes, retomemos un poco. Hasta aquí tenemos lo siguiente: 
-
-1. Un experimento define a un grupo de tramiento y otro de control. De aquí existen dos resultados posibles: 
-
-  - Resultado con tratamiento $y_{1i}$
-  - Resultado sin tratamiento $y_{0i}$
-
-2. Solo podemos observar uno de los dos resultados para $i$. Para ello, definimos la asignación de tratamiento con una variable de tratamiento $D_i$, que nos permite identificar: 
-$$
-y_i = 
-\begin{cases}
-  y_{1i}, & \quad \text{si } D_i =1\\
-  y_{0i}, & \quad \text{si } D_i =0\\
-\end{cases}
-$$
-3. El efecto causal del tratamiento es
-$$
-\tau_i =y_{1i}-y_{0i}
-$$
-pero no se puede observar directamente $\tau_i$. 
-4. Dado que no se puede observar $\tau_i$, se dfine el efecto promedio del tratamiento (ATE) como 
-$$
-E[\tau_i] = E[y_{1i}-y_{0i}] 
-$$
-y el efecto promedio *sobre* los tratados (ATT) como
-$$
-E[\tau_i \mid D_i =1] = E[y_{1i}-y_{0i}\mid D_i =1] 
-$$
-5. Al tratar con el problema econométrico, recordemos qué pasaba cuando tomabamos la diferencia entre ambios grupos: 
-$$
-E[y_{1i} \mid D_i = 1] - E[y_{0i} \mid D_i =0]
-$$
-que es equivalente a 
-$$
-E[y_{1i} \mid D_i = 1] - E[y_{0i} \mid D_i = 1] + E[y_{0i} \mid D_i = 1] - E[y_{0i} \mid D_i = 0]
-$$
-donde $E[y_{1i} \mid D_i = 1]- E[y_{0i} \mid D_i = 1]$: ATT; y $E[y_{0i} \mid D_i = 1]- E[y_{0i} \mid D_i = 0] \neq 0$: Sesgo de selección (SS). Entonces teníamos que
-$$
-E[y_{1i} \mid D_i = 1]-E[y_{0i} \mid D_i = 0] = ATT+ SS
-$$
-No obstante, la comparación del promedio de los grupos **no** nos da *per se* el efecto del tratamiento (de hecho, no siempre es cero). Si no que, esto lo obtendremos con la aleatorización. 
-
-### La Solución Experimental: Por qué funciona la Aleatorización
-
-Como vimos en la sección anterior, el sesgo de selección surge porque las personas se "autoseleccionan" en el tratamiento basándose en sus características (y por ende, en sus resultados potenciales). Quienes van al hospital ($D_i=1$) tienen, *de base*, una salud ($Y_{0i}$) peor que quienes no van. La asignación aleatoria (Random Assignment) resuelve este problema de raíz. ¿Cómo? **Desvinculando el tratamiento de las características del individuo**.
-
-En un RCT, la asignación del tratamiento $D_i$ es decidida por un mecanismo aleatorio (una moneda, una lotería, un generador de números aleatorios). Esto implica una propiedad estadística fundamental descrita por [Angrist y Pischke (2008)](https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf): **la independencia**:
-$$\{Y_{1i}, Y_{0i}\} \perp \!\!\! \perp D_i$$
-
-Esto se lee así: los resultados potenciales son independientes del estatus de tratamiento. En palabras simples: el hecho de que seas asignado al grupo de tratamiento o al de control no tiene **nada** que ver con tu salud previa, tu motivación, tu inteligencia o tu nivel socioeconómico. Es puro azar. Esta independencia es la herramienta más poderosa de la econometría experimental. Nos permite afirmar que, en promedio, los individuos del grupo de control son idénticos a los del grupo de tratamiento *antes* de la intervención.
-
-#### La Derivación Formal
-
-Esta independencia nos permite hacer una "magia" matemática. Recordemos nuestra descomposición de la diferencia de medias observada:
+Formalmente, si $D_i$ se asigna al azar, el tratamiento es independiente de los resultados potenciales:
 
 $$
-\underbrace{E[Y_i | D_i=1] - E[Y_i | D_i=0]}_{\text{Diferencia Observada}} = \underbrace{E[Y_{1i} | D_i=1] - E[Y_{0i} | D_i=1]}_{\text{ATT}} + \underbrace{E[Y_{0i} | D_i=1] - E[Y_{0i} | D_i=0]}_{\text{Sesgo de Selección}}
+\{Y_{1i}, Y_{0i}\} \perp D_i .
 $$
 
-Bajo aleatorización, el término de sesgo de selección desaparece. Siguiendo a [A&P (2008)](https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf), la lógica es la siguiente: dado que $D_i$ es independiente de $Y_{0i}$, el promedio del resultado potencial "sin tratamiento" ($Y_{0i}$) es estadísticamente idéntico en ambos grupos.
-
-$$E[Y_{0i} | D_i = 1] = E[Y_{0i} | D_i = 0] = E[Y_{0i}]$$
-
-Esto es lo que A&Pe llaman la capacidad de **"intercambiar"** (*swap*) términos. Podemos usar el resultado observado del grupo de control ($E[Y_{0i} | D_i=0]$) como un contrafactual perfecto para el grupo de tratamiento.
-
-#### El Resultado: ATE = ATT
-
-Si el sesgo de selección es cero, la ecuación se simplifica dramáticamente:
+Esto implica que $E[Y_{0i} \mid D_i = 1] = E[Y_{0i} \mid D_i = 0]$, de modo que el sesgo de selección en (@eq-descomposicion) desaparece. Por la misma razón, $E[Y_{1i} \mid D_i = 1] = E[Y_{1i}]$, y entonces
 
 $$
-\begin{aligned}
-E[Y_i | D_i=1] - E[Y_i | D_i=0] &= E[Y_{1i} | D_i=1] - E[Y_{0i} | D_i=1] \\
-&= E[Y_{1i} - Y_{0i} | D_i=1] \\
-&= E[Y_{1i} - Y_{0i}]
-\end{aligned}
+E[Y_i \mid D_i = 1] - E[Y_i \mid D_i = 0] = E[Y_{1i} - Y_{0i} \mid D_i = 1] = E[Y_{1i} - Y_{0i}] .
 $$
 
-Bajo aleatorización, la diferencia de medias simple no solo recupera el Efecto Promedio en los Tratados (ATT), sino que, como la muestra es representativa y la asignación es aleatoria, este es igual al **Efecto Promedio del Tratamiento (ATE)** poblacional [(Angrist y Pischke, 2008)](https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf).
+Bajo aleatorización, la diferencia de medias identifica el ATT y, como los tratados son una muestra al azar de la población, el ATT coincide con el ATE. Su estimador es simplemente $\bar{Y}_1 - \bar{Y}_0$. En palabras de Angrist y Pischke, el efecto de una hospitalización asignada al azar en los hospitalizados es el mismo que el efecto de la hospitalización en un paciente elegido al azar. Lo esencial, sin embargo, es que el sesgo de selección desaparece.
 
-::: {.callout-tip appearance="minimal"}
-**Intuición Económica:**
-En el ejemplo del hospital de A&P, si forzáramos a una muestra aleatoria de la población a ir al hospital (independientemente de si están enfermos o no), eliminaríamos el hecho de que "los enfermos buscan tratamiento". Así, compararíamos la salud de un grupo promedio hospitalizado versus un grupo promedio no hospitalizado. La diferencia sería, indiscutiblemente, el efecto causal de la atención médica.
-:::
+La independencia se cumple en expectativa, no en cada muestra. Con un individuo por grupo, es casi seguro que ambos difieran en muchas cosas además del tratamiento. Con cientos por grupo, la ley de los grandes números hace que los promedios de cualquier característica, observada o no, se acerquen a su valor poblacional y, por tanto, se parezcan entre grupos. Por eso los experimentos necesitan muestras de tamaño razonable, y por eso el primer paso al analizarlos es verificar que la aleatorización produjo grupos comparables.
 
-En suma, si $D_i$ es asignado al azar, entonces es independiente de $y_i$, tal que 
-$$
-E[y_{1i} \mid D_i = 1] = E[y_{1i} \mid D_i = 0] = E[y_{1i}] .
-$$
-Luego, teníamos que el efecto del tratamiento es el siguiente: 
-$$
-E[y_{1i}\mid D_i =1]-E[y_{0i}\mid D_i =0] = ATT 
-$$
-por lo que ahora: 
-$$
-E[y_{1i}\mid D_i =1] - E[y_{0i}\mid D_i =1] = E[y_{1i}-y_{0i}].
-$$
-Es decir, que el ATT coincide con el ATE. Además, vale la pena mencionar que el *estimador* de ATE se puede calcualr como diferencia de medias:
-$$
-\bar{Y}\mid D_i = 1 - \bar{Y}\mid D_i = 0
-$$
-Por último, una sintesis hasta aquí de lo que llevamos de manera esquemática: 
+## Balance: el proyecto STAR
 
-```{mermaid}
-flowchart LR
+El *Tennessee Student/Teacher Achievement Ratio* (STAR) es uno de los experimentos más influyentes en educación. Costó unos 12 millones de dólares, siguió a cerca de 11.600 niños desde el *kindergarten* de 1985-86 hasta tercero básico y asignó a alumnos y profesores al azar, *dentro de cada escuela*, a tres tipos de curso: pequeños (13 a 17 alumnos), regulares (22 a 25) y regulares con un asistente de profesor a tiempo completo [@krueger1999; @angrist2009, cap. 2].
 
-    %% Nodos principales
-    P["Población"]
-    M["Muestra"]
-    GT["Grupo tratamiento"]
-    GC["Grupo control"]
+La primera pregunta ante cualquier experimento es si la aleatorización logró equilibrar las características de los grupos. Para responderla se comparan variables previas al tratamiento.
 
-    %% Nodos de texto (etiquetas en cajas)
-    T1["Muestreo Aleatorio<br/>Validez Externa"]
-    T2["Asignación Aleatoria<br/>Validez Interna"]
-    T3["Asignación Aleatoria<br/>Validez Interna"]
+```{r tabla-star-balance}
+#| echo: false
 
-    %% Conexiones
-    P --> T1 --> M
-    M --> T2 --> GT
-    M --> T3 --> GC
-
-    %% Estilo de cajas principales
-    classDef main fill:#f6eeee,stroke:#666,stroke-width:1px,color:#8b0000
-    class P,M,GT,GC main
-
-    %% Estilo de cajas de texto intermedias
-    classDef label fill:#ededed,stroke:#ededed,color:#8b0000,font-size:12px
-    class T1,T2,T3 label
-
+tibble(
+  Variable = c("Almuerzo gratis", "Blanco/asiático", "Edad en 1985",
+               "Tasa de deserción", "Tamaño del curso en kínder",
+               "Percentil en pruebas de kínder"),
+  `Pequeño` = c(0.47, 0.68, 5.44, 0.49, 15.10, 54.70),
+  Regular = c(0.48, 0.67, 5.43, 0.52, 22.40, 48.90),
+  `Regular con asistente` = c(0.50, 0.66, 5.42, 0.53, 22.80, 50.00),
+  `Valor p conjunto` = c(0.09, 0.26, 0.32, 0.02, 0.00, 0.00)
+) |>
+  gt() |>
+  fmt_number(columns = -Variable, decimals = 2) |>
+  tab_row_group(label = "Resultados del experimento", rows = 4:6) |>
+  tab_row_group(label = "Características previas", rows = 1:3) |>
+  row_group_order(groups = c("Características previas", "Resultados del experimento")) |>
+  tab_header(title = md("**Proyecto STAR: comparación entre grupos**")) |>
+  tab_source_note("Fuente: Angrist y Pischke (2009, tabla 2.2.1), adaptada de Krueger (1999, tabla 1). El valor p corresponde al test F de igualdad de medias entre los tres grupos.") |>
+  tabla_curso()
 ```
 
+Las tres primeras filas muestran diferencias pequeñas y no significativas en ingreso familiar (aproximado por el almuerzo gratuito), raza y edad: la aleatorización funcionó. La quinta fila muestra que el experimento logró crear la variación buscada en el tamaño de los cursos. La cuarta merece atención: la deserción fue algo menor en los cursos pequeños, una diferencia significativa al 5 %. Krueger le dedica un análisis extenso porque, si los alumnos que abandonan el estudio difieren entre grupos, la comparación en grados posteriores deja de ser entre grupos equivalentes. Por eso los resultados de *kindergarten*, que no están afectados por la deserción, son los más confiables. Volveremos sobre este problema en la @sec-problemas.
 
-## Experimentos aleatorizados: Proyecto STAR 
+## Ventajas y límites
 
+Un experimento bien implementado elimina la correlación sistemática entre el tratamiento y las características observadas y no observadas de los participantes. Excluye la causalidad inversa porque es el investigador quien asigna el tratamiento. Permite variar parámetros de una política uno a la vez, como hicieron los experimentos de impuesto negativo al ingreso o el experimento de seguros de salud de RAND, y probar intervenciones que todavía no existen. Sus resultados, además, se comunican con facilidad: una diferencia de promedios no requiere un modelo estructural para ser entendida.
 
-Algo que no hemos mencionado hasta ahora: para un experimento aleatorio, en general vamos a necesitar un número lo suficientemente **grande** de personas en cada grupo. Por ejemplo, si tenemos solo 1 personas en cada grupo, es muy probable que estas dos personas difieran en cosas distintas generando sesgo por selección. En cambio, si tenemos grupos con un $n$ lo suficientemente grande e individuos elegidos al azar, entonces, aunque *cada* individuo sea diferente, la mayoría de las características serán similares *en promedio*. A esto también le llamamos *en expectativa*, pues calculamos el valor esperado por notación generalmente como ya vimos. 
+La evidencia comparativa muestra que esto importa. En la terapia de reemplazo hormonal, los estudios observacionales sugerían beneficios para la salud de las mujeres; un ensayo aleatorizado posterior encontró pocos beneficios y efectos secundarios graves. En los programas de capacitación laboral, las comparaciones no experimentales suelen mostrar que los participantes ganan menos que los no participantes, porque esos programas atienden a personas con bajo potencial de ingreso. Las evaluaciones aleatorizadas, en cambio, encuentran efectos mayoritariamente positivos [@lalonde1986; @angrist2009, cap. 2].
 
-Pero, ¿cómo sabemos que el tamaño $n$ influye de tal manera? Bueno, por la propiedad estadística de la **Ley de los Grandes Números**: el promedio muestral se acerca al promedio poblacional a medida que aumenta el tamaño de la muestra. El promedio poblacional se llama *esperanza matemática*, $E[y]$. Entonces, $\bar{y} \to E[y]$. 
+Los experimentos también tienen límites. Son caros en tiempo, dinero y capital político, y esos costos limitan el tamaño muestral y con él la capacidad de detectar efectos pequeños. Hay preguntas que no pueden responderse experimentalmente por razones éticas, como el efecto de la contaminación sobre la salud infantil. Suelen durar poco y capturan efectos de equilibrio parcial. A esto se suman los problemas que aparecen al implementarlos, que se tratan en la @sec-problemas.
 
-Luego de aleatorizar, se debe chequear que los grupos de tratamiento y de control no tinene diferencias en variables observables (características y variable de resultado), **previo a la intervención**. Veamos cómo ocurre esto con una investigación empírica real: el Proyecto STAR (*Student/Teacher Achievement Ratio*), ejecutado durante los 80s en Tennessee (US), donde se redujo el tamaño de la clase de pre-escolares. La asignación aleatoria de estudiantes en 3 grupos
+## Cómo se aleatoriza en la práctica
 
-  * Tratamiento: 1) Clases pequeñas (13-17 alumnos).
-  * Control: 2) Clases regulares (22-25 alumnos) y un asistente de profesor a tiempo parcial; o 3) clases regulares con un asistente de profesor a tiempo completo.
-  
-  
-Así, una de las primeras preguntas que hay que plantearse sobre un experimento aleatorio es "si la aleatorización ha logrado equilibrar con éxito las características de los sujetos entre los diferentes grupos de tratamiento" [(Angrist y Pischke, 2008, p. 14, *traducción propia*)](https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf). Para ello, se suele comparar resultados previos al tratamiento y/u otras covariables. Los datos de STAR, no obstante, no incluyen las puntuaciones de las pruebas previas al tratamiento, pero es posible examinar caracteristicas personales como la raza y la edad. A&P muestran la siguiente tabla, en la cual debemos verificar que la aleatorización funcionó. Las características pre-tratamiento deben ser iguales entre grupos:
+@duflo2007 muestran que hay más formas de introducir aleatorización que el ensayo clínico clásico, y que muchas pueden insertarse en programas existentes con poca disrupción:
 
-```{r img-star-balance}
+- **Sobresuscripción.** Cuando la demanda por un programa excede los cupos, un sorteo entre los postulantes elegibles es una forma justa de asignarlos. Así se evaluó el programa de vouchers escolares en Colombia.
+- **Implementación escalonada (*phase-in*).** Cuando un programa se expandirá de todos modos por etapas, se sortea el orden. En el proyecto de desparasitación de Kenia, 75 escuelas se dividieron al azar en tres grupos que recibieron el tratamiento en 1998, 1999 y 2000 [@miguel2004]. La desventaja es que impide medir efectos de largo plazo y que el grupo de control puede cambiar su conducta porque anticipa el tratamiento.
+- **Aleatorización dentro de grupos.** Se asigna el tratamiento a unos cursos o grados dentro de cada escuela, lo que facilita la cooperación de todas las escuelas pero aumenta el riesgo de contagio entre tratados y controles.
+- **Diseño de incentivo (*encouragement design*).** No se asigna el tratamiento, sino una invitación o un incentivo a tomarlo. Es útil cuando el programa ya está disponible para todos, pero genera necesariamente incumplimiento.
+
+La elección del diseño no es solo logística. Determina qué parámetro se identifica: en un sorteo entre postulantes, por ejemplo, el efecto corresponde a quienes postulan, no a toda la población.
+
+# Problemas en la práctica {#sec-problemas}
+
+## Incumplimiento y efecto de la intención de tratar
+
+En muchos experimentos la asignación no coincide con la recepción del tratamiento. Se puede asignar un suplemento alimenticio, pero las personas deciden si lo toman. Sea $T_i$ un indicador de que el individuo efectivamente recibió el tratamiento (*take-up*). Si el cumplimiento es imperfecto, comparar a quienes lo tomaron con quienes no lo tomaron reintroduce el sesgo de selección, porque $T_i$ ya no es aleatorio: depende de decisiones individuales correlacionadas con los resultados potenciales.
+
+Lo que sí sigue siendo aleatorio es la asignación $D_i$. Comparar por asignación identifica el **efecto de la intención de tratar** (ITT), es decir, el efecto de ser asignado al tratamiento, independientemente de si se recibió. El ITT es a menudo el parámetro relevante para la política pública, porque ninguna política obliga a todos a usar lo que ofrece. Si además interesa el efecto de recibir el tratamiento, puede recuperarse dividiendo el ITT por la diferencia en las tasas de tratamiento entre grupos, lo que identifica el efecto en quienes cumplen con la asignación. Ese es el estimador de Wald, que se estudia en la sesión 2.
+
+El incumplimiento también afecta la potencia. Si una fracción $c$ de los asignados al tratamiento lo recibe y una fracción $s$ de los controles también lo recibe, el ITT es el efecto del tratamiento multiplicado por $c - s$. El efecto mínimo detectable para el tratamiento en sí aumenta en proporción $1/(c-s)$ [@duflo2007, sec. 4.3]. Con un cumplimiento del 50 %, se necesita aproximadamente cuatro veces la muestra para detectar el mismo efecto.
+
+## Deserción
+
+La deserción (*attrition*) ocurre cuando no se logra medir el resultado de parte de la muestra original. Si es aleatoria, solo reduce la potencia. Si está correlacionada con el tratamiento, la comparación final deja de ser entre grupos equivalentes. Por ejemplo, si quienes menos se benefician de un programa abandonan el estudio, el efecto se sobrestima. Incluso con tasas de deserción iguales entre grupos puede haber sesgo, si quienes salen de cada grupo lo hacen por razones distintas.
+
+@duflo2007 recomiendan reportar siempre las tasas de deserción por grupo y comparar con datos de línea base a quienes salen con quienes se quedan. Cuando el problema persiste, pueden construirse cotas para el efecto bajo supuestos débiles, como las de @manski1989 y @lee2009. La mejor solución, con todo, es prevenir la deserción durante el trabajo de campo.
+
+## SUTVA, contagio y equilibrio general
+
+La notación $Y_{1i}, Y_{0i}$ supone implícitamente que el resultado de $i$ depende solo de su propio tratamiento. Este es el supuesto de **no interferencia entre unidades** (*Stable Unit Treatment Value Assumption*, SUTVA). Se viola cuando hay contagio (*spillovers*). El contagio puede ser negativo, como en un programa de capacitación que ayuda a los tratados a quedarse con un número fijo de vacantes a costa de los controles. Puede ser positivo, como en una vacuna o un tratamiento antiparasitario que reduce la transmisión también entre los no tratados. O puede operar a través de efectos de equilibrio general sobre precios, salarios o empleo locales.
+
+Las soluciones pasan por redefinir la unidad de aleatorización, por ejemplo asignando escuelas o comunidades completas en vez de individuos, o por modelar directamente las interacciones cuando su estructura es conocida. @miguel2004 son el ejemplo clásico: al aleatorizar por escuela, pudieron medir efectos de la desparasitación sobre alumnos no tratados en escuelas tratadas y cercanas. Una lección general es que la aleatorización por sí sola no garantiza la identificación. Para que SUTVA se cumpla hay que entender cómo interactúan las unidades.
+
+## Otras amenazas
+
+Quedan dos amenazas de comportamiento. Los participantes pueden cambiar su conducta solo por saberse observados (efecto Hawthorne o sesgo de desempeño), lo que en medicina se controla con diseños doble ciego. Y los controles pueden buscar sustitutos del tratamiento que se les negó, como contratar un seguro por su cuenta o inscribirse en otro programa preescolar, lo que lleva la estimación hacia cero. Finalmente, la validez externa de un experimento depende de que la muestra y el programa sean representativos. Los voluntarios no lo son, un piloto breve puede no parecerse al programa a escala, y lo que funciona en pequeño puede dejar de funcionar cuando el equilibrio general entra en juego.
+
+# Regresión en experimentos
+
+## Del contraste de medias a la regresión
+
+Supóngase que el efecto es igual para todos, $Y_{1i} - Y_{0i} = \rho$. Reescribiendo la ecuación de resultados observados, se obtiene
+
+$$
+Y_i = \underbrace{E[Y_{0i}]}_{\alpha} + \rho\,D_i + \underbrace{Y_{0i} - E[Y_{0i}]}_{\eta_i} ,
+$$
+
+y evaluando la esperanza condicional en cada grupo:
+
+$$
+E[Y_i \mid D_i = 1] - E[Y_i \mid D_i = 0] = \rho + \underbrace{E[\eta_i \mid D_i = 1] - E[\eta_i \mid D_i = 0]}_{\text{sesgo de selección}} .
+$$
+
+El sesgo de selección se traduce en correlación entre el error de la regresión y el tratamiento. Con asignación aleatoria, $E[\eta_i \mid D_i] = 0$, se cumplen los supuestos de MCO y la regresión de $Y_i$ sobre $D_i$ estima $\rho$ sin sesgo. El coeficiente es numéricamente idéntico a la diferencia de medias. @duflo2007 [nota 4] señalan que esto no requiere suponer un efecto constante: con efectos heterogéneos, el coeficiente estima el ATE.
+
+## El papel de los controles
+
+En un experimento no se necesitan controles para obtener un estimador insesgado, pero pueden ser útiles por dos razones [@angrist2009, sec. 2.3].
+
+La primera es que el diseño sea aleatorio solo condicionalmente. En STAR la asignación fue al azar dentro de cada escuela, pero no entre escuelas. Si la probabilidad de estar en un curso pequeño difiere entre escuelas que también difieren en rendimiento, la comparación simple puede estar contaminada, y es necesario incluir efectos fijos de escuela.
+
+La segunda es la precisión. Si se agrega una variable $X_i$ balanceada entre grupos pero con poder explicativo sobre $Y_i$, el coeficiente de $D_i$ no cambia en expectativa, pero la varianza del error disminuye y con ella el error estándar. La tabla de Krueger lo ilustra:
+
+```{r tabla-star-reg}
 #| echo: false
-#| fig-cap: "Tabla de Balance Proyecto STAR"
-#| out-width: "80%"
 
-knitr::include_graphics("images/star_balance.png", error = FALSE)
+tibble(
+  Variable = c("Curso pequeño", "", "Regular con asistente", "",
+               "Efectos fijos de escuela", "Características del alumno",
+               "Características del profesor", "R²"),
+  `(1)` = c("4,82", "(2,19)", "0,12", "(2,23)", "No", "No", "No", "0,01"),
+  `(2)` = c("5,37", "(1,26)", "0,29", "(1,13)", "Sí", "No", "No", "0,25"),
+  `(3)` = c("5,36", "(1,21)", "0,53", "(1,09)", "Sí", "Sí", "No", "0,31"),
+  `(4)` = c("5,37", "(1,19)", "0,31", "(1,07)", "Sí", "Sí", "Sí", "0,31")
+) |>
+  gt() |>
+  tab_header(title = md("**Proyecto STAR: efecto del tamaño del curso en el percentil de las pruebas**")) |>
+  tab_source_note("Fuente: Angrist y Pischke (2009, tabla 2.2.2), adaptada de Krueger (1999, tabla 5). Errores estándar robustos a correlación dentro de cada curso entre paréntesis. N = 5.681.") |>
+  tabla_curso()
 ```
 
-Entonces, el "tratamiento" serían las clases pequeñas (Columna "*Small*") y los dos controles diferenciados por clases regulares (igual de grandes que antes), pero con la diferenciación del profe a tiempo completo o parcial. Las variables relevantes en verdad son las 3 primeras: 1. Almuerzo gratis, 2. Blanco/asiático y 3. Edad en 1985. Se presentan medias, por lo que sería, por ejemplo, para 1: 47% de los alumnos recibían almuerzo gratuito en salas pequeñas, 48% en regulares y 50% en regulares con profe asistente. Como vemos, coinciden los valores en casi todas. Al rededor del 50% tiene almuerzo gratis en todas los tipos de salas (nivel socioeconómico (bajo) similar), al rededor de 2/3 son blancos o asiaticos y la edad promedio en 1985 era casi de 5 años y medio. El joint $p-$*value* (es un $F-$*test*) indica si hay diferencias significativas estadísticamente habblando. COmo vemos, ninguna $p<0.05$, por lo que no hay diferencias signidicativas entre los grupos de control y el tratado. Esto indica que son grupos con características similares^[La atrición son los casos perdidos porque se cambiaron de colegio o cualquier otro motivo].
+El efecto de los cursos pequeños es de unos 5 puntos percentiles, cerca de 0,2 desviaciones estándar, y prácticamente no cambia al agregar controles. Lo que cambia es la precisión: el error estándar cae de 2,19 a 1,26 al incluir efectos fijos de escuela, porque estos explican buena parte de la variación en el rendimiento. Las características del profesor no alteran nada, como era de esperar, ya que los profesores también fueron asignados al azar.
 
-Por lo tanto, son grupos balanceados. Además, dado que "la aleatorización elimina el sesgo de selección, la diferencia en los resultados entre los grupos de tratamiento refleja el efecto causal medio del tamaño de la clase (en relación con las clases normales con un asistente a tiempo parcial)" [(Angrist y Pischke, 2008, p. 15, *traducción propia*)](https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf). En la práctica, la diferencia en las medias entre los grupos de tratamiento y control puede obtenerse a partir de una regresión de las puntuaciones de las pruebas sobre variables *dummy* para cada grupo de tratamiento, un punto que se trata aquí con una tabla, pero que después profundizaremos con más detenimiento. En cualquier caso, la tabla es la siguiente (solo para adelantar, luego la analizamos bien):
+Los controles tienen además un uso diagnóstico. Una forma de probar el balance es regresionar el tratamiento sobre las características de línea base,
 
-```{r img-star-balance-regression}
-#| echo: false
-#| fig-cap: "Estimaciones experimentales del efecto de la asignación del tamaño de clase en los puntajes de los exámenes"
-#| out-width: "80%"
+$$
+D_i = \beta_0 + \beta_1 x_{1i} + \dots + \beta_m x_{mi} + e_i ,
+$$
 
-knitr::include_graphics("images/regression-to-balance.png", error = FALSE)
+y contrastar la hipótesis conjunta $H_0: \beta_1 = \dots = \beta_m = 0$ con un test $F$. Si la aleatorización funcionó, ninguna característica previa debería predecir la asignación.
+
+## Controles malos
+
+No cualquier control es inofensivo. Las slides plantean el caso de una regresión de salarios sobre un indicador de capacitación que además controla por haber conseguido empleo después del programa. Angrist y Pischke llaman a esto un **control malo** (*bad control*): una variable que es a su vez resultado del tratamiento [@angrist2009, sec. 3.2.3]. Los buenos controles son variables fijadas antes de que se asignara el tratamiento.
+
+El problema es una forma sutil de sesgo de selección. Aunque la capacitación se asigne al azar, quienes consiguen empleo entre los capacitados no son comparables con quienes lo consiguen entre los no capacitados. Si la capacitación ayuda a encontrar trabajo, entre los empleados no capacitados habrá una mayor proporción de personas que lo habrían conseguido de todos modos, por ejemplo por tener más habilidad. La simulación siguiente lo muestra: la capacitación aumenta el salario en 0,3 de forma directa y también aumenta la probabilidad de empleo, que a su vez depende de una habilidad no observada.
+
+```{r sim-controles}
+n <- 5000
+
+sim_ctrl <- tibble(
+  d = rbinom(n, 1, 0.5),                                  # capacitación asignada al azar
+  x = rnorm(n),                                           # característica previa, balanceada
+  habilidad = rnorm(n),                                   # no observada
+  empleo = as.numeric(0.8 * d + habilidad + rnorm(n) > 0.5),  # resultado intermedio
+  salario = 1 + 0.3 * d + 1.5 * x + 0.5 * empleo + habilidad + rnorm(n)
+)
+
+modelos_ctrl <- list(
+  "Sin controles"          = feols(salario ~ d, data = sim_ctrl, vcov = "hetero"),
+  "Control previo (x)"     = feols(salario ~ d + x, data = sim_ctrl, vcov = "hetero"),
+  "Control malo (empleo)"  = feols(salario ~ d + x + empleo, data = sim_ctrl, vcov = "hetero")
+)
+
+modelsummary(
+  modelos_ctrl,
+  coef_map = c(d = "Capacitación", x = "x (previa)", empleo = "Empleo"),
+  gof_map = c("nobs", "r.squared"),
+  stars = TRUE,
+  title = "Controles buenos y malos en un experimento simulado"
+)
 ```
 
-## Ventajas y limitaciones de los experimentos aleatorizados
+Las dos primeras columnas estiman el efecto total de la capacitación, que incluye el canal del empleo, y difieren solo en precisión: el control previo $x$ reduce el error estándar sin mover el coeficiente. La tercera columna no estima ni el efecto total ni el directo de 0,3. Al condicionar en el empleo, compara a capacitados y no capacitados con distinta habilidad promedio, y el coeficiente queda sesgado hacia abajo.
 
-Antes de pasar al bloque de regresión e inferencia, que es donde retomaremos la tabla anterior, conviene decir algunas cosas. Si bien los RCTs son considerados el *Gold Standard* para la identificación causal debido a su capacidad para asegurar la **validez interna**, no están exentos de desafíos prácticos y teóricos. No basta con aleatorizar; el investigador debe ser consciente de las barreras que pueden comprometer tanto la integridad del experimento como su utilidad para el diseño de políticas públicas.
+## Aleatorización estratificada y por conglomerados
 
-### El poder de la aleatorización (Ventajas)
+La aleatorización no tiene por qué ser completamente libre. En la **aleatorización estratificada**, la población se divide en estratos según covariables observadas y se aleatoriza dentro de cada uno. Esto evita asignaciones poco informativas, como una en que por azar todos los hombres quedan tratados y todas las mujeres en el control, y mejora la precisión. @duflo2007 [sec. 4.5] muestran que estratificar es más eficiente que controlar por las mismas variables después, porque garantiza proporciones iguales de tratados en cada estrato. Las variables de estratificación deben elegirse antes del experimento, lo que además protege contra la búsqueda de especificaciones a la medida de los resultados. En el análisis se incluyen efectos fijos de estrato, como los de escuela en STAR.
 
-La principal fortaleza de un RCT es que la asignación exógena del tratamiento permite "limpiar" la estimación de ruidos estadísticos que suelen invalidar los estudios observacionales:
+En la **aleatorización por conglomerados** (*clusters*) se asignan grupos completos, como escuelas, cursos o comunidades, y no individuos. A veces es la única opción logística o política, y es la forma natural de proteger el experimento contra el contagio. Su costo es la precisión, como se ve en la @sec-inferencia.
 
-1.  **Eliminación del Sesgo de Selección:** eomo demostramos formalmente, al asignar aleatoriamente garantizamos que $cov(D_i, \eta_i) = 0$. Esto elimina la correlación sistemática entre el tratamiento y las características observadas (y, crucialmente, las **no observadas**) de los participantes.
-2.  **Ausencia de Causalidad Inversa:** dado que es el investigador quien impone el tratamiento exógenamente, por definición, eliminamos la posibilidad de que sea la variable resultado $Y$ la que cause $D$.
-3. **Permiten variar distintos parámetros**, en lugar de enfrentar el efecto de múltiples cambios de política que ocurren simultáneamente. Y eso también nos permite probar tratamientos que no serían factibles en la realidad.
-4.  **Transparencia:** Los resultados de un experimento bien ejecutado son fáciles de comunicar, ya que se basan en una comparación directa de promedios entre grupos, sin necesidad de modelos estructurales complejos.
-
-### Desafíos y Amenazas (Limitaciones)
-
-No obstante, llevar un experimento al "mundo real" presenta limitaciones severas que clasificamos en tres dimensiones:
-
-#### Restricciones estructurales y éticas
-
-El costo monetario y político de un RCT es masivo. Además del financiamiento, existen preguntas económicas que simplemente **no pueden** responderse mediante experimentos por razones éticas (ej: ¿cuál es el efecto de la contaminación en la salud infantil?) o técnicas. Esto último, es importante, porque se podrán tener todos los recursos del mundo, pero a veces son inviables porque las personas tratadas no quieren exponerse a un experimento aleatorio de tal naturaleza.
-
-#### Amenazas a la Validez Interna
-
-Incluso con un diseño robusto, la ejecución puede fallar reintroduciendo sesgos: 
-
-* **Problemas de implementación**: los problemas de implementación pueden ocurrir en un RCT. Por ejemplo, puede existir una mala práctica en la asignación aleatoria, generando que $\mbox{cov}(D_i, u_i) \neq 0$. A su vez, pueden ocurrir incumplimientos de protocolos: el grupo de tratamiento no recibe todo el tratamiento y el grupo de control recibe parte del tratamiento (*partial compliance*). 
-* **Sesgo de Deserción (Attrition):** si la pérdida de participantes no es aleatoria (ej: si los más enfermos en el grupo de control abandonan el estudio), la comparación final estará sesgada. También puede ocurrir que no aleatoriamente parte de la muestra no responda entrevistas o al tratamiento. 
-* **Sesgo de desempeño:** los participantes pueden cambiar su conducta por saberse observados (Efecto Hawthorne) o el grupo de control puede buscar activamente sustitutos al tratamiento (Sesgo de sustitución), sesgando el efecto hacia cero^[En mediciana, es más común realizar experimentos doble ciego para sortear esta dificultad].
-* **Sesgo de sustitución**: el grupo de control puede buscar tratamientos sustitutos porque se les negó el tratamiento. Es por eso que se utilizan placebos. Mientras la muestra esté menos consciente de si se le asignó o no el tratamiento, mejor. 
-
-#### Amenazas a la Validez Externa
-
-Un experimento puede ser válido para su muestra, pero su capacidad de generalización es limitada si el efecto del tratamiento difiere entre contextos geográficos o periodos de tiempo. Además, resultados a pequeña escala pueden no mantenerse al masificarse debido a **efectos de equilibrio general**.
-
-### Tipología de Efectos del Tratamiento {-}
-
-Cuando los efectos del tratamiento son heterogéneos, debemos ser precisos sobre qué estamos midiendo exactamente:
-
-::: {.r-stack .border .p-3 .rounded style="background-color: #f8f9fa; border-color: #69000C !important; border-width: 2px !important;"}
-**Efectos del Tratamiento: Definiciones Clave**
-
-1.  **ATE (Average Treatment Effect):** Es el efecto promedio esperado si asignáramos a un individuo aleatorio de la población al tratamiento.
-    $$ATE = E[Y_{1i} - Y_{0i}]$$
-2.  **ATT (Average Treatment Effect on the Treated):** Es el efecto promedio para quienes efectivamente recibieron el tratamiento.
-    $$ATT = E[Y_{1i} - Y_{0i} \mid D_i = 1]$$
-3.  **$ATE(x)$ (Efecto Condicional):** El efecto promedio para un subgrupo específico con características $x$.
-    $$E[Y_{1i} - Y_{0i} \mid X_i = x]$$
-:::
-
-En un experimento con **asignación aleatoria perfecta**, el tratamiento es independiente de los resultados potenciales, lo que implica que el grupo tratado es estadísticamente idéntico al grupo de control antes de la intervención. En este escenario ideal:
-$$ATE = ATT$$
-
-## El problema del cumplimiento (Take-up)
-
-En la práctica, la **asignación** al tratamiento no siempre equivale a la **recepción** del mismo (Take-up). Si existe una proporción de individuos que no toma el tratamiento asignado, estamos bajo **"imperfect compliance"**.
-
-Puesto que la decisión de tomar el tratamiento ($T_i$) ya no es aleatoria (depende de la voluntad o características del individuo), comparar a quienes se trataron contra quienes no reintroduce el **sesgo de selección**. Por esta razón, en estos contextos se estima el **ITT (Intention-to-Treat)**, que mide el efecto de haber sido *asignado* al tratamiento, independientemente de la adopción final.
-
-```{r tabla-resumen-efectos}
+```{r img-estratificado}
 #| echo: false
-#| warning: false
-
-data.frame(
-  Concepto = c("ATE", "ATT", "ITT"),
-  Definicion = c("Efecto promedio poblacional", "Efecto promedio en quienes se tratan", "Efecto de ser asignado al tratamiento"),
-  `Uso Principal` = c("Inferencia general", "Evaluacion de impacto directo", "Politica publica con adopcion parcial")
-) |> 
-  gt() |> 
-  tab_header(title = md("**Resumen de Estimadores de Impacto**")) |> 
-  tab_options(
-    heading.background.color = "#69000C",
-    column_labels.background.color = "#69000C",
-    table.border.top.color = "#69000C",
-    table.border.bottom.color = "#69000C",
-    source_notes.font.size = px(12)
-  )
-
-```
-
-
-
-# Bloque 3: Regresión e Inferencia
-
-Volvamos a la tabla anterior, que si habíamos mencionado, pero para retomar bien la que no mencionamos:  
-
-```{r img-star-balance2}
-#| echo: false
-#| fig-cap: "Tabla de Balance Proyecto STAR"
-#| out-width: "80%"
-
-knitr::include_graphics("images/star_balance.png", error = FALSE)
-```
-
-Lo que se tiene que analizar aquí es **cuál es el efecto de estar en una clase pequeña respecto a estar en una clase grande/regular (sin tratamiento) y sin profesor asistente**. En principio, lo primero que podemos mencionar es cuál es el efecto de tener una clase pequeña sobre el desempeño en la prueba. Vemos que en la variable de resultados, `6. Percentile score in kindergarten`, una clase pequeña puntua 54,7 --columna *small*--, mientras que una regular 49,9 --columna *regular*--. Ese sería el efecto bruto de estar en una clase de $\approx$ 15 personas, respecto a una de 23 app. Notamos, además, que agregar un asistente/ayudante, *Regular/Aide*, solo aumenta respecto a la *Regular* en 0,01 el puntaje en la variable re resultados. 
-
-Si esto estuviera desbalanceado, se puede utilizar regresiones para mejorar esta predicción. De inmediato lo veremos, pero *ya* con esto, dado que es un RCT, solo comparando medias tenemos una buena predicción del efecto *causal* de estudiar en una clase pequeña respecto a una regular o regular con asistente. Es decir, como es un experimento aleatorizado, el efecto promedio de estudiar en una clase pequeña (tratamiento) respecto a una regular o, más específicamente, sin aplicarle el tratamiento de disminución de alumnos (control), ya nos indica una diferencia en el puntaje de la variable de resultado y, por tanto, la magnitud del efecto de estudiar en una aula con menos alumnos. La magnitud de ese efecto es, por tanto, la diferencia entre estas medias. Así pues, nuestro estimador es
-$$
-\hat{\tau} = \bar{Y}_1 - \bar{Y}_0
-$$
-Además, tenemos que su error estándar está dado por
-$$
-\mbox{SE}(\hat\tau) = \sqrt{\frac{s^2_1}{n_1} +\frac{s^2_0}{n_0}}
-$$
-donde $s_1^2, s_0^2$ son las varianzas muestrales de los grupos tratados y de control, respectivamente; y $n_1, n_0$ sus tamaños muestrales. Por lo tanto, con ello también podemos obtener una medida de confianza de nuestro estimador.
-
-Entonces, si los grupos están bien balanceados y el RCT está bien hecho, con esto simplemente nos alcanza. Como vemos, tenemos un estimador del efecto causal, $\hat\tau$, y una medida de precisión, $\mbox{SE}(\hat\tau)$. Y, además, es algo muy simple de comunicar, entendible para todo público y riguroso científicamente. Ahora bien, ¿podemos hacer algo más realizando un análisis de regresión? Sí, en efecto podemos hacerlo. 
-
-
-
-## Análisis de regresión en experimentos 
-
-
-¿Para qué vamos a usar regresiones en experimentos aleatorizados? En primer lugar, el estimador $\hat \tau$ podríamos estimarlo con una regresión simple. ¿Cuál sería esa regresión? Tendríamos que regresar nuestra variable de resultados, $y_i$, es decir `Percentile score in kindergarten`, contra una dummy, $D_i$, que indica si se está o no en una clase pequeña, esto es, si recibió o no tratamiento. Entonces, si suponemos que ele fecto de un tratamiento es igual para todos los individuos, se tiene que 
-$$
-y_{1i}-y_{0i} = \tau
-$$
-Luego, con efecto constante, re escribimos esto como 
-$$
-\begin{aligned}
-  y_i &= y_{0i}+ (y_{1i}- y_{0i})D_i\\
-  &=y_{0i} + \tau D_i + E[y_{0i}]-E[y_{0i}]\\
-  &= E[y_{0i}]+\tau D_i + (y_{0i}- E[y_{0i}])\\
-  &= \alpha + \tau D_i + \eta_i
-\end{aligned}
-$$
-Por lo tanto, nuestra regresión a estimar sería 
-$$
-y_i = \alpha + \tau D_i + \eta_i
-$$
-donde, si se estima, entonces $\hat\alpha$ es el intercepto: cuando el tratamiento es cero. Y el $\hat \tau$ sería la diferencia entre los tratados y los no tratados. Lo que tenemos, por tanto, es que el valor esperado para tratados y no tratados sería: 
-$$
-\begin{aligned}
-  E[y_i \mid  D_i = 1] &= \alpha + \tau + E[\eta_i | D_i = 1]\\
-  E[y_i \mid  D_i = 0] &= \alpha + E[\eta_i | D_i = 0]
-\end{aligned}
-$$
-Entonces,
-$$
-  E[y_i \mid D_i =1]- E[y_i \mid D_i =0] =\tau + E[\eta_i \mid D_i =1]- E[\eta_i \mid D_i =0]
-$$
-Con asignación aleatoria, basta realizar una regresión de $y_i$ sobre $D_i$:
-$$
-E[y_i\mid D_i = 1]- E[y_i \mid D_i = 0] = \tau
-$$
-Nos da exactamente lo mismo. No obstante, el uso de regresores adicionales puede contribuir a generar estimadores más precisos en dos situaciones: 
-
-  1. Cuando el diseño es aleatorio condicional a otra variable (Proyecto STAR: aleatorización dentro de escueal y no entre escuelas, por que se introduce un efecto fijo por escuela)
-  
-  2. Regresores disminuyen el error estándar poque tienen poder explicativo sobre $y_i$, aún cuando las pruebas de balance indiquen diferencias *no significativas*. 
-  
-  
-Es más, si vemos la tabla 2.2.2. que dejamos pendiente, que es justamente un modelo de regresión del experimento, tenemos los mismos resultados (aunque agregaron más controles después): 
-
-
-```{r img-star-balance-regression2}
-#| echo: false
-#| fig-cap: "Estimaciones experimentales del efecto de la asignación del tamaño de clase en los puntajes de los exámenes"
-#| out-width: "80%"
-
-knitr::include_graphics("images/regression-to-balance.png", error = FALSE)
-```
-
-Como vemos, en la primera tabla la diferencia en la variable de resultados `Percentile score in kindergarten` entre el puintaje promedio de estar en una clase pequeña respecto a una regular es 
-$$
-\hat \tau = \bar{Y}_1- \bar{Y}_0 = 54.7-50.0 = 4.7
-$$
-En el modelo de regersión, en la columna 1 donde no se han agregado controles, la diferencia es:
-$$
-\hat \tau = 4.82-0.12 = 4.7
-$$
-Esto es evidente, porque lo que indica el modelo de regresión en el $\widehat{\text{Small class}} = 4.82$ es que estar en una clase pequeña (tratamiento) sube el puntaje promedio en 4.82 respecto de no estarlo (control). En cambio, el estimador $\widehat{\text{Regular}} = 0.12$ indica que aumenta en promedio solo 0.12. La diferencia es el efecto causal, que es lo mismo que calcular la diferencia entre las medias de `Percentile score in kindergarten` si se aplicó o no el tratamiento.   
-
-Entonces, en efecto, no hay diferencia entre restar las medias en un RCT, y aplicar un modelo de regresión *simple* al RCT. Pero, como  ya vimos, no significa que sea inútil aplicar el modelo de regresión al RCT, pues nos sirve para ir agregando controles de manera más efectiva, además de para ponderar valores si el experimento está desbalanceado.
-
-Lo que tenemos es, pues, todo lo siguiente. Dado que ya demostramos que si el efecto es constante para todos los individuos, entonces podemos escribir 
-$$
-  y_i = \alpha + \tau D_i +  \eta_i
-$$
-y que, con $D_i$ aleatorio, entonces se cumple $E[\eta_i \mid D_i ] = 0$, luego se cumplen los supuestos de MCO y obtenemos un estimador insesgado de $ATE(\tau)$. Y, entonces, tenemos que 
-$$
-\hat \tau = \widehat{ATE} \quad \text{ y } \quad E[\hat\tau] = ATE 
-$$
-De tal modo, no es necesario incluir controles para obtener un estimador ATE insesgado, *pero* podemos incluir controles para disminuir la varainaza del error, para ponderar mejor valores, etc. Respecto a disminuir la varianza, que nos servirá incluido cuando el experimento esté bien balanceado (ergo, siempre será útil aplicar un modelo de regresión), supongamos que agregamos $X_i$, tal que 
-$$
-\begin{aligned}
-  y_i &= \alpha + \tau D_i + \beta X_i - \beta X_i + \eta_i\\
-  y_i &= \alpha + \tau D_i + \beta X_i+  \nu_i
-\end{aligned}
-$$
-donde $\nu_i = \eta_i - \beta X_i$ y, por tanto, si $\beta \neq 0$, entonces la varianza del término de error disminuye. En ello reside la utilidad de realizar un análisis de regresión a un RCT incluso cuando el experimento está bien balanceado. En el fondo, siempre será útil, a pesar de que con una diferencia de medias ya estaremos obteniendo, y rigurosamente, el efecto causal de nuestro tratamiento. 
-
-Otra cuestión útil, además de la reducción de la varianza del término de error, es que añadir controles también evita posibles sesgos si el tratamiento depende de otra variable. Por ejemplo, supongamos que $X_i$ depende del tratamiento $D_i$. La ecuación a estimar, por tanto, es
-$$
-y_i = \alpha + \tau D_i + \beta X_i + u_i
-$$
-Supongamos que $y_i$ es salarios, $D_i$ si se recibe capacitación y $X_i$ si se consigue empleo después de la capaciatación. Entonces, al agregar $\beta X_i$, se estima el impacto de haber recibido la capacitación, el tratamiento, *controlando* por haber obtenido un empleo. Entonces, no solo reduce la varianza del término de error, sino que en el fondo mejora la específicación de nuestro modelo muchas veces el hecho de agregar variables de control. 
-
-Muchas veces también los controles nos sirven para chequear **la calidad de la aleatorización**. Así, se puede hacer una prueba de balance con test de media, o bien, correr la siguiente regresión:
-$$
-  D_i = \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i} + \ldots + \beta_m X_{mi} + \varepsilon_i
-$$
-y aplicar un Test F: $H_0 : \beta_1 =  \beta_2 = \ldots = \beta_m =0$. Ello nos indicaría si las variables de control no están relacionadas con la asignación del tratamiento. 
-
-
-## Asignación aleatoria condicional
-
-En un experimento aleatorizado, la asignación al tratamiento es *independiente* de los resultados potenciales y es una función conocidas de los covariables. Hay tres formas principales: 
-
-  - Asignación completamente aleatoria
-  - Aleatorización estratificada (aleatorización dentro de un número finito de estratos)
-  - Aleatorización por conglomerados (aleatorización a nivel de *clusters*)
-
-
-El siguiente esquema resume la diferencia entre la aleatorización estratificada a la por conglomerados: 
-
-```{r stratified-vs-clusters}
-#| echo: false
-#| fig-cap: "Aleatorización estratificada vs por conglometerados (*clustering*)"
-#| out-width: "80%"
+#| fig-cap: "Aleatorización estratificada y por conglomerados."
+#| out-width: "85%"
 
 knitr::include_graphics("images/stratified-vs-cluster-sampling.png", error = FALSE)
 ```
 
-En la práctica, la aleatorización rara vez es "simple" o completamente al azar sobre toda la población. A menudo, el investigador posee información previa sobre los sujetos o enfrenta restricciones logísticas que lo obligan a utilizar un mecanismo de **asignación aleatoria condicional**. En este diseño, la probabilidad de recibir el tratamiento es una función conocida de ciertas covariables observadas.
+# Inferencia y potencia {#sec-inferencia}
 
-Como se observa en la @stratified-vs-clusters, la arquitectura del muestreo y la asignación cambia drásticamente según cómo agrupemos a las unidades.
+## Contraste de hipótesis en muestras grandes
 
-### Aleatorización Estratificada (Stratified Randomization)
+La hipótesis habitual es que el tratamiento no tiene efecto, $H_0: \rho = 0$. Si ambos grupos son grandes, las varianzas de los resultados son finitas y la proporción de tratados no tiende a cero ni a uno, el estimador $\hat\rho = \bar Y_1 - \bar Y_0$ es aproximadamente normal y se usa el estadístico $t = \hat\rho / \text{EE}(\hat\rho)$, con
 
-Este método consiste en dividir a la población en $G$ estratos definidos por variables exógenas (como género, edad o nivel socioeconómico) y realizar una aleatorización independiente dentro de cada estrato.
+$$
+\text{EE}(\hat\rho) = \sqrt{\frac{s_1^2}{n_1} + \frac{s_0^2}{n_0}} ,
+$$
 
-* **Lógica:** Buscamos asegurar que grupos pequeños pero importantes estén representados proporcionalmente tanto en el grupo de tratamiento como en el de control.
-* **Ventaja Técnica:** Mejora la eficiencia estadística al evitar "vectores de asignación no informativos" (por ejemplo, casos accidentales donde todos los hombres terminen en el grupo de control y todas las mujeres en el de tratamiento).
-* **Ejemplo en STAR:** La aleatorización se realizó **dentro de cada escuela**. Esto garantiza que las características específicas de una escuela (infraestructura, calidad docente promedio) no sesguen la comparación entre clases pequeñas y grandes.
+donde $s_1^2$ y $s_0^2$ son las varianzas muestrales de cada grupo. Este error estándar permite varianzas distintas entre grupos y coincide con el error estándar robusto a heterocedasticidad de la regresión.
 
-### Aleatorización por Conglomerados (Cluster Randomization)
+## Errores agrupados
 
-A diferencia de la anterior, aquí la unidad de aleatorización no es el individuo, sino un grupo pre-existente o "cluster".
+Cuando se aleatoriza por conglomerados pero se observa a los individuos, los errores no son independientes: alumnos del mismo curso comparten profesor, sala y compañeros. Como el tratamiento también es común dentro del conglomerado, un shock que afecte a todo un grupo puede confundirse con el efecto del programa. @duflo2007 [sec. 4.2] lo formalizan con el modelo
 
-* **Lógica:** Todos los individuos pertenecientes a un mismo cluster (ej: una sala de clases, una aldea o una manzana) reciben el mismo estatus de tratamiento.
-* **Motivación:** Se suele utilizar por razones logísticas o para minimizar **spillovers** (interferencias) entre vecinos que harían inviable tratar a unos y a otros no dentro de un mismo espacio.
-* **Ejemplo en STAR:** Si bien la asignación fue dentro de escuelas, cada sala de clase constituye un **cluster**. Esto tiene implicancias críticas para la inferencia: los errores estándar deben ajustarse (closterizarse), ya que los resultados de los alumnos dentro de una misma sala están correlacionados entre sí.
+$$
+Y_{ij} = \alpha + \beta T_j + \upsilon_j + \omega_{ij},
+$$
 
-::: {.r-stack .border .p-3 .rounded style="background-color: #f8f9fa; border-color: #69000C !important; border-width: 2px !important;"}
-**Diferencia Fundamental: Representatividad vs. Unidad de Implementación**
+donde $\upsilon_j$ es un componente común al conglomerado $j$, con varianza $\tau^2$, y $\omega_{ij}$ un componente individual, con varianza $\sigma^2$. La correlación intraconglomerado es $\rho_{ic} = \tau^2 / (\tau^2 + \sigma^2)$. Con conglomerados de tamaño $n$, la varianza del estimador se multiplica por el **efecto de diseño**
 
-Mientras que la **estratificación** busca asegurar que la muestra sea un "espejo" de la diversidad poblacional (tomando sujetos de todos los colores en la imagen), el **clustering** selecciona grupos completos (bloques de color), facilitando la implementación pero sacrificando, en ocasiones, poder estadístico por la correlación intracluster.
-:::
+$$
+D = 1 + (n - 1)\,\rho_{ic}
+$$
 
-```{r tabla-comparativa-muestreo}
-#| echo: false
-#| warning: false
+respecto de una aleatorización individual.^[@duflo2007 presentan $D$ como el cociente entre errores estándar, pero la expresión corresponde al cociente entre varianzas: el cociente de errores estándar es $\sqrt{D}$. Su propio ejemplo lo confirma: con $n = 50$ y $\rho_{ic} = 0{,}06$, $D = 3{,}94$ y el error estándar "más que se duplica", ya que $\sqrt{3{,}94} \approx 1{,}98$.] El efecto crece con el tamaño de los conglomerados y con la correlación entre sus miembros, y puede ser grande incluso con correlaciones modestas. La consecuencia práctica tiene dos caras: hay que estimar errores estándar agrupados (*clustered*) al nivel en que se aleatorizó, y la potencia del diseño depende mucho más del número de conglomerados que del número de individuos por conglomerado.
 
-data.frame(
-  Dimension = c("Unidad de asignación", "Objetivo principal", "Efecto en precisión", "Inferencia"),
-  Estratificada = c("Individuo (dentro del grupo)", "Equilibrio y representatividad", "Aumenta la precisión (reduce SE)", "Modelar con Efectos Fijos"),
-  Conglomerados = c("Grupo o Cluster completo", "Viabilidad logística / Spillovers", "Suele disminuir la precisión", "Ajustar errores por cluster")
-) |> 
-  gt() |> 
-  tab_header(title = md("**Comparación de Diseños Condicionales**")) |> 
-  tab_options(
-    heading.background.color = "#69000C",
-    column_labels.background.color = "#69000C",
-    table.border.top.color = "#69000C",
-    table.border.bottom.color = "#69000C",
-    source_notes.font.size = px(12)
+## Inferencia exacta: el test de Fisher
+
+Cuando la muestra es pequeña, la aproximación normal puede fallar. La alternativa, que se remonta a @fisher1935, es un test exacto, es decir, uno que controla el error de tipo I para cualquier tamaño muestral. Se basa en la hipótesis nula *estricta* de que el tratamiento no tiene efecto para nadie: $Y_{1i} = Y_{0i}$ para todo $i$. Bajo esa hipótesis se conocen todos los resultados potenciales, porque cada observación muestra el único resultado que esa unidad habría tenido. Entonces puede calcularse el valor que habría tomado el estimador bajo cualquier otra asignación posible.
+
+Sea $\Omega$ el conjunto de asignaciones que el mecanismo de aleatorización pudo producir. La distribución de $\hat\rho(\omega)$ sobre $\omega \in \Omega$ es la distribución exacta del estimador bajo la nula, y el valor p es la proporción de asignaciones que producen un estadístico al menos tan extremo como el observado, $\Pr\left(|\hat\rho(\omega)| \geq |\hat\rho|\right)$. Si $\Omega$ es demasiado grande para enumerarlo, se simula.
+
+```{r fisher}
+#| fig-cap: "Distribución por re-aleatorización del estimador bajo la hipótesis nula estricta."
+
+# Un experimento pequeño: 20 unidades, 10 tratadas
+n_f <- 20
+d_f <- sample(rep(c(0, 1), each = n_f / 2))
+y_f <- rnorm(n_f) + 0.8 * d_f
+
+dif_medias <- function(y, d) mean(y[d == 1]) - mean(y[d == 0])
+rho_obs <- dif_medias(y_f, d_f)
+
+# Re-aleatorizar respetando el mecanismo (10 de 20 tratados)
+rho_perm <- replicate(10000, dif_medias(y_f, sample(d_f)))
+p_fisher <- mean(abs(rho_perm) >= abs(rho_obs))
+p_t      <- t.test(y_f[d_f == 1], y_f[d_f == 0])$p.value
+
+ggplot(tibble(rho = rho_perm), aes(rho)) +
+  geom_histogram(bins = 40, fill = "grey75", color = "white") +
+  geom_vline(xintercept = c(-1, 1) * rho_obs, color = col_uch, linewidth = 1) +
+  labs(
+    x = "Diferencia de medias bajo asignaciones alternativas", y = NULL,
+    subtitle = sprintf("Valor p exacto de Fisher = %.3f   |   valor p del test t = %.3f",
+                       p_fisher, p_t)
   )
 ```
 
+Con 20 unidades hay $\binom{20}{10} = 184.756$ asignaciones posibles, de modo que 10.000 re-aleatorizaciones aproximan bien el valor p exacto. En muestras de este tamaño ambos valores p suelen ser parecidos, pero solo el de Fisher tiene garantía exacta. El mismo procedimiento se aplica a diseños estratificados o por conglomerados, siempre que se re-aleatorice siguiendo el mecanismo efectivamente usado.
 
+## Potencia y tamaño muestral
 
+El tamaño de un test, $\alpha$, es la probabilidad de rechazar la nula cuando es verdadera. Su **potencia**, $\kappa$, es la probabilidad de rechazarla cuando es falsa. Los cálculos de potencia se hacen antes del experimento para saber si este tiene una probabilidad razonable de detectar un efecto plausible, convencionalmente con $\kappa = 0{,}80$. Siguiendo a @duflo2007 [sec. 4.1], si una fracción $P$ de una muestra de $N$ individuos independientes se asigna al tratamiento, la varianza de $\hat\beta$ es $\sigma^2 / [P(1-P)N]$, y el **efecto mínimo detectable** (MDE) es
 
-
-
-## SUTVA (Stable Unit Treatment Value Assumption)
-
-Ahora pasamos directamente a tratar este supuesto, el **Supuesto de no interferencia entre unidades** (SUTVA, por sus cifras en inglés: *Stable Unit Treatment Value Assumption*). Este supuesto también es necesario para que el experimento tenga validez interna suficiente para que el estimador del efecto causal sea un estimador insesgado del efecto del tratamiento. Además, este supuesto luego lo veremos en otras técnicas econométricas de estimación que no son experimentales. 
-
-::: {.r-stack .border .p-3 .rounded style="background-color: #f8f9fa; border-color: #69000C !important; border-width: 2px !important;"}
-**Supuesto SUTVA**
-
-Lo central de este supuesto es que el **valor de la variable de resultados**, para la unidad $i$ bajo el tratamiento $t$ será el mismo *sin importar* qué tratamientos reciban otras unidades. Esto es, los tratamientos que recibe una unidad no afectan a los resultados de otra. Entonces, el tratamiento que recibe un individuo/unidad $i$ no afecta en otro individuo/unidad $j$, lo que está implícito en nuestra notación de resultados potenciales: 
 $$
-y_i = 
-\begin{cases}
-  y_{1i}, & \quad \text{si } D_i =1\\
-  y_{0i}, & \quad \text{si } D_i =0\\
-\end{cases}
+\text{MDE} = \left(t_{1-\kappa} + t_{\alpha/2}\right)\sqrt{\frac{1}{P(1-P)}\,\frac{\sigma^2}{N}} .
 $$
-donde para que $y_{\cdot i}$ tome el valor $y_{1i}$ o $y_{0i}$ depende exclusivamente del tratamiento que recibe $i$
+
+La fórmula hace explícitas varias disyuntivas. Exigir un tamaño menor aumenta el MDE. Si el costo principal es recolectar datos, el diseño óptimo divide la muestra en mitades ($P = 0{,}5$). Si el tratamiento es caro y los datos baratos, conviene un grupo de control más grande. Con aleatorización por conglomerados, $J$ grupos de $n$ individuos, la expresión se convierte en
+
+$$
+\text{MDE} = \frac{t_{1-\kappa} + t_{\alpha/2}}{\sqrt{P(1-P)J}}\,\sqrt{\rho_{ic} + \frac{1-\rho_{ic}}{n}}\;\sigma .
+$$
+
+El gráfico siguiente evalúa esta fórmula para una correlación intraconglomerado de 0,05, usando valores críticos normales.
+
+```{r potencia}
+#| fig-cap: "Efecto mínimo detectable (en desviaciones estándar) según el número de conglomerados y su tamaño. α = 0,05, potencia = 0,80, P = 0,5, correlación intraconglomerado = 0,05."
+
+mde_cluster <- function(J, n, rho_ic, P = 0.5, alpha = 0.05, poder = 0.80) {
+  (qnorm(1 - alpha / 2) + qnorm(poder)) / sqrt(P * (1 - P) * J) *
+    sqrt(rho_ic + (1 - rho_ic) / n)
+}
+
+expand_grid(J = c(20, 40, 80, 160), n = 1:100) |>
+  mutate(mde = mde_cluster(J, n, rho_ic = 0.05),
+         J = factor(J)) |>
+  ggplot(aes(n, mde, color = J)) +
+  geom_line(linewidth = 1) +
+  scale_color_grey(start = 0.7, end = 0.1, name = "Conglomerados (J)") +
+  labs(x = "Individuos por conglomerado (n)", y = "MDE (desv. estándar)")
+```
+
+Las curvas se aplanan rápido. Pasar de 20 a 100 individuos por conglomerado mejora poco la precisión, mientras que duplicar el número de conglomerados reduce el MDE en un factor de aproximadamente $1/\sqrt{2}$, cualquiera sea $n$. Como resumen @duflo2007, un individuo más en un conglomerado que ya está en la muestra aporta menos información que el primer individuo de un conglomerado nuevo. @athey2017 [sec. 7.1] desarrollan estos cálculos con más detalle.
+
+# Aplicación en R: educación sexual en Colombia {#sec-aplicacion}
+
+## El experimento
+
+@chong2020 evaluaron un curso de educación sexual en línea dirigido a estudiantes de noveno grado de colegios públicos en 21 ciudades de Colombia. El curso duraba un semestre y tenía cinco módulos. El diseño tiene dos etapas: primero se sortearon los colegios entre tratados y de control y, dentro de los colegios tratados, se sorteó qué cursos recibían el programa. Esto genera tres grupos:
+
+- **Tratados**: cursos que recibieron el programa en colegios tratados.
+- **Control**: cursos en colegios no tratados.
+- **Difusión**: cursos que no recibieron el programa, pero en colegios tratados.
+
+El grupo de difusión es el que permite medir el contagio entre compañeros del mismo colegio, en la línea de @miguel2004. Se aplicaron tres encuestas: al inicio del año (ronda 1), al final del semestre del curso (ronda 2) y al final del año (ronda 3). No todos los cursos tratados completaron los cinco módulos, por paros, ausencia de profesores o problemas de conexión, de modo que la comparación por asignación identifica un ITT.
+
+::: {.callout-note appearance="simple"}
+**Datos.** Los datos de replicación son públicos y están en el repositorio de Innovations for Poverty Action en Harvard Dataverse [@chong2019data], con DOI [10.7910/DVN/H82SFI](https://doi.org/10.7910/DVN/H82SFI). Para reproducir esta sección, descargue el archivo y guarde `Colombia_Sex_Ed.dta` en `sesiones/data/`. Si el archivo no está, el sitio se renderiza igual, pero sin ejecutar los bloques de esta sección.
 :::
 
+## Preparación
 
-Entonces, teniendo claro que supuesto SUTVA implica que el *valor* de la *variable de resultado* para el individuo $i$, dado el tratamiento, será el mismo independiente del tratamiento que reciban otros individuos $j$, ¿qué podría violar el supuesto SUTVA? Dicho de otra forma, ¿qué podría hacer que el tratamiento en $i$ se vea alterado por el tratamiento de $j$ y, por tanto, el tratamiento de $i$ **no sea independiente**?
+La base codifica las respuestas inválidas o faltantes con valores de 777 en adelante, que hay que convertir en `NA`. La ronda 3 tiene una particularidad: `answer_round_3` vale 1, 2 o 3 según si el estudiante respondió en papel, por internet o por teléfono, y 0 si no participó. Tratar solo el valor 1 como respuesta subestima la tasa de respuesta de esa ronda.
 
-### Violaciones al Supuesto SUTVA
+```{r chong-prep}
+#| eval: !expr hay_datos
 
-Existen diversas situaciones en las que el supuesto SUTVA puede verse comprometido. Las más relevantes son:
+chong <- read_dta(ruta_chong) |>
+  zap_labels()
 
-1. **Spillovers o Efectos de Pares Negativos:** supongamos un programa de capacitación laboral donde el número de empleos disponibles es fijo. Si capacitamos a un grupo de individuos, estos pueden "desplazar" a los no capacitados en la competencia por los mismos puestos de trabajo. En este caso, el resultado $Y_{0j}$ de un individuo $j$ del grupo de control se ve *afectado* por el hecho de que otros individuos $i$ recibieron el tratamiento. El efecto causal estimado estaría sobreestimado, pues parte del "beneficio" del tratamiento proviene de perjudicar al grupo de control. En el fondo, un grupo a la vez que se beneficia del tratamiento, perjudica a otro grupo, dada la competencia por la misma plaza en este caso. 
+# Variables de encuesta que usaremos (códigos >= 777 son inválidos o faltantes)
+vars_encuesta <- c(
+  "socioeconomicstrata_round1", "study5years_r1", "appropriateage_women_r1",
+  paste0(rep(c("talkwithparents", "trustparents", "trustgirlfriend",
+               "trustfriends", "willuseacondomnexttime", "usecondomlasttime"),
+             each = 3), "_r", 1:3),
+  "buycondomslastmonth_r1", "buycondomslastmonth_r2", "buycondomslast6month_r3"
+)
 
-2. **Spillovers Positivos:** el caso opuesto ocurre con intervenciones como las vacunas. Si vacunamos a una proporción suficiente de la población, incluso los no vacunados se benefician indirectamente por la reducción en la transmisión del virus (inmunidad de rebaño). Aquí, el grupo de control "mejora" gracias al tratamiento de otros, lo que *subestima* el efecto causal verdadero de la vacuna. Es un poco lo que ocurrrió en la pandemia, que antivacunas que no querían vacunarse igualmente se vieron beneficiados porque el resto se vacunaba y, por lo tanto, ello distorsiona (en este caso a la baja) la magnitud del efecto causal de la vacuna, en tanto que no se logra capturar *ceteris paribus*.
-
-3. **Efectos de Equilibrio General:** A gran escala, los tratamientos pueden alterar precios, salarios o la demanda agregada en mercados relacionados. Por ejemplo, un programa masivo de transferencias monetarias condicionadas podría aumentar la demanda local de alimentos, elevando sus precios y afectando tanto a tratados como a no tratados. Estos efectos "macro" violan SUTVA porque el resultado de cada individuo depende del estado de tratamiento agregado de la economía, no solo del propio.
-
-### Soluciones a las Violaciones de SUTVA
-
-Cuando sospechamos que SUTVA no se cumple, existen estrategias para abordar el problema:
-
-* **Redefinir la unidad de interés:** Si los spillovers ocurren dentro de grupos definidos (aldeas, escuelas, hogares), podemos aleatorizar a nivel de grupo completo (cluster randomization) y definir el efecto causal a nivel del cluster. Así, el "tratamiento" es que toda la aldea reciba la intervención, eliminando la interferencia interna.
-
-* **Modelar explícitamente las interacciones:** Si conocemos la estructura de las interacciones (por ejemplo, una red social o geográfica), podemos incluir en el modelo variables que capturen la "exposición" de cada individuo al tratamiento de sus vecinos. Esto permite estimar tanto el efecto directo como el efecto indirecto (spillover).
-
-::: {.callout-warning appearance="simple"}
-**Advertencia Importante**
-
-Incluso en experimentos aleatorizados, se requiere conocimiento sustantivo del contexto para que SUTVA se cumpla. Debemos entender los límites de las interacciones entre unidades, esto es, comprender adecuadamente la relación de (in)dependencia entre individuos implicados en el experimento. La aleatorización por sí sola **no garantiza** la identificación de efectos causales si hay interferencia entre unidades ([Angrist & Pischke, 2008](https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf)).
-:::
-
-## Pruebas de Hipótesis y Cálculos de Potencia
-
-Una vez estimado el efecto del tratamiento, debemos evaluar si este es estadísticamente distinguible de cero. Esto nos lleva al terreno de la inferencia estadística, donde el enfoque depende crucialmente del tamaño muestral disponible. El tamaño muestral es importante en RCT's porque no se suele contar con muestras lo suficientemente grande como, por ejemplo, en las encuestas que recopilan datos observacionales. 
-
-### Pruebas de Hipótesis en Muestras Grandes
-
-El objetivo es testear la hipótesis nula $H_0: \tau = 0$, es decir, que el tratamiento no tiene efecto. En este contexto:
-
-* **Error Tipo I:** rechazar $H_0$ cuando en realidad es verdadera (falso positivo). Convencionalmente, limitamos esta probabilidad a $\alpha = 0.05$ (nivel de significancia del 5%).
-* **Error Tipo II:** no rechazar $H_0$ cuando en realidad es falsa (falso negativo).
-
-Cuando el tamaño muestral es suficientemente grande, podemos aplicar la teoría asintótica estándar. Bajo los supuestos de varianzas finitas y de que ambos grupos (tratamiento y control) crecen proporcionalmente con $n$, el estimador $\hat{\tau}$ se distribuye aproximadamente normal. Esto nos permite construir el estadístico $t$ clásico:
-$$
-t = \frac{\hat{\tau}}{\text{SE}(\hat{\tau})}
-$$
-donde, como vimos anteriormente:
-$$
-\text{SE}(\hat{\tau}) = \sqrt{\frac{s_1^2}{n_1} + \frac{s_0^2}{n_0}}
-$$
-siendo $s_1$ y $s_0$ las desviaciones estándar muestrales de $Y_i$ en los grupos de tratamiento y control, respectivamente. Si $|t| > 1.96$, rechazamos $H_0$ al 5% de significancia.
-
-### Pruebas de Hipótesis en Muestras Pequeñas: Test Exacto de Fisher
-
-En muestras pequeñas, la aproximación normal puede ser inadecuada. Necesitamos un test que sea **exacto**, es decir, que controle el error Tipo I para cualquier tamaño muestral, sin depender de aproximaciones asintóticas.
-
-La idea central del **Test Exacto de Fisher** (o test de permutaciones) es la siguiente: bajo la hipótesis nula estricta de que el tratamiento no tiene efecto alguno, tenemos que $Y_i = Y_{0i} = Y_{1i}$ para todo $i$. Es decir, el resultado observado de cada individuo es el mismo independientemente de si fue tratado o no.
-
-Esto nos permite "completar" los resultados potenciales faltantes: si $H_0$ es verdadera, conocemos *todos* los resultados potenciales (son iguales al resultado observado). Por lo tanto, podemos calcular qué valor tomaría nuestro estadístico $\hat{\tau}$ bajo *cualquier* reasignación hipotética del tratamiento.
-
-Formalmente, sea $\Omega$ el conjunto de todas las posibles realizaciones del vector de tratamiento $(D_1, \ldots, D_n)$ bajo el mecanismo de asignación conocido. Para cada $\omega \in \Omega$, calculamos $\hat{\tau}(\omega)$, el valor del estimador si los tratamientos se hubieran asignado según $\omega$. Al enumerar (o simular mediante muestreo repetido) todas las realizaciones posibles, obtenemos la **distribución nula exacta** de $\hat{\tau}$.
-
-El $p$-valor se calcula como la proporción de reasignaciones que producen un estadístico tan o más extremo que el observado:
-
-$$
-p\text{-valor} = \Pr\left(|\hat{\tau}(\omega)| \geq |\hat{\tau}|\right)
-$$
-
-Este enfoque no requiere supuestos distribucionales y es válido para cualquier tamaño de muestra, lo que lo convierte en una herramienta robusta cuando $n$ es pequeño.
-
-### Cálculos de Potencia (Power Calculations)
-
-Antes de ejecutar un experimento, es fundamental preguntarse: ¿tenemos suficientes observaciones para detectar un efecto si este realmente existe? Aquí entran los **cálculos de potencia**.
-
-* **Potencia del test:** Es la probabilidad de rechazar $H_0$ cuando esta es falsa, es decir, de detectar un efecto cuando realmente lo hay. Se denota como $1 - \beta$, donde $\beta$ es la probabilidad de cometer un Error Tipo II.
-* **Objetivo convencional:** Típicamente, buscamos una potencia de al menos 0.80 (80%).
-
-La potencia depende de tres factores principales:
-
-1. **Tamaño del efecto esperado ($\tau$):** Efectos más grandes son más fáciles de detectar.
-2. **Variabilidad del resultado ($\sigma$):** Mayor varianza implica más "ruido" y menor potencia.
-3. **Tamaño muestral ($n$):** Muestras más grandes aumentan la potencia.
-
-La relación entre estos elementos se puede expresar, para un test de dos colas con $\alpha = 0.05$ y potencia $1-\beta = 0.80$, mediante la fórmula aproximada para el tamaño muestral mínimo requerido por grupo:
-
-$$
-n \approx \frac{2(z_{1-\alpha/2} + z_{1-\beta})^2 \sigma^2}{\tau^2} \approx \frac{2(1.96 + 0.84)^2 \sigma^2}{\tau^2} \approx \frac{15.7 \sigma^2}{\tau^2}
-$$
-
-donde $z_{1-\alpha/2} \approx 1.96$ y $z_{1-\beta} \approx 0.84$ son los cuantiles de la distribución normal estándar.
-
-::: {.callout-tip appearance="simple"}
-**Implicancia Práctica**
-
-Los cálculos de potencia se realizan **antes** del experimento para determinar si el estudio tiene una probabilidad razonable de detectar efectos plausibles. Esto requiere tener una estimación previa (o supuesto informado) sobre el tamaño del efecto esperado y la desviación estándar del resultado. Para una discusión más detallada y un ejemplo aplicado, véase Athey e Imbens (2017, sección 7.1).
-:::
-
-```{r tabla-resumen-inferencia}
-#| echo: false
-#| warning: false
-
-data.frame(
-  Concepto = c("Error Tipo I (α)", "Error Tipo II (β)", "Potencia (1-β)", "Nivel de significancia"),
-  Definicion = c(
-    "Rechazar H₀ cuando es verdadera",
-    "No rechazar H₀ cuando es falsa", 
-    "Detectar un efecto cuando existe",
-    "Umbral para rechazar H₀ (usualmente 5%)"
-  ),
-  Valor_Tipico = c("≤ 0.05", "≤ 0.20", "≥ 0.80", "α = 0.05")
-) |> 
-  gt() |> 
-  tab_header(title = md("**Conceptos Clave en Inferencia Estadística**")) |> 
-  cols_label(
-    Concepto = "Concepto",
-    Definicion = "Definición",
-    Valor_Tipico = "Valor Típico"
+chong <- chong |>
+  mutate(
+    across(all_of(vars_encuesta), ~ if_else(.x >= 777, NA_real_, .x)),
+    resp_r1 = as.numeric(answer_round_1 == 1),
+    resp_r2 = as.numeric(answer_round_2 == 1),
+    resp_r3 = as.numeric(answer_round_3 %in% 1:3),
+    grupo = case_when(
+      treatmentgroup == 1                        ~ "Tratado",
+      treatmentschool == 0                       ~ "Control",
+      treatmentschool == 1 & treatmentgroup == 0 ~ "Difusión"
+    ),
+    grupo = factor(grupo, levels = c("Control", "Tratado", "Difusión")),
+    tratado  = as.numeric(grupo == "Tratado"),
+    difusion = as.numeric(grupo == "Difusión"),
+    mujer = as.numeric(Female == 1),
+    sigue_estudiando = as.numeric(study5years_r1 == 1)   # 3 = "no sé" se cuenta como no
   ) |>
-  tab_options(
-    heading.background.color = "#69000C",
-    column_labels.background.color = "#69000C",
-    table.border.top.color = "#69000C",
-    table.border.bottom.color = "#69000C",
-    source_notes.font.size = px(12)
-  )
+  filter(!is.na(grupo))
+
+count(chong, grupo) |>
+  mutate(Porcentaje = 100 * n / sum(n)) |>
+  gt() |>
+  fmt_number(Porcentaje, decimals = 1) |>
+  cols_label(grupo = "Grupo", n = "Estudiantes") |>
+  tabla_curso()
 ```
 
-## Síntesis de la Sesión
+## Balance
 
-En esta primera sesión hemos establecido los fundamentos conceptuales y formales de la inferencia causal en econometría:
+Siguiendo la @sec-experimentos, se compara la línea base de los tres grupos. Cada fila es una regresión de la característica sobre los indicadores de tratado y difusión, con errores agrupados por colegio, que es la unidad de la primera etapa de aleatorización.
 
-1. **El problema fundamental:** La imposibilidad de observar simultáneamente los resultados potenciales $Y_{1i}$ e $Y_{0i}$ para un mismo individuo genera el problema del contrafactual.
+```{r chong-balance}
+#| eval: !expr hay_datos
 
-2. **El sesgo de selección:** Las comparaciones ingenuas entre grupos mezclan el efecto causal con diferencias preexistentes entre quienes eligen (o son seleccionados para) el tratamiento.
+vars_balance <- c(
+  "Mujer"                       = "mujer",
+  "Estrato socioeconómico (1-6)" = "socioeconomicstrata_round1",
+  "Espera seguir estudiando"    = "sigue_estudiando",
+  "Edad apropiada para iniciar vida sexual (mujeres)" = "appropriateage_women_r1",
+  "Habla con sus padres (1-3)"  = "talkwithparents_r1",
+  "Confía en sus padres (1-3)"  = "trustparents_r1"
+)
 
-3. **La solución experimental:** La asignación aleatoria garantiza la independencia entre el tratamiento y los resultados potenciales, eliminando el sesgo de selección y permitiendo identificar el ATE mediante una simple diferencia de medias.
+base_r1 <- filter(chong, resp_r1 == 1)
 
-4. **El análisis de regresión:** Aunque no es estrictamente necesario en un RCT balanceado, permite reducir la varianza del estimador, controlar por diseños de aleatorización condicional y verificar la calidad del balance.
+tabla_balance <- imap_dfr(vars_balance, function(v, etiqueta) {
+  m <- feols(as.formula(paste(v, "~ tratado + difusion")),
+             data = base_r1, cluster = ~schoolcluster)
+  ct <- coeftable(m)
+  tibble(
+    Variable = etiqueta,
+    `Media control` = ct["(Intercept)", "Estimate"],
+    `Tratado − control` = ct["tratado", "Estimate"],
+    `EE (T)` = ct["tratado", "Std. Error"],
+    `Difusión − control` = ct["difusion", "Estimate"],
+    `EE (D)` = ct["difusion", "Std. Error"],
+    N = nobs(m)
+  )
+})
 
-5. **Supuestos críticos:** SUTVA debe cumplirse para que la interpretación causal sea válida. Cuando hay spillovers o efectos de equilibrio general, debemos redefinir unidades o modelar explícitamente las interacciones.
+tabla_balance |>
+  gt() |>
+  fmt_number(columns = 2:6, decimals = 3) |>
+  tab_header(title = md("**Balance en línea base (ronda 1)**")) |>
+  tab_source_note("Errores estándar agrupados por colegio.") |>
+  tabla_curso()
+```
 
-6. **Inferencia:** La validez de nuestras conclusiones depende de tests estadísticos apropiados (asintóticos o exactos) y de un diseño con suficiente potencia para detectar efectos relevantes.
+Una diferencia aislada no invalida el experimento: con seis variables y dos contrastes, es esperable que alguna resulte significativa por azar. Lo que importa es si hay un patrón sistemático y si las variables desbalanceadas predicen los resultados, en cuyo caso conviene incluirlas como controles.
 
-En las próximas sesiones, exploraremos cómo aproximarnos al ideal experimental cuando la aleatorización no es posible, utilizando estrategias de identificación como variables instrumentales, regresión discontinua y diferencias en diferencias.
+## Deserción
 
-# Referencias
+```{r chong-attrition}
+#| eval: !expr hay_datos
 
-[Angrist, J. D., & Pischke, J.-S. (2008). *Mostly Harmless Econometrics: An Empiricist's Companion*. Princeton University Press](https://newblankets.org/worth_a_look/Mostly%20Harmless%20Econometrics.pdf).
+desercion <- base_r1 |>
+  mutate(
+    sale_r1_r2 = 1 - resp_r2,
+    sale_r2_r3 = if_else(resp_r2 == 1, 1 - resp_r3, NA_real_)
+  )
 
-**Literatura en la que se basó la clase:** 
+modelsummary(
+  list(
+    "Ronda 1 → 2" = feols(sale_r1_r2 ~ tratado + difusion, data = desercion, cluster = ~schoolcluster),
+    "Ronda 2 → 3" = feols(sale_r2_r3 ~ tratado + difusion, data = desercion, cluster = ~schoolcluster)
+  ),
+  coef_map = c("(Intercept)" = "Tasa en el control", tratado = "Tratado", difusion = "Difusión"),
+  gof_map = "nobs",
+  stars = TRUE,
+  title = "Deserción diferencial por grupo (errores agrupados por colegio)"
+)
+```
 
-Athey, S., & Imbens, G. W. (2017). The econometrics of randomized experiments. In A. V. Banerjee & E. Duflo (Eds.), *Handbook of Economic Field Experiments* (Vol. 1, pp. 73-140). North-Holland.
+La constante es la tasa de deserción del grupo de control y los coeficientes son las diferencias respecto de ella. Si son pequeños y no significativos, la deserción no parece estar relacionada con el tratamiento, aunque, como advierten @duflo2007, eso no garantiza que quienes salen de cada grupo sean comparables.
 
-Holland, P. W. (1986). Statistics and causal inference. *Journal of the American Statistical Association*, 81(396), 945-960.
+## Efecto del programa
 
-Imbens, G. W., & Wooldridge, J. M. (2009). Recent developments in the econometrics of program evaluation. *Journal of Economic Literature*, 47(1), 5-86.
+Los resultados se resumen en dos índices: la confianza en el círculo cercano (hablar con los padres y confiar en ellos, en la pareja y en los amigos) y el uso de condón (intención de usarlo, uso en la última relación y compra reciente). Cada componente se estandariza con la media y la desviación estándar del grupo de control en la ronda 1, y el índice es el promedio de los componentes disponibles. En la ronda 3, la pregunta de compra se refiere a los últimos seis meses y no al último mes, por lo que ese componente se estandariza con el control de la ronda 3.
 
-Krueger, A. B. (1999). Experimental estimates of education production functions. *The Quarterly Journal of Economics*, 114(2), 497-532.
+```{r chong-indices}
+#| eval: !expr hay_datos
 
+estandarizar <- function(x, ref) (x - mean(ref, na.rm = TRUE)) / sd(ref, na.rm = TRUE)
+control <- filter(chong, grupo == "Control")
 
+comp_confianza <- c("talkwithparents", "trustparents", "trustgirlfriend", "trustfriends")
+comp_condon    <- c("willuseacondomnexttime", "usecondomlasttime")
+
+for (r in 1:3) {
+  # Confianza: todos los componentes se estandarizan con el control en ronda 1
+  z_conf <- map(comp_confianza, ~ estandarizar(chong[[paste0(.x, "_r", r)]],
+                                               control[[paste0(.x, "_r1")]]))
+  # Condón: intención y uso, con referencia en ronda 1
+  z_cond <- map(comp_condon, ~ estandarizar(chong[[paste0(.x, "_r", r)]],
+                                            control[[paste0(.x, "_r1")]]))
+  # Compra: cambia de pregunta en la ronda 3
+  z_compra <- if (r < 3) {
+    estandarizar(chong[[paste0("buycondomslastmonth_r", r)]], control$buycondomslastmonth_r1)
+  } else {
+    estandarizar(chong$buycondomslast6month_r3, control$buycondomslast6month_r3)
+  }
+  chong[[paste0("idx_confianza_r", r)]] <- rowMeans(do.call(cbind, z_conf), na.rm = TRUE)
+  chong[[paste0("idx_condon_r", r)]]    <- rowMeans(cbind(do.call(cbind, z_cond), z_compra), na.rm = TRUE)
+}
+
+# rowMeans devuelve NaN cuando todos los componentes faltan
+chong <- mutate(chong, across(starts_with("idx_"), ~ if_else(is.nan(.x), NA_real_, .x)))
+```
+
+El efecto se estima de tres formas sobre los índices medidos en la ronda 3, seis meses después del curso. La primera es la diferencia de medias con errores que suponen independencia entre estudiantes. La segunda, la misma regresión con errores agrupados por colegio. La tercera agrega controles de línea base: el índice en la ronda 1, el sexo y el estrato. Como en la Tarea 1, el indicador de difusión se incluye siempre, de modo que el coeficiente de `tratado` compara a tratados con el grupo de control puro.
+
+```{r chong-itt}
+#| eval: !expr hay_datos
+
+estimar_itt <- function(y) {
+  f_simple <- as.formula(paste(y, "~ tratado + difusion"))
+  f_ctrl   <- as.formula(paste(y, "~ tratado + difusion +",
+                               sub("_r3", "_r1", y), "+ mujer + socioeconomicstrata_round1"))
+  list(
+    "iid"                  = feols(f_simple, data = chong, vcov = "iid"),
+    "Cluster"              = feols(f_simple, data = chong, cluster = ~schoolcluster),
+    "Cluster + controles"  = feols(f_ctrl,   data = chong, cluster = ~schoolcluster)
+  )
+}
+
+modelos_itt <- c(estimar_itt("idx_confianza_r3"), estimar_itt("idx_condon_r3"))
+names(modelos_itt) <- paste0(rep(c("Confianza: ", "Condón: "), each = 3), names(modelos_itt))
+
+modelsummary(
+  modelos_itt,
+  coef_map = c(tratado = "Tratado", difusion = "Difusión"),
+  gof_map = c("nobs", "r.squared"),
+  stars = TRUE,
+  title = "Efecto de la intención de tratar en la ronda 3 (desviaciones estándar)",
+  notes = "iid: errores que suponen independencia entre estudiantes. Cluster: errores agrupados por colegio."
+)
+```
+
+Tres cosas merecen atención al leer la tabla. La primera es la diferencia entre la primera y la segunda columna de cada índice: el coeficiente es idéntico, pero el error estándar agrupado es mayor, porque los estudiantes de un mismo colegio no son observaciones independientes y la asignación se hizo a nivel de colegio. Ignorarlo sobrestima la precisión, exactamente como predice el efecto de diseño. La segunda es el efecto de los controles, que debería reducir el error estándar sin mover mucho el coeficiente. Si el coeficiente cambia de forma importante, es señal de desbalance en la línea base o de que la muestra con controles completos difiere de la total. Vale la pena revisar el número de observaciones: el estrato socioeconómico tiene muchas respuestas faltantes, y la regresión con controles se estima sobre una muestra bastante más pequeña. La tercera es la interpretación: como no todos los cursos tratados completaron el programa, estos coeficientes son ITT y no el efecto de haber completado el curso.
+
+En Stata, la pauta del curso estima estas regresiones con `reg y t_c, vce(cluster schoolcluster)`. El equivalente en R con `fixest` es `feols(y ~ tratado, cluster = ~schoolcluster)`, y ambos aplican la misma corrección por número de conglomerados.
+
+# Síntesis
+
+La sesión parte de una dificultad que no tiene solución directa: nunca observamos el mismo individuo con y sin tratamiento. La comparación de promedios entre tratados y no tratados mezcla el efecto causal con el sesgo de selección, y ese término puede ser lo bastante grande para invertir el signo de la conclusión, como en el ejemplo del hospital. La asignación aleatoria resuelve el problema porque hace al tratamiento independiente de los resultados potenciales; bajo ella, una diferencia de medias identifica el efecto promedio y una regresión simple lo estima sin sesgo.
+
+Llevar ese ideal a terreno introduce sus propios problemas. El incumplimiento obliga a distinguir entre el efecto de ser asignado y el de ser tratado; la deserción puede deshacer lo que la aleatorización logró; el contagio entre unidades viola el supuesto de que cada resultado depende solo del propio tratamiento. La regresión ayuda a ganar precisión y a respetar el diseño, por ejemplo con efectos fijos de estrato, pero un control mal elegido reintroduce el sesgo que el experimento había eliminado. La inferencia, finalmente, debe seguir al diseño: errores agrupados al nivel en que se aleatorizó, tests exactos cuando la muestra es pequeña y cálculos de potencia que tomen en serio que el número de conglomerados importa más que su tamaño.
+
+Las sesiones siguientes usan el experimento como vara de medida. Variables instrumentales, regresión discontinua y diferencias en diferencias son formas de encontrar, en datos observacionales, una variación que se parezca a la que habría producido un sorteo.^[Angrist y Pischke dedican parte del capítulo 3 al supuesto de independencia condicional, que permite dar interpretación causal a una regresión con datos observacionales cuando el tratamiento es "como si" fuera aleatorio una vez que se controla por características observadas, y a los métodos basados en el *propensity score*. Ese material se trata en la sesión 5, sobre *matching*.]
+
+# Referencias {.unnumbered}
+
+::: {#refs}
+:::
