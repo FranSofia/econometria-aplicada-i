@@ -75,13 +75,13 @@ armonizar_sector <- function(rama, anio) {
 }
 
 # --- Limpieza de cada año -----------------------------------------------------
-procesar_casen <- function(archivo, anio) {
+procesar_casen <- function(archivo, anio_base) {
   read_dta(archivo, col_select = all_of(vars_casen)) |>
     zap_labels() |>
     mutate(across(everything(), as.numeric)) |>
     filter(between(edad, 18, 60)) |>
     transmute(
-      anio,
+      anio = anio_base,
       migrante   = as.numeric(r1b == 3),
       ocupado    = as.numeric(activ == 1),
       esc        = if_else(esc > 30, NA_real_, esc),
@@ -92,7 +92,7 @@ procesar_casen <- function(archivo, anio) {
       exper  = pmax(0, edad - coalesce(esc, 0) - 6),
       exper2 = exper^2,
       region = if_else(region == 16, 8, region),     # Ñuble vuelve a Biobío
-      sector = armonizar_sector(rama1, anio)
+      sector = armonizar_sector(rama1, anio_base)
     )
 }
 
