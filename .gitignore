@@ -31,3 +31,6 @@ TODO.md
 
 # Datos locales de las sesiones (descargar de las fuentes indicadas en cada sesión)
 /sesiones/data/
+
+# Bases procesadas y livianas que sí se versionan (datos públicos)
+!sesiones/datos-procesados/*.rds
