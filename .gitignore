@@ -28,3 +28,6 @@ TODO.md
 *.pdf
 
 **/*.quarto_ipynb
+
+# Datos locales de las sesiones (descargar de las fuentes indicadas en cada sesión)
+/sesiones/data/
