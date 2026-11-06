@@ -484,7 +484,9 @@ modelsummary(
 fitstat(modelos_casen$MC2E, ~ ivf1 + ivwald1)
 ```
 
-Al leer la tabla conviene mirar primero la primera etapa. Con solo dos shocks y celdas cuya exposición inicial puede estar medida con error, porque la CASEN es una muestra y no un censo, el instrumento puede ser débil, y en ese caso la discusión anterior sobre instrumentos débiles aplica de lleno. Si es fuerte, la comparación entre MCO y MC2E indica en qué dirección actuaba la selección de los migrantes hacia sectores y regiones con salarios crecientes.
+La primera etapa es fuerte. El estadístico de Wald robusto a la correlación dentro de celdas supera 100 para ambas variables endógenas, y una celda con el doble de exposición predicha tiene, en promedio, una tasa de migrantes cerca de un 47 % mayor. Vale la pena notar que el $F$ convencional, que supone errores independientes, llega a casi 20.000. Con datos agrupados, el que importa es el robusto.
+
+Por MCO, un aumento de 10 % en la tasa de migrantes de la celda se asocia con salarios de los nativos 0,26 % más altos, y la asociación es significativa. Por MC2E, el coeficiente cae a la mitad y deja de ser significativo, y tampoco hay diferencias entre trabajadores de alta y baja calificación. La lectura más simple es que la correlación positiva de MCO refleja, al menos en parte, que los migrantes se dirigieron a sectores y regiones con salarios crecientes, y que una vez corregida esa selección no hay evidencia de un efecto sobre los salarios de los nativos en ninguna dirección. Esa conclusión depende, con todo, de que la exposición de 2015 sea exógena a los shocks salariales posteriores de cada celda, y el instrumento descansa en solo dos shocks, de modo que la discusión de la sección anterior sobre participaciones exógenas aplica de lleno.
 
 # Síntesis
 
