@@ -1,5 +1,418 @@
 ---
-title: "03-rdd"
-format: html
+title: "Sesión 3: Regresión discontinua"
+subtitle: "Diseños nítidos y difusos, estimación local e inferencia robusta"
+date: "2025-12-19"
+author: "Fran Sofía Núñez"
+lang: es
+bibliography: ../references.bib
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    code-fold: show
+editor: visual
 ---
 
+```{r setup}
+#| include: false
+
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(tidyverse, gt, rdrobust, rddensity)
+
+set.seed(20251219)
+theme_set(theme_minimal(base_size = 12))
+col_uch <- "#69000C"
+
+tabla_curso <- function(tbl) {
+  tbl |>
+    tab_options(
+      heading.background.color       = col_uch,
+      column_labels.background.color = col_uch,
+      table.border.top.color         = col_uch,
+      table.border.bottom.color      = col_uch,
+      source_notes.font.size         = px(12)
+    )
+}
+
+# Resumen compacto de un objeto rdrobust
+resumen_rd <- function(rd, etiqueta = "") {
+  tibble(
+    Resultado = etiqueta,
+    Estimación = rd$coef[1],
+    `EE convencional` = rd$se[1],
+    `IC 95 % robusto` = sprintf("[%.3f; %.3f]", rd$ci[3, 1], rd$ci[3, 2]),
+    `Valor p robusto` = rd$pv[3],
+    Bandwidth = rd$bws[1, 1],
+    `N efectivo` = sum(rd$N_h)
+  )
+}
+```
+
+# Introducción {-}
+
+Muchas políticas asignan beneficios según una regla. Un crédito estudiantil se otorga a quienes superan cierto puntaje, una transferencia cambia de monto cuando la población de un municipio cruza un umbral, un permiso parental rige para los nacidos desde cierta fecha. La regresión discontinua (RD) aprovecha esas reglas. Si las unidades que están apenas a un lado del umbral son comparables con las que están apenas al otro, la diferencia en sus resultados revela el efecto del tratamiento para quienes están cerca del corte.
+
+Esta sesión presenta la identificación en el diseño nítido (*sharp*) y en el difuso (*fuzzy*), la estimación por regresión lineal local con selección de bandwidth e inferencia robusta, y las pruebas que se usan para evaluar la validez del diseño. Revisa luego los dos ejemplos de la clase y termina con una aplicación en R sobre transferencias a municipios en Brasil [@litschig2013], que corresponde a la segunda pregunta de la Tarea 2. Las lecturas obligatorias son el capítulo 6 de *Mostly Harmless Econometrics* [@angrist2009] y el capítulo 6 de *Causal Inference: The Mixtape* [@cunningham2021].
+
+# Reglas con punto de corte
+
+En una RD el tratamiento se asigna según una variable observada antes del tratamiento, $X_i$, llamada **variable de asignación** (*running variable*), y un **punto de corte** conocido $c$. En el diseño nítido la regla se cumple siempre,
+
+$$
+D_i = \mathbf{1}(X_i \geq c),
+$$
+
+o $D_i = \mathbf{1}(X_i \leq c)$ si el tratamiento se asigna a quienes quedan bajo el umbral. Las dos convenciones son simétricas, y en lo que sigue usamos la primera. Los ejemplos abundan en Chile y en otros países. El acceso al crédito con aval del Estado dependía de obtener al menos 475 puntos promedio en la PSU, en Estados Unidos el acceso legal al alcohol cambia a los 21 años, y la fecha de nacimiento determina el año en que un niño puede entrar a primero básico.
+
+Para fijar ideas, la clase usa el siguiente ejemplo. Una universidad observa que muchos estudiantes de primer año reprueban matemáticas y aplica una prueba de diagnóstico. Quienes obtienen menos de 50 puntos reciben una tutoría, y se quiere evaluar su efecto sobre una prueba de fin de año. Comparar a todos los que recibieron tutoría con todos los que no la recibieron estaría muy sesgado, porque los tutorados son por construcción los que peor estaban. Pero un estudiante con 49 puntos y otro con 51 son muy parecidos, y lo único que los separa de forma sistemática es la tutoría.
+
+```{r sim-tutoria}
+#| fig-cap: "Ejemplo simulado: tutoría para quienes obtienen menos de 50 puntos en el diagnóstico."
+
+tutoria <- tibble(
+  diagnostico = runif(800, 20, 80),
+  tutoria = as.numeric(diagnostico < 50),
+  final = 20 + 0.6 * diagnostico + 6 * tutoria + rnorm(800, 0, 5)
+)
+
+ggplot(tutoria, aes(diagnostico, final, color = factor(tutoria))) +
+  geom_point(alpha = 0.35, size = 1) +
+  geom_smooth(method = "lm", se = FALSE, linewidth = 1.2) +
+  geom_vline(xintercept = 50, linetype = "dashed") +
+  scale_color_manual(values = c("grey50", col_uch), labels = c("Sin tutoría", "Con tutoría")) +
+  labs(x = "Puntaje en la prueba de diagnóstico", y = "Puntaje en la prueba final", color = NULL) +
+  theme(legend.position = "bottom")
+```
+
+La relación entre el diagnóstico y la prueba final es creciente a ambos lados, pero en el corte hay un salto. Ese salto, y no la diferencia entre los promedios de cada grupo, es la estimación del efecto de la tutoría.
+
+# Identificación en el diseño nítido
+
+El parámetro de interés es el efecto promedio para las unidades que están en el corte,
+
+$$
+\tau_{RD} = E[Y_i(1) - Y_i(0) \mid X_i = c] = E[Y_i(1) \mid X_i = c] - E[Y_i(0) \mid X_i = c].
+$$
+
+Ninguno de los dos términos se observa directamente, porque en $X_i = c$ todas las unidades están tratadas. La idea de la RD es aproximar cada uno con las unidades que están muy cerca del corte por el lado correspondiente. Sea $\mu(x) = E[Y_i \mid X_i = x]$ la esperanza condicional del resultado observado, y sean
+
+$$
+\mu_-(c) = \lim_{x \uparrow c} E[Y_i \mid X_i = x], \qquad \mu_+(c) = \lim_{x \downarrow c} E[Y_i \mid X_i = x]
+$$
+
+sus límites por la izquierda y por la derecha. El supuesto clave es que las funciones de resultados potenciales, $\mu_0(x) = E[Y_i(0) \mid X_i = x]$ y $\mu_1(x) = E[Y_i(1) \mid X_i = x]$, son **continuas** en $x = c$. Como a la izquierda del corte nadie está tratado, $\mu_-(c) = \mu_0(c)$, y como a la derecha todos lo están, $\mu_+(c) = \mu_1(c)$. Entonces
+
+$$
+\tau_{RD} = \mu_+(c) - \mu_-(c).
+$$
+
+El efecto queda identificado como el salto de la esperanza condicional en el corte. La continuidad descarta que algo distinto del tratamiento cambie bruscamente en el umbral, ya sea otra política que use el mismo corte o una diferencia en la composición de quienes quedan a cada lado.
+
+Dos rasgos distinguen a la RD de los diseños anteriores. El primero es que no hay superposición: para ningún valor de $X$ se observan unidades tratadas y no tratadas a la vez, de modo que la identificación descansa en extrapolar un poco a cada lado y no en comparar unidades con el mismo $X$. El segundo es que el efecto es **local**. Corresponde a unidades con $X_i = c$ y no necesariamente vale lejos del corte. Un estudiante con 20 puntos en el diagnóstico podría beneficiarse mucho más o mucho menos de la tutoría que uno con 49.
+
+# Estimación
+
+## Regresiones lineales a cada lado
+
+La primera aproximación es estimar una regresión lineal con las observaciones de cada lado, dentro de una ventana alrededor del corte. A la izquierda se usan las observaciones con $X_i \in [c - h, c)$ y se estima $Y_i = a_- + b_-(X_i - c) + e_i$. A la derecha se hace lo mismo con $X_i \in [c, c + h]$. Como la variable está centrada en el corte, las constantes estiman los límites, y
+
+$$
+\hat\tau_{RD} = \hat a_+ - \hat a_- .
+$$
+
+Las dos regresiones pueden escribirse como una sola, con pendientes distintas a cada lado,
+
+$$
+Y_i = \alpha + \tau D_i + \beta_1 (X_i - c) + \beta_2 D_i (X_i - c) + e_i, \qquad c - h \leq X_i \leq c + h,
+$$
+
+y el coeficiente de $D_i$ es el salto en el corte.
+
+## Regresión lineal local
+
+La estimación moderna generaliza esta idea con una **regresión polinomial local**, típicamente lineal. Para estimar la función en el corte se resuelve, a cada lado,
+
+$$
+\min_{a, b} \sum_{i} K\!\left(\frac{X_i - c}{h}\right) \big[Y_i - a - b(X_i - c)\big]^2 ,
+$$
+
+donde $K(\cdot)$ es un **kernel** que da más peso a las observaciones cercanas al corte y $h$ es el **bandwidth**, que define el tamaño de la ventana. El kernel triangular, que hace caer los pesos linealmente hasta cero en $c \pm h$, es el recomendado para estimar en un borde. El kernel uniforme equivale a la regresión lineal simple dentro de la ventana.
+
+Se usa un polinomio lineal y no una media simple (polinomio de grado cero) porque el corte está en el borde del soporte de cada lado. Una media dentro de la ventana estima el valor de la función en el centro de la ventana y no en su borde, y si la función tiene pendiente, ese error se traslada al salto. La pendiente local corrige ese sesgo de borde. Tampoco se recomiendan polinomios globales de grado alto ajustados con todos los datos. @gelman2019 muestran que dan pesos erráticos a observaciones lejanas al corte, son sensibles al grado elegido y producen intervalos de confianza con cobertura deficiente.
+
+## El bandwidth y la inferencia robusta
+
+El bandwidth gobierna un compromiso entre sesgo y varianza. Una ventana estrecha usa solo unidades muy parecidas a las del corte, con poco sesgo pero mucha varianza. Una ventana amplia gana precisión a costa de depender más de que la aproximación lineal sea buena lejos del corte. La práctica actual elige $h$ de forma automática, minimizando el error cuadrático medio del estimador, y reporta la sensibilidad a otras elecciones.
+
+Hay una sutileza en la inferencia. El bandwidth que minimiza el error cuadrático medio es, por construcción, lo bastante amplio para que el sesgo no sea despreciable frente a la varianza, y los intervalos de confianza convencionales, que lo ignoran, tienen una cobertura menor a la nominal. @calonico2014 proponen corregir el sesgo estimándolo con un polinomio de un grado mayor y construir intervalos que incorporen la variabilidad adicional de esa corrección. Son los intervalos **robustos** que reporta el paquete `rdrobust`, disponible en R y en Stata. Una presentación habitual reporta el estimador puntual convencional junto con el intervalo y el valor p robustos.
+
+## El gráfico de RD
+
+Toda RD debería mostrarse en un gráfico, y la convención es agrupar la variable de asignación en intervalos (*bins*), graficar el promedio del resultado en cada uno y superponer un ajuste polinomial a cada lado. El número y la ubicación de los bins no son inocuos. Pocos bins suavizan demasiado y muchos producen un gráfico ruidoso. @calonico2015 proponen elegirlos con criterios basados en los datos, implementados en `rdplot`. Las opciones con bins de igual ancho (`es`) o con igual número de observaciones (`qs`) minimizan el error cuadrático medio integrado y producen gráficos suaves que resaltan la forma de la función. Las versiones que imitan la varianza (`esmv` y `qsmv`) usan más bins y dan una idea de la dispersión de los datos.
+
+# Regresión discontinua difusa
+
+En muchos casos la regla no se cumple a la perfección. Hay unidades que, estando sobre el umbral, no reciben el tratamiento, y otras que lo reciben estando bajo él. Lo que salta en el corte es la probabilidad de tratamiento, que no pasa de 0 a 1. En ese caso el salto en el resultado diluye el efecto, porque solo una fracción de las unidades cambió de tratamiento. El estimador de RD difusa corrige esa dilución dividiendo el salto en el resultado por el salto en la probabilidad de tratamiento,
+
+$$
+\tau_{FRD} = \frac{\lim_{x \downarrow c} E[Y_i \mid X_i = x] - \lim_{x \uparrow c} E[Y_i \mid X_i = x]}{\lim_{x \downarrow c} E[D_i \mid X_i = x] - \lim_{x \uparrow c} E[D_i \mid X_i = x]} .
+$$
+
+La estructura es la del estimador de Wald de la sesión 2. Estar sobre el umbral actúa como instrumento del tratamiento efectivo, el numerador es la forma reducida y el denominador la primera etapa. Bajo supuestos análogos a los de LATE, el cociente identifica el efecto en los compliers del corte, las unidades cuyo tratamiento depende de estar a uno u otro lado del umbral [@angrist2009, sec. 6.2].
+
+El ejemplo clásico es la regla de Maimónides que estudian @angrist1999. En Israel los cursos no pueden superar los 40 alumnos, de modo que una escuela con 40 matriculados en un nivel tiene un curso de 40, mientras que una con 41 debe dividirlos en dos cursos de unos 20. La regla predice saltos en el tamaño de los cursos en 40, 80 y 120 matriculados, y el tamaño real los sigue de cerca pero no exactamente.
+
+```{r tabla-maimonides}
+#| echo: false
+
+tibble(
+  ` ` = c("Tamaño del curso", "", "N"),
+  `MCO, muestra completa` = c("0,019 a 0,322", "(0,036) a (0,044)", "2.018"),
+  `RD difusa, muestra completa` = c("−0,185 a −0,261", "(0,092) a (0,151)", "2.018"),
+  `RD difusa, ±5 del corte` = c("−0,443", "(0,236)", "471"),
+  `RD difusa, ±3 del corte` = c("−0,270", "(0,281)", "302")
+) |>
+  gt() |>
+  tab_header(title = md("**Efecto del tamaño del curso en el puntaje de matemáticas de quinto básico**")) |>
+  tab_source_note("Errores estándar corregidos por correlación dentro de escuelas. Los rangos corresponden a distintas especificaciones de la tabla. Fuente: Angrist y Pischke (2009, tabla 6.2.1), adaptada de Angrist y Lavy (1999).") |>
+  tabla_curso()
+```
+
+Por MCO, los cursos más grandes parecen tener mejores puntajes, o al menos no peores, porque en Israel las escuelas con cursos pequeños tienden a atender a estudiantes más desfavorecidos. Usando la regla como instrumento, el signo se invierte y un alumno adicional por curso reduce el puntaje en alrededor de un cuarto de punto.
+
+# Validez del diseño
+
+El supuesto de continuidad no se puede probar, pero tiene implicancias que sí se pueden revisar.
+
+## Manipulación de la variable de asignación
+
+Si las personas conocen la regla y pueden influir en su valor de $X_i$, quienes quedan justo sobre el umbral pueden ser distintos de quienes quedan justo bajo él. Una escuela puede ajustar puntajes, un contribuyente puede declarar ingresos apenas bajo un tramo, un municipio puede inflar su población. La huella típica es una acumulación de observaciones (*bunching*) a un lado del corte. @mccrary2008 propuso estimar la densidad de $X$ a cada lado y contrastar si salta en el corte. La versión que se usa hoy, de @cattaneo2020, está implementada en el paquete `rddensity`. La simulación siguiente compara una variable sin manipulación con una en que parte de las unidades que estaban justo bajo el umbral logró cruzarlo.
+
+```{r sim-manipulacion}
+x_limpia <- rnorm(3000)
+x_manipulada <- if_else(x_limpia > -0.2 & x_limpia < 0 & runif(3000) < 0.6,
+                        runif(3000, 0, 0.1), x_limpia)
+
+tibble(
+  `Variable de asignación` = c("Sin manipulación", "Con manipulación"),
+  `Valor p del test de densidad` = c(rddensity(x_limpia)$test$p_jk,
+                                     rddensity(x_manipulada)$test$p_jk)
+) |>
+  gt() |>
+  fmt_number(columns = 2, decimals = 3) |>
+  tabla_curso()
+```
+
+## Continuidad de las covariables
+
+Si las unidades a ambos lados del corte son comparables, sus características previas al tratamiento no deberían saltar en el umbral. La prueba consiste en repetir el análisis de RD usando cada covariable como si fuera el resultado. Es el equivalente de las pruebas de balance de un experimento.
+
+## Cortes placebo y sensibilidad
+
+Otra prueba es estimar saltos en valores de $X$ donde no cambia el tratamiento, usando solo observaciones de un mismo lado del corte verdadero. Si aparecen saltos donde no debería haberlos, la función puede tener irregularidades que el estimador confunda con efectos. Finalmente, conviene mostrar que la estimación no depende de una elección particular del bandwidth, del kernel o del orden del polinomio local. Cambios moderados en la magnitud son esperables, pero no deberían cambiar la conclusión.
+
+# Dos ejemplos de la clase
+
+@zimmerman2019 estudia si estudiar en una carrera de élite en Chile ayuda a llegar a la cima de la distribución de ingresos y a los cargos de liderazgo empresarial. Considera seis carreras de negocios, ingeniería y derecho de la Universidad de Chile y la Pontificia Universidad Católica, que reciben solo alrededor del 1,8 % de los estudiantes pero de las que egresa cerca del 41 % de los líderes empresariales y el 39 % del 0,1 % de mayores ingresos. Comparar egresados con no egresados mezclaría el efecto de la carrera con el talento y los recursos de quienes son admitidos. La estrategia aprovecha que la admisión dependía de un puntaje con un corte, el del último admitido en cada carrera y año. La variable de asignación es la diferencia entre el puntaje de postulación y ese corte, y los resultados provienen de registros tributarios y de las bases de ejecutivos y directores de empresas abiertas en bolsa. Ser admitido aumenta en torno a un 50 % la probabilidad de llegar al 0,1 % de mayores ingresos y en un 44 % la de ocupar un cargo directivo, pero los efectos se concentran en hombres que egresaron de colegios particulares pagados. Para las mujeres y para los hombres de otros colegios, el efecto es cercano a cero. El autor lo interpreta como evidencia de que las redes formadas en la universidad entre estudiantes de origen privilegiado son el mecanismo principal.
+
+@farre2019 estudian una reforma española de marzo de 2007 que introdujo dos semanas de permiso de paternidad pagado. La fecha de nacimiento del hijo determina si el padre tuvo derecho al beneficio, de modo que la variable de asignación es el tiempo y el corte es la entrada en vigencia de la ley. Antes de estimar efectos, los autores muestran que no hubo un aumento de nacimientos justo después del corte, que habría indicado que las familias ajustaron la fecha del parto, y que las características de madres y recién nacidos no cambian en el umbral. Encuentran que la reforma aumentó el tiempo hasta el siguiente nacimiento.
+
+El segundo control de lectura usó otro diseño frecuente, las elecciones con resultados estrechos. @ertugrul2021 comparan empresas donde los trabajadores votaron a favor de sindicalizarse por un margen mínimo con empresas donde la sindicalización perdió por un margen mínimo, bajo la idea de que el resultado de una votación muy reñida es casi aleatorio.
+
+# Aplicación en R: transferencias a municipios en Brasil
+
+## El diseño
+
+@litschig2013 estudian el *Fundo de Participação dos Municípios* (FPM), el principal mecanismo de transferencias del gobierno federal brasileño a los municipios. El monto que recibe cada municipio depende de su población según una tabla de tramos, y los coeficientes saltan en umbrales fijos. Los autores aprovechan los tres primeros cortes, en 10.188, 13.584 y 16.980 habitantes, para estimar el efecto de las transferencias adicionales de comienzos de los ochenta sobre resultados educativos y de pobreza medidos en el censo de 1991. Como hay tres cortes, normalizan la población restándole el corte del tramo correspondiente y estiman un efecto conjunto (*pooled*), que corresponde a un promedio de los efectos en los tres umbrales. En la base, la variable de asignación `pscore` está medida en centenas de habitantes, de modo que un valor de 10 corresponde a 1.000 habitantes sobre el corte.
+
+Los datos de replicación son públicos y acompañan al artículo en la *American Economic Journal: Applied Economics*. El script `sesiones/scripts/03-preparar-fpm.R` toma el archivo original y guarda una base recortada con los 1.787 municipios cercanos a los tres cortes y las variables que usamos.
+
+```{r fpm-script}
+#| eval: false
+#| file: scripts/03-preparar-fpm.R
+```
+
+```{r fpm-datos}
+fpm <- readRDS("datos-procesados/fpm_litschig_morrison.rds")
+
+fpm |>
+  count(Corte = c("10.188", "13.584", "16.980")[corte], name = "Municipios") |>
+  gt() |>
+  tabla_curso()
+```
+
+## El gráfico y la primera etapa
+
+El diseño es difuso en un sentido particular. Cruzar el umbral no es un tratamiento binario, sino un aumento en el coeficiente que determina las transferencias. Por eso conviene empezar mostrando que las transferencias efectivamente saltan en el corte.
+
+```{r fpm-primera-etapa}
+#| fig-cap: "Logaritmo de las transferencias FPM per cápita (1982-1985) según la distancia al corte."
+
+rdplot(fpm$log_fpm_pc, fpm$pscore, c = 0, p = 1, binselect = "es",
+       x.label = "Distancia al corte (centenas de habitantes)",
+       y.label = "log(FPM per cápita)", title = "")
+
+primera_etapa <- rdrobust(fpm$log_fpm_pc, fpm$pscore, c = 0)
+resumen_rd(primera_etapa, "log(FPM per cápita)") |>
+  gt() |>
+  fmt_number(columns = c(2, 3, 5, 6), decimals = 3) |>
+  tabla_curso()
+```
+
+Los municipios justo sobre el corte reciben transferencias per cápita unos 0,21 puntos logarítmicos mayores que los que están justo bajo él, es decir, cerca de un 24 % más.
+
+## Efectos sobre educación, pobreza y reelección
+
+Las tablas 5 y 6 del artículo reportan efectos sobre la escolaridad y la alfabetización de dos grupos de edad, sobre la pobreza en 1991 y sobre la probabilidad de reelección del partido del alcalde. Las estimamos con `rdrobust`, con kernel triangular y bandwidth que minimiza el error cuadrático medio.
+
+```{r fpm-efectos}
+resultados_fpm <- c(
+  "Escolaridad, 9 a 18 años"       = "escolaridad_9_18",
+  "Escolaridad, 19 a 28 años"      = "escolaridad_19_28",
+  "Alfabetización, 9 a 18 años"    = "alfabetizacion_9_18",
+  "Alfabetización, 19 a 28 años"   = "alfabetizacion_19_28",
+  "Tasa de pobreza 1991"           = "pobreza_91",
+  "Reelección del partido del alcalde" = "reeleccion"
+)
+
+imap_dfr(resultados_fpm, ~ resumen_rd(rdrobust(fpm[[.x]], fpm$pscore, c = 0), .y)) |>
+  gt() |>
+  fmt_number(columns = c(2, 3, 5, 6), decimals = 3) |>
+  tab_header(title = md("**Efectos de cruzar el umbral del FPM**")) |>
+  tab_source_note("Regresión lineal local con kernel triangular y bandwidth MSE-óptimo (en centenas de habitantes). El intervalo y el valor p son los robustos de Calonico, Cattaneo y Titiunik (2014).") |>
+  tabla_curso()
+```
+
+```{r fpm-grafico}
+#| fig-cap: "Escolaridad promedio de la población de 19 a 28 años en 1991 según la distancia al corte."
+
+rdplot(fpm$escolaridad_19_28, fpm$pscore, c = 0, p = 1, binselect = "es",
+       x.label = "Distancia al corte (centenas de habitantes)",
+       y.label = "Años de escolaridad, 19 a 28 años", title = "")
+```
+
+Los efectos más claros están en la cohorte de 19 a 28 años en 1991, que estaba en edad escolar cuando llegaron las transferencias adicionales. En los municipios justo sobre el corte, esa cohorte tiene casi medio año más de escolaridad y una tasa de alfabetización unos 5 puntos mayor, con intervalos robustos que excluyen el cero. Para la cohorte más joven los efectos son de magnitud parecida pero imprecisos. La pobreza cae unos 7 puntos porcentuales y la reelección aumenta, pero ninguno de los dos efectos es estadísticamente distinto de cero con esta especificación.
+
+Como cruzar el umbral aumenta las transferencias en alrededor de 0,21 puntos logarítmicos, la RD difusa permite expresar el efecto por unidad de transferencia, usando el logaritmo del FPM como variable de tratamiento.
+
+```{r fpm-fuzzy}
+rd_difusa <- rdrobust(fpm$escolaridad_19_28, fpm$pscore, c = 0, fuzzy = fpm$log_fpm_pc)
+resumen_rd(rd_difusa, "Escolaridad 19-28, por punto log de FPM") |>
+  gt() |>
+  fmt_number(columns = c(2, 3, 5, 6), decimals = 3) |>
+  tabla_curso()
+```
+
+El coeficiente es la forma reducida dividida por la primera etapa. Un aumento de 10 % en las transferencias se asociaría con unas 0,2 años más de escolaridad, aunque la estimación es imprecisa, porque el cociente hereda el ruido de ambas regresiones y se estima con su propio bandwidth.
+
+## Pruebas de validez
+
+```{r fpm-validez}
+#| fig-cap: "Densidad de la variable de asignación a cada lado del corte."
+
+densidad <- rddensity(fpm$pscore, c = 0)
+rdplotdensity(densidad, fpm$pscore,
+              xlabel = "Distancia al corte (centenas de habitantes)", ylabel = "Densidad")$Estplot
+
+covariables <- c(
+  "Ingreso per cápita 1980"      = "ingreso_pc_80",
+  "Pobreza 1980"                 = "pobreza_80",
+  "Analfabetismo 1980"           = "analfabetismo_80",
+  "Población urbana 1980"        = "urbano_80",
+  "Mortalidad infantil 1980"     = "mortalidad_infantil_80"
+)
+
+imap_dfr(covariables, ~ resumen_rd(rdrobust(fpm[[.x]], fpm$pscore, c = 0), .y)) |>
+  gt() |>
+  fmt_number(columns = c(2, 3, 5, 6), decimals = 3) |>
+  tab_header(title = md("**Continuidad de las características de 1980 en el corte**")) |>
+  tab_source_note(sprintf("Test de densidad de Cattaneo, Jansson y Ma (2020): valor p = %.3f.", densidad$test$p_jk)) |>
+  tabla_curso()
+```
+
+No hay señales de manipulación de la población en torno al corte, y ninguna de las características de 1980 muestra saltos significativos. Esto es lo esperable, porque los tramos se fijaron con datos censales y los municipios no podían ajustar su población a voluntad.
+
+Los cortes placebo y la sensibilidad a las elecciones de estimación completan el diagnóstico.
+
+```{r fpm-sensibilidad}
+placebo <- map_dfr(c(-10, -7.5, -5, -2.5, 2.5, 5, 7.5, 10), function(c0) {
+  lado <- if (c0 < 0) fpm$pscore < 0 else fpm$pscore >= 0
+  rd <- rdrobust(fpm$escolaridad_19_28[lado], fpm$pscore[lado], c = c0)
+  resumen_rd(rd, sprintf("Corte placebo en %+.1f", c0))
+})
+
+h_opt <- rdrobust(fpm$escolaridad_19_28, fpm$pscore, c = 0)$bws[1, 1]
+sensibilidad <- bind_rows(
+  resumen_rd(rdrobust(fpm$escolaridad_19_28, fpm$pscore, c = 0, h = h_opt / 2), "Mitad del bandwidth óptimo"),
+  resumen_rd(rdrobust(fpm$escolaridad_19_28, fpm$pscore, c = 0, h = 2 * h_opt), "Doble del bandwidth óptimo"),
+  resumen_rd(rdrobust(fpm$escolaridad_19_28, fpm$pscore, c = 0, kernel = "uniform"), "Kernel uniforme"),
+  resumen_rd(rdrobust(fpm$escolaridad_19_28, fpm$pscore, c = 0, kernel = "epanechnikov"), "Kernel Epanechnikov"),
+  resumen_rd(rdrobust(fpm$escolaridad_19_28, fpm$pscore, c = 0, p = 2), "Polinomio local cuadrático")
+)
+
+bind_rows(placebo, sensibilidad) |>
+  gt() |>
+  fmt_number(columns = c(2, 3, 5, 6), decimals = 3) |>
+  tab_row_group(label = "Sensibilidad de la estimación en el corte verdadero", rows = 9:13) |>
+  tab_row_group(label = "Cortes placebo", rows = 1:8) |>
+  row_group_order(groups = c("Cortes placebo", "Sensibilidad de la estimación en el corte verdadero")) |>
+  tab_header(title = md("**Escolaridad de 19 a 28 años: placebos y sensibilidad**")) |>
+  tabla_curso()
+```
+
+La estimación en el corte verdadero se mantiene positiva y de magnitud parecida con otros kernels y con un polinomio cuadrático. Con la mitad del bandwidth el coeficiente sube pero pierde precisión, como es de esperar con menos datos, y con el doble se reduce algo y gana precisión. Los cortes placebo dejan una advertencia. Siete de los ocho no muestran saltos, pero el ubicado 500 habitantes sobre el corte verdadero sí, con un coeficiente negativo y grande, estimado con una ventana muy estrecha que contiene apenas un centenar de municipios. Con ocho pruebas al 5 % no es raro que alguna resulte significativa por azar, y no hay otros saltos en su vecindad, pero indica que la relación entre población y escolaridad tiene irregularidades a la derecha del corte y obliga a leer la estimación con algo de cautela. @litschig2013 complementan el análisis con especificaciones que incluyen efectos fijos de estado y covariables de 1980, que este ejercicio no replica.
+
+## Un ejemplo con datos incluidos en `rdrobust`: elecciones al Senado
+
+El paquete `rdrobust` incluye datos de elecciones al Senado de Estados Unidos entre 1914 y 2010 que permiten replicar un diseño clásico, el de las elecciones estrechas. La pregunta es si el partido que ocupa un escaño tiene ventaja en la elección siguiente. La variable de asignación es el margen de victoria del partido demócrata en una elección, el corte es cero, y el resultado es su porcentaje de votos en la elección siguiente por ese mismo escaño. Un margen de pocas décimas a favor o en contra debería ser casi aleatorio, así que comparar escaños ganados por poco con escaños perdidos por poco identifica la ventaja de ocupar el cargo, en la línea del trabajo de Lee que comentan @angrist2009 y @cunningham2021.
+
+```{r senado}
+#| fig-cap: "Porcentaje de votos demócratas en la elección siguiente según el margen de victoria demócrata."
+
+data("rdrobust_RDsenate", package = "rdrobust")
+senado <- rdrobust_RDsenate
+
+rdplot(senado$vote, senado$margin, c = 0, p = 1,
+       x.label = "Margen de victoria demócrata (puntos)",
+       y.label = "Voto demócrata en la elección siguiente (%)", title = "")
+
+polinomio_global <- function(p) {
+  m <- lm(vote ~ poly(margin, p, raw = TRUE) * I(margin >= 0), data = senado)
+  coef(m)[["I(margin >= 0)TRUE"]]
+}
+
+bind_rows(
+  resumen_rd(rdrobust(senado$vote, senado$margin), "Lineal local, bandwidth óptimo"),
+  tibble(Resultado = c("Polinomio global de grado 1", "Polinomio global de grado 4"),
+         Estimación = c(polinomio_global(1), polinomio_global(4)))
+) |>
+  gt() |>
+  fmt_number(columns = c(2, 3, 5, 6), decimals = 2) |>
+  sub_missing(missing_text = "") |>
+  tab_header(title = md("**Ventaja del partido incumbente en el Senado**")) |>
+  tabla_curso()
+```
+
+Ganar un escaño por poco aumenta en unos 7 puntos el porcentaje de votos del partido en la elección siguiente. La tabla muestra también lo que advierten @gelman2019. Con polinomios ajustados a todos los datos, la estimación del salto depende del grado elegido y se mueve de 6 a 9 puntos, mientras que la regresión lineal local usa solo los escaños cercanos al corte y no exige elegir un grado.
+
+# Ejercicios
+
+Los siguientes ejercicios corresponden a la segunda pregunta de la Tarea 2 y usan la base de Litschig y Morrison de la sección anterior.
+
+1. Los autores agrupan tres puntos de corte en una sola estimación. Explique qué se gana y qué se pierde al hacerlo, considerando el poder estadístico, la interpretación del parámetro estimado y la posibilidad de que el efecto difiera entre cortes.
+2. Estime por separado el efecto sobre la escolaridad de 19 a 28 años en cada uno de los tres cortes, usando la variable `corte`. ¿Son parecidos los efectos? ¿Cómo cambia la precisión?
+3. Repita la estimación de la tabla de efectos con distintos kernels (`triangular`, `epanechnikov`, `uniform`) y compare los bandwidths óptimos que elige `rdrobust` en cada caso. ¿Por qué el kernel uniforme elige ventanas más estrechas? Compare luego con las ventanas que usan @litschig2013 en el artículo.
+4. Construya el gráfico de RD para la alfabetización de 19 a 28 años con `rdplot` usando las opciones `binselect = "es"`, `"qs"`, `"esmv"` y `"qsmv"`, y con polinomios de grado 1 y 4. ¿Qué cambia en la impresión visual del salto? ¿Cuál de los gráficos le parece más honesto respecto de la precisión de la estimación?
+5. Discuta qué podría explicar el salto en el corte placebo ubicado 500 habitantes sobre el umbral. ¿Qué otras pruebas haría para evaluar si es un problema para el diseño?
+
+# Síntesis
+
+La regresión discontinua identifica efectos causales cuando el tratamiento cambia en un umbral conocido de una variable observada. El supuesto central es la continuidad de los resultados potenciales en el corte, y bajo él el salto en la esperanza condicional del resultado es el efecto del tratamiento para las unidades cercanas al umbral. Es un efecto local, y su validez externa hacia unidades lejanas al corte debe argumentarse aparte.
+
+La estimación actual usa regresiones lineales locales a cada lado, con kernel triangular, bandwidth elegido con los datos e intervalos de confianza robustos que corrigen el sesgo de la aproximación. Cuando la regla no se cumple a la perfección, la RD difusa divide el salto en el resultado por el salto en el tratamiento y se interpreta como un estimador de variables instrumentales para los compliers del corte. Ningún diseño de RD es creíble sin su gráfico, sin una prueba de manipulación de la variable de asignación, sin mostrar que las covariables previas no saltan en el corte y sin revisar la sensibilidad a las elecciones de estimación. En la aplicación brasileña esas pruebas son en general favorables, con una advertencia en uno de los cortes placebo.
+
+# Referencias {.unnumbered}
+
+::: {#refs}
+:::
