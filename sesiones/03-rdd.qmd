@@ -406,6 +406,10 @@ Los siguientes ejercicios corresponden a la segunda pregunta de la Tarea 2 y usa
 4. Construya el gráfico de RD para la alfabetización de 19 a 28 años con `rdplot` usando las opciones `binselect = "es"`, `"qs"`, `"esmv"` y `"qsmv"`, y con polinomios de grado 1 y 4. ¿Qué cambia en la impresión visual del salto? ¿Cuál de los gráficos le parece más honesto respecto de la precisión de la estimación?
 5. Discuta qué podría explicar el salto en el corte placebo ubicado 500 habitantes sobre el umbral. ¿Qué otras pruebas haría para evaluar si es un problema para el diseño?
 
+El último ejercicio se basa en la ayudantía 2, que replica con datos del SIMCE el diseño de Cáceres-Delpiano y Giolito sobre la edad de ingreso a la escuela. En Chile, la edad mínima para entrar a primero básico se cumple a una fecha de corte, de modo que los nacidos justo después de esa fecha entran un año más tarde y son los mayores de su curso.
+
+6. Explique por qué una regresión del puntaje SIMCE sobre la edad del estudiante estaría sesgada. Usando como corte el 30 de junio y la fecha de nacimiento como variable de asignación, discuta si el diseño es nítido o difuso, qué pruebas haría para evaluar manipulación de la fecha de nacimiento, y cómo interpretaría un salto en los puntajes de octavo básico en el corte. ¿Mide ese salto el efecto de la edad, el de entrar más tarde a la escuela, o ambos?
+
 # Síntesis
 
 La regresión discontinua identifica efectos causales cuando el tratamiento cambia en un umbral conocido de una variable observada. El supuesto central es la continuidad de los resultados potenciales en el corte, y bajo él el salto en la esperanza condicional del resultado es el efecto del tratamiento para las unidades cercanas al umbral. Es un efecto local, y su validez externa hacia unidades lejanas al corte debe argumentarse aparte.
