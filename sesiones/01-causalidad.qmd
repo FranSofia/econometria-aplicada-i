@@ -105,7 +105,7 @@ tibble(
   tabla_curso()
 ```
 
-Tomada al pie de la letra, la tabla sugiere que ir al hospital empeora la salud. La explicación más plausible es otra: quienes van al hospital estaban más enfermos desde antes. La comparación mezcla el efecto del hospital con las diferencias previas entre ambos grupos. Ese segundo componente es el **sesgo de selección**, y no es una peculiaridad de los datos estadounidenses. Con la CASEN 2015 se obtiene un patrón casi idéntico para Chile:
+Tomada al pie de la letra, la tabla sugiere que ir al hospital empeora la salud. La explicación más plausible, sin embargo, es otra: quienes van al hospital estaban más enfermos desde antes. La comparación mezcla el efecto del hospital con las diferencias previas entre ambos grupos. Ese segundo componente es el **sesgo de selección**, y no es una peculiaridad de los datos estadounidenses. Con la CASEN 2015 se obtiene un patrón casi idéntico para Chile:
 
 ```{r tabla-hospital-chile}
 #| echo: false
@@ -123,12 +123,11 @@ tibble(
   tabla_curso()
 ```
 
-Las escalas van en direcciones opuestas, pero la conclusión es la misma: los hospitalizados reportan peor salud. Ninguna de las dos tablas permite concluir nada sobre el efecto de la atención hospitalaria.
+Ojo, aquí las escalas van en direcciones opuestas, pero la conclusión es la misma, pues los hospitalizados reportan peor salud. No obstante, dado el sesgo de selección que tiene esta relación, ninguna de las dos tablas permite concluir nada sobre el efecto de la atención hospitalaria.
 
 # Resultados potenciales y sesgo de selección
 
-Para precisar el problema se usa el modelo de resultados potenciales, desarrollado por @rubin1974 y bautizado por @holland1986 como modelo causal de Rubin. Sea $D_i \in \{0,1\}$ un indicador de tratamiento (haber estado hospitalizado) e $Y_i$ el resultado de interés (salud). Para cada individuo existen dos resultados potenciales: $Y_{1i}$, la salud que tendría si fuera tratado, e $Y_{0i}$, la que tendría si no lo fuera. Ambos existen conceptualmente para todas las personas, pero solo se observa uno:
-
+Para precisar el problema se usa el modelo de resultados potenciales, desarrollado por @rubin1974 y bautizado por @holland1986 como modelo causal de Rubin. Sea $D_i \in \{0,1\}$ un indicador de tratamiento, e.g. haber estado hospitalizado, e $Y_i$ el resultado de interés, e.g. la salud del individuo. Para cada individuo existen dos resultados potenciales: $Y_{1i}$, es decir, la salud que tendría si fuera tratado, e $Y_{0i}$, la que tendría si no lo fuera. Ambos existen conceptualmente para todas las personas, i.e., para cada $i$, pero solo se observa uno empíricamente:
 $$
 Y_i =
 \begin{cases}
@@ -139,12 +138,32 @@ Y_i =
 Y_i = Y_{0i} + (Y_{1i} - Y_{0i})\,D_i .
 $$
 
-El efecto causal del tratamiento para el individuo $i$ es $\tau_i = Y_{1i} - Y_{0i}$, y aquí aparece lo que @holland1986 llama el **problema fundamental de la inferencia causal**: como nunca se observan ambos resultados para la misma persona, $\tau_i$ no es observable. Lo que sí puede estimarse son promedios. Los dos más usados son:
+Sabiendo esto, diremos que el **efecto causal** del tratamiento para el individuo $i$ es $\tau_i = Y_{1i} - Y_{0i}$. Con ello, aparece lo que @holland1986 llama el **problema fundamental de la inferencia causal**: como nunca se observan ambos resultados para la misma persona, $\tau_i$ no es observable. Ahora bien, lo que sí puede estimarse son promedios. Los dos más usados son:
 
-- el **efecto promedio del tratamiento** (ATE), $E[Y_{1i} - Y_{0i}]$, que promedia sobre toda la población;
-- el **efecto promedio en los tratados** (ATT), $E[Y_{1i} - Y_{0i} \mid D_i = 1]$, que promedia solo sobre quienes recibieron el tratamiento.
+- el **efecto promedio _del_ tratamiento** (ATE, por sus cifras en inglés: *Average Treatment Effect*), $E[Y_{1i} - Y_{0i}]$, que promedia sobre toda la población;
+- el **efecto promedio _en_ los tratados** (ATT, por su cifras en inglés: *Average Treatment Effect on the Treated*), $E[Y_{1i} - Y_{0i} \mid D_i = 1]$, que promedia solo sobre quienes recibieron el tratamiento.
 
-Cuando los efectos son heterogéneos, ambos pueden diferir. También puede interesar el efecto en un subgrupo con características $X_i = x$, $\text{ATE}(x) = E[Y_{1i} - Y_{0i} \mid X_i = x]$.
+Reforcemos lo que quiere decir tanto el ATE como el ATT. Primero, el ATE, refleja el efecto promedio de un tratamiento aplicado a toda una población. Por ejemplo, si definimos 
+$$
+\tau_{\text{ATE}} = \mathbb{E}(\tau_i) = \mathbb{E}\left[ Y_{1i} -Y_{0i}\right]
+$$
+como el efecto promedio de la aplicación de una política sobre la población. Entonces, podemos representar la variable dependiente (o de resultado) mediante un modelo de regresión simple tal que
+$$
+Y_i  = \beta_0 + \tau_i D_i + \varepsilon_i
+$$
+donde $\tau_i = Y_{1i} -Y_{0i}$ y $Y_{0i} = \mathbb{E}[Y_{0i}] + \varepsilon_i = \beta_0 + \varepsilon_i$. Entonces, $\tau_{\text{ATE}}$ se "interpreta como el cambio promedio en la variable de resultado cuando un individuo escodigo al azar pasa aleatoriamente de ser participante [tratado] a no ser participante" [@bernal-peña2011, p. 19]. Así, como bien mencionan @bernal-peña2011, el parámetro $\tau_{\text{ATE}}$ es muy útil y relevante cuando se busca medir el impacto de una política universal, cuando se quiere observar un efecto en toda la población afecta.
+
+No obstante, generalmente nos encontraremos con tratamientos en subpoblaciones, como lo es en las políticas. Cuando se focaliza una política, no se mide un impacto en toda la población, sino solo en un subconjunto de ella. En este caso, el $ATT$ es el efecto nos interesa. Este corresponde, como vimos, a la diferencia entre el promedio de la variable dependiente en el grupo de los tratados, y el promedio que *hubieran* obtenido los tratados si no se les hubiese tratado, tal que
+$$
+\begin{aligned}
+\tau_{\text{ATT}} &= \mathbb{E}[\tau_i \mid D_i = 1]\\
+ &= \mathbb{E}[Y_{1i} - Y_{0i} \mid D_i = 1]\\
+ &= \mathbb{E}[Y_{1i} \mid D_i = 1]- \mathbb{E}[Y_{0i} \mid D_i = 1]
+\end{aligned}
+$$
+Por lo tanto, en este caso, el operador de la esperanza condicional $\mathbb{E}[Y_{1i} \mid D_i = 1]$ es el valor esperado de la variable dependiente dado que fue tratado, i. e., el promedio de "la variable de resultado en el grupo de tratamiento en *presencia* del tratamiento" [@bernal-peña2011, p. 19]. En cambio, al operador $\mathbb{E}[Y_{0i} \mid D_i = 1]$ , conocido también como *contrafactual*, es el valor esperado de la variable dependiente $Y$ en el grupo de tratamiento en *ausencia* de tratamiento^[Evidentemente, este es u resultado hipotético, un promedio contrafactual no queda registrado en los datos, ni se observa como tal [@bernal-peña2011]. Más adelante veremos cómo nos será útil, sin embargo, usar un contrafactual.]. 
+
+Cabe destacar que, cuando los efectos son heterogéneos, ambos pueden diferir. También puede interesar el efecto en un subgrupo con características $X_i = x$, $\text{ATE}(x) = E[Y_{1i} - Y_{0i} \mid X_i = x]$.
 
 Considérese ahora lo que entrega la comparación ingenua entre tratados y no tratados. Sumando y restando $E[Y_{0i} \mid D_i = 1]$, el resultado contrafactual promedio de los tratados, se obtiene la descomposición central de la sesión:
 
