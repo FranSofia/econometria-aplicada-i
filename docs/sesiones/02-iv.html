@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -13,10 +13,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -94,10 +97,10 @@ div.csl-indent {
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-e67676cf1ca699c48252eabef0ea5c47.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-8398f9434cb8b571328d8249f6cc3971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-6c346fce746cd160a166cd336dbaf8c9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-93926d78e1b823f9cdf745bbbeda2aaa.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -127,7 +130,7 @@ div.csl-indent {
 }</script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -277,7 +280,8 @@ window.Quarto = {
   <li><a href="#buenas-prácticas" id="toc-buenas-prácticas" class="nav-link" data-scroll-target="#buenas-prácticas"><span class="header-section-number">9.3</span> Buenas prácticas</a></li>
   <li><a href="#aplicación-migración-y-salarios-en-chile" id="toc-aplicación-migración-y-salarios-en-chile" class="nav-link" data-scroll-target="#aplicación-migración-y-salarios-en-chile"><span class="header-section-number">9.4</span> Aplicación: migración y salarios en Chile</a></li>
   </ul></li>
-  <li><a href="#síntesis" id="toc-síntesis" class="nav-link" data-scroll-target="#síntesis"><span class="header-section-number">10</span> Síntesis</a></li>
+  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios"><span class="header-section-number">10</span> Ejercicios</a></li>
+  <li><a href="#síntesis" id="toc-síntesis" class="nav-link" data-scroll-target="#síntesis"><span class="header-section-number">11</span> Síntesis</a></li>
   <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias">Referencias</a></li>
   </ul>
 </nav>
@@ -3614,8 +3618,18 @@ Wald (1st stage), ln_tasa:alta_calif  : stat =     233.66, p &lt; 2.2e-16, on 2 
 <p>Por MCO, un aumento de 10 % en la tasa de migrantes de la celda se asocia con salarios de los nativos 0,26 % más altos, y la asociación es significativa. Por MC2E, el coeficiente cae a la mitad y deja de ser significativo, y tampoco hay diferencias entre trabajadores de alta y baja calificación. La lectura más simple es que la correlación positiva de MCO refleja, al menos en parte, que los migrantes se dirigieron a sectores y regiones con salarios crecientes, y que una vez corregida esa selección no hay evidencia de un efecto sobre los salarios de los nativos en ninguna dirección. Esa conclusión depende, con todo, de que la exposición de 2015 sea exógena a los shocks salariales posteriores de cada celda, y el instrumento descansa en solo dos shocks, de modo que la discusión de la sección anterior sobre participaciones exógenas aplica de lleno.</p>
 </section>
 </section>
-<section id="síntesis" class="level1" data-number="10">
-<h1 data-number="10"><span class="header-section-number">10</span> Síntesis</h1>
+<section id="ejercicios" class="level1" data-number="10">
+<h1 data-number="10"><span class="header-section-number">10</span> Ejercicios</h1>
+<p>Los dos primeros ejercicios usan los datos de Card de la sección de aplicación. El tercero se basa en la ayudantía 2 y el cuarto en la primera pregunta de la Tarea 2.</p>
+<ol type="1">
+<li>Con los datos de <code>wooldridge::card</code>, estime la primera etapa, la forma reducida y MC2E usando <code>nearc2</code> (universidad de dos años en el condado) como único instrumento. Compare la fuerza de este instrumento con la de <code>nearc4</code> y discuta qué tipo de compliers identificaría cada uno.</li>
+<li>Estime el retorno a la educación por MC2E por separado para hombres negros y no negros (variable <code>black</code>). Revise la primera etapa en cada grupo. ¿Es razonable comparar los dos LATE? ¿Qué advertencia haría sobre la precisión del grupo más pequeño?</li>
+<li><span class="citation" data-cites="epple2006">Epple y McCallum (<a href="#ref-epple2006" role="doc-biblioref">2006</a>)</span> estiman una ecuación de oferta de pollos para Estados Unidos con datos anuales, <span class="math inline">\(\ln Q_t = \alpha_1 + \alpha_2 \ln P_t + \alpha_3 \ln FP_t + \alpha_4 \ln Q_{t-1} + \alpha_5 t + u_t\)</span>, donde <span class="math inline">\(P_t\)</span> es el precio real de los pollos y <span class="math inline">\(FP_t\)</span> el del alimento. Explique por qué <span class="math inline">\(\ln P_t\)</span> es endógena en una ecuación de oferta. Entre los instrumentos candidatos están el ingreso per cápita, el precio de la carne de vacuno, el crecimiento de la población, el precio rezagado y las exportaciones de pollos. ¿Cuáles desplazan la demanda sin afectar la oferta? ¿Cuál le parece más dudoso como instrumento y por qué? ¿Qué le dice un test de sobreidentificación y qué no le dice?</li>
+<li>En la aplicación con la CASEN, el instrumento se construye con dos shocks, el crecimiento nacional de migrantes de alta y baja calificación. Discuta si la identificación descansa en los shocks o en las participaciones, en el sentido de <span class="citation" data-cites="borusyak2025">Borusyak et&nbsp;al. (<a href="#ref-borusyak2025" role="doc-biblioref">2025</a>)</span>, y proponga un instrumento alternativo basado en el país de origen de los migrantes, como en <span class="citation" data-cites="card2001">Card (<a href="#ref-card2001" role="doc-biblioref">2001</a>)</span>. Escriba formalmente cómo se construiría, qué shock variaría en el tiempo y por qué el supuesto de validez podría ser más o menos plausible que el de la versión por nivel educativo.</li>
+</ol>
+</section>
+<section id="síntesis" class="level1" data-number="11">
+<h1 data-number="11"><span class="header-section-number">11</span> Síntesis</h1>
 <p>Un instrumento es una variable que mueve el tratamiento, se comporta como si hubiera sido asignada al azar y solo afecta el resultado a través del tratamiento. La relevancia se verifica en la primera etapa; la exogeneidad y la exclusión solo pueden argumentarse. Con efectos constantes, el cociente entre la forma reducida y la primera etapa identifica el efecto del tratamiento, y MC2E generaliza ese cálculo a más instrumentos y covariables.</p>
 <p>Con efectos heterogéneos, lo que se identifica es el efecto en los compliers, quienes cambian su tratamiento por el instrumento. Esto exige el supuesto de monotonicidad y obliga a preguntar en cada caso para quién vale la estimación. En Angrist y Krueger y en Card, el retorno estimado por IV supera al de MCO, y una explicación plausible es que los compliers, personas en el margen por la ley o por el costo de estudiar, tienen retornos mayores que el promedio.</p>
 <p>Los instrumentos débiles sesgan MC2E hacia MCO y producen inferencias engañosas, sobre todo cuando se usan muchos instrumentos. Revisar la primera etapa es obligatorio, y la literatura reciente sugiere que la regla de un <span class="math inline">\(F\)</span> mayor que 10 es más permisiva de lo que se pensaba. Los instrumentos shift-share extienden la lógica a contextos de exposición diferencial a shocks comunes, y su validez puede venir de los shocks o de las participaciones, con implicancias distintas para el diseño y la inferencia.</p>
@@ -3674,6 +3688,9 @@ Card, David. 2001. <span>«Immigrant Inflows, Native Outflows, and the Local Lab
 </div>
 <div id="ref-cunningham2021" class="csl-entry" role="listitem">
 Cunningham, Scott. 2021. <em>Causal Inference: The Mixtape</em>. Yale University Press.
+</div>
+<div id="ref-epple2006" class="csl-entry" role="listitem">
+Epple, Dennis, y Bennett T. McCallum. 2006. <span>«Simultaneous Equation Econometrics: The Missing Example»</span>. <em>Economic Inquiry</em> 44 (2): 374-84.
 </div>
 <div id="ref-goldsmith2020" class="csl-entry" role="listitem">
 Goldsmith-Pinkham, Paul, Isaac Sorkin, y Henry Swift. 2020. <span>«Bartik Instruments: What, When, Why, and How»</span>. <em>The American Economic Review</em> 110 (8): 2586-624.
@@ -3796,16 +3813,16 @@ Wright, Philip G. 1928. <em>The Tariff on Animal and Vegetable Oils</em>. Macmil
     }
     function toggleCodeHandler(show) {
       return function(e) {
-        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
-        for (let i=0; i<detailsSrc.length; i++) {
-          const details = detailsSrc[i].parentElement;
+        const cellDetails = window.document.querySelectorAll(".cell details.code-fold");
+        for (let i=0; i<cellDetails.length; i++) {
+          const details = cellDetails[i];
           if (show) {
             details.open = true;
           } else {
             details.removeAttribute("open");
           }
         }
-        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const cellCodeDivs = window.document.querySelectorAll(".cell div.sourceCode.cell-code");
         const fromCls = show ? "hidden" : "unhidden";
         const toCls = show ? "unhidden" : "hidden";
         for (let i=0; i<cellCodeDivs.length; i++) {
@@ -4645,20 +4662,29 @@ Wright, Philip G. 1928. <em>The Tariff on Animal and Vegetable Oils</em>. Macmil
 <span id="cb12-488"><a href="#cb12-488" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-489"><a href="#cb12-489" aria-hidden="true" tabindex="-1"></a>Por MCO, un aumento de 10 % en la tasa de migrantes de la celda se asocia con salarios de los nativos 0,26 % más altos, y la asociación es significativa. Por MC2E, el coeficiente cae a la mitad y deja de ser significativo, y tampoco hay diferencias entre trabajadores de alta y baja calificación. La lectura más simple es que la correlación positiva de MCO refleja, al menos en parte, que los migrantes se dirigieron a sectores y regiones con salarios crecientes, y que una vez corregida esa selección no hay evidencia de un efecto sobre los salarios de los nativos en ninguna dirección. Esa conclusión depende, con todo, de que la exposición de 2015 sea exógena a los shocks salariales posteriores de cada celda, y el instrumento descansa en solo dos shocks, de modo que la discusión de la sección anterior sobre participaciones exógenas aplica de lleno.</span>
 <span id="cb12-490"><a href="#cb12-490" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-491"><a href="#cb12-491" aria-hidden="true" tabindex="-1"></a><span class="fu"># Síntesis</span></span>
+<span id="cb12-491"><a href="#cb12-491" aria-hidden="true" tabindex="-1"></a><span class="fu"># Ejercicios</span></span>
 <span id="cb12-492"><a href="#cb12-492" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-493"><a href="#cb12-493" aria-hidden="true" tabindex="-1"></a>Un instrumento es una variable que mueve el tratamiento, se comporta como si hubiera sido asignada al azar y solo afecta el resultado a través del tratamiento. La relevancia se verifica en la primera etapa; la exogeneidad y la exclusión solo pueden argumentarse. Con efectos constantes, el cociente entre la forma reducida y la primera etapa identifica el efecto del tratamiento, y MC2E generaliza ese cálculo a más instrumentos y covariables.</span>
+<span id="cb12-493"><a href="#cb12-493" aria-hidden="true" tabindex="-1"></a>Los dos primeros ejercicios usan los datos de Card de la sección de aplicación. El tercero se basa en la ayudantía 2 y el cuarto en la primera pregunta de la Tarea 2.</span>
 <span id="cb12-494"><a href="#cb12-494" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-495"><a href="#cb12-495" aria-hidden="true" tabindex="-1"></a>Con efectos heterogéneos, lo que se identifica es el efecto en los compliers, quienes cambian su tratamiento por el instrumento. Esto exige el supuesto de monotonicidad y obliga a preguntar en cada caso para quién vale la estimación. En Angrist y Krueger y en Card, el retorno estimado por IV supera al de MCO, y una explicación plausible es que los compliers, personas en el margen por la ley o por el costo de estudiar, tienen retornos mayores que el promedio.</span>
-<span id="cb12-496"><a href="#cb12-496" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-497"><a href="#cb12-497" aria-hidden="true" tabindex="-1"></a>Los instrumentos débiles sesgan MC2E hacia MCO y producen inferencias engañosas, sobre todo cuando se usan muchos instrumentos. Revisar la primera etapa es obligatorio, y la literatura reciente sugiere que la regla de un $F$ mayor que 10 es más permisiva de lo que se pensaba. Los instrumentos shift-share extienden la lógica a contextos de exposición diferencial a shocks comunes, y su validez puede venir de los shocks o de las participaciones, con implicancias distintas para el diseño y la inferencia.</span>
-<span id="cb12-498"><a href="#cb12-498" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-499"><a href="#cb12-499" aria-hidden="true" tabindex="-1"></a>La sesión 3 retoma la idea de un instrumento en un contexto particular, la regresión discontinua difusa, donde cruzar un umbral cambia la probabilidad de recibir el tratamiento.</span>
-<span id="cb12-500"><a href="#cb12-500" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-501"><a href="#cb12-501" aria-hidden="true" tabindex="-1"></a><span class="fu"># Referencias {.unnumbered}</span></span>
-<span id="cb12-502"><a href="#cb12-502" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-503"><a href="#cb12-503" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
-<span id="cb12-504"><a href="#cb12-504" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb12-495"><a href="#cb12-495" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Con los datos de <span class="in">`wooldridge::card`</span>, estime la primera etapa, la forma reducida y MC2E usando <span class="in">`nearc2`</span> (universidad de dos años en el condado) como único instrumento. Compare la fuerza de este instrumento con la de <span class="in">`nearc4`</span> y discuta qué tipo de compliers identificaría cada uno.</span>
+<span id="cb12-496"><a href="#cb12-496" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Estime el retorno a la educación por MC2E por separado para hombres negros y no negros (variable <span class="in">`black`</span>). Revise la primera etapa en cada grupo. ¿Es razonable comparar los dos LATE? ¿Qué advertencia haría sobre la precisión del grupo más pequeño?</span>
+<span id="cb12-497"><a href="#cb12-497" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>@epple2006 estiman una ecuación de oferta de pollos para Estados Unidos con datos anuales, $\ln Q_t = \alpha_1 + \alpha_2 \ln P_t + \alpha_3 \ln FP_t + \alpha_4 \ln Q_{t-1} + \alpha_5 t + u_t$, donde $P_t$ es el precio real de los pollos y $FP_t$ el del alimento. Explique por qué $\ln P_t$ es endógena en una ecuación de oferta. Entre los instrumentos candidatos están el ingreso per cápita, el precio de la carne de vacuno, el crecimiento de la población, el precio rezagado y las exportaciones de pollos. ¿Cuáles desplazan la demanda sin afectar la oferta? ¿Cuál le parece más dudoso como instrumento y por qué? ¿Qué le dice un test de sobreidentificación y qué no le dice?</span>
+<span id="cb12-498"><a href="#cb12-498" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>En la aplicación con la CASEN, el instrumento se construye con dos shocks, el crecimiento nacional de migrantes de alta y baja calificación. Discuta si la identificación descansa en los shocks o en las participaciones, en el sentido de @borusyak2025, y proponga un instrumento alternativo basado en el país de origen de los migrantes, como en @card2001. Escriba formalmente cómo se construiría, qué shock variaría en el tiempo y por qué el supuesto de validez podría ser más o menos plausible que el de la versión por nivel educativo.</span>
+<span id="cb12-499"><a href="#cb12-499" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-500"><a href="#cb12-500" aria-hidden="true" tabindex="-1"></a><span class="fu"># Síntesis</span></span>
+<span id="cb12-501"><a href="#cb12-501" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-502"><a href="#cb12-502" aria-hidden="true" tabindex="-1"></a>Un instrumento es una variable que mueve el tratamiento, se comporta como si hubiera sido asignada al azar y solo afecta el resultado a través del tratamiento. La relevancia se verifica en la primera etapa; la exogeneidad y la exclusión solo pueden argumentarse. Con efectos constantes, el cociente entre la forma reducida y la primera etapa identifica el efecto del tratamiento, y MC2E generaliza ese cálculo a más instrumentos y covariables.</span>
+<span id="cb12-503"><a href="#cb12-503" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-504"><a href="#cb12-504" aria-hidden="true" tabindex="-1"></a>Con efectos heterogéneos, lo que se identifica es el efecto en los compliers, quienes cambian su tratamiento por el instrumento. Esto exige el supuesto de monotonicidad y obliga a preguntar en cada caso para quién vale la estimación. En Angrist y Krueger y en Card, el retorno estimado por IV supera al de MCO, y una explicación plausible es que los compliers, personas en el margen por la ley o por el costo de estudiar, tienen retornos mayores que el promedio.</span>
+<span id="cb12-505"><a href="#cb12-505" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-506"><a href="#cb12-506" aria-hidden="true" tabindex="-1"></a>Los instrumentos débiles sesgan MC2E hacia MCO y producen inferencias engañosas, sobre todo cuando se usan muchos instrumentos. Revisar la primera etapa es obligatorio, y la literatura reciente sugiere que la regla de un $F$ mayor que 10 es más permisiva de lo que se pensaba. Los instrumentos shift-share extienden la lógica a contextos de exposición diferencial a shocks comunes, y su validez puede venir de los shocks o de las participaciones, con implicancias distintas para el diseño y la inferencia.</span>
+<span id="cb12-507"><a href="#cb12-507" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-508"><a href="#cb12-508" aria-hidden="true" tabindex="-1"></a>La sesión 3 retoma la idea de un instrumento en un contexto particular, la regresión discontinua difusa, donde cruzar un umbral cambia la probabilidad de recibir el tratamiento.</span>
+<span id="cb12-509"><a href="#cb12-509" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-510"><a href="#cb12-510" aria-hidden="true" tabindex="-1"></a><span class="fu"># Referencias {.unnumbered}</span></span>
+<span id="cb12-511"><a href="#cb12-511" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-512"><a href="#cb12-512" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb12-513"><a href="#cb12-513" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 
